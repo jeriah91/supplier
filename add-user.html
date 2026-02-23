@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add new user</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Mobile header ── */
+    .mob-header {
+      background: #f1f5f9;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .back-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 0; color: #334155; flex-shrink: 0;
+      display: flex; align-items: center;
+    }
+
+    .mob-header-title {
+      flex: 1;
+      color: #334155;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      line-height: 26px;
+    }
+
+    /* ── Form content ── */
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      color: #334155;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+    }
+    .form-label .req { color: #ef4444; }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      color: #0f172a;
+      letter-spacing: -0.32px;
+      line-height: 22px;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+    .form-input::placeholder { color: #94a3b8; }
+
+    .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      color: #0f172a;
+      letter-spacing: -0.32px;
+      line-height: 22px;
+      outline: none;
+      background: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 44px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-select:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      background: #fff;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-top: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+
+    .btn-save {
+      background: #2c66ef;
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.32px;
+      line-height: 22px;
+      padding: 13px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-save:hover { background: #1d56df; }
+
+    .btn-cancel {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.32px;
+      line-height: 22px;
+      padding: 13px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-cancel:hover { background: #f8fafc; }
+
+    /* Desktop redirect — this page is meant for mobile */
+    @media (min-width: 768px) {
+      body { align-items: center; justify-content: center; background: #cbd5e1; }
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        width: 480px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .mob-header { border-bottom: 1px solid #e2e8f0; }
+      .page-content { max-width: 100%; padding: 24px; }
+      .page-footer { padding: 20px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <!-- Header with back button -->
+    <div class="mob-header">
+      <button class="back-btn" onclick="history.back()" aria-label="Go back">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <span class="mob-header-title">Add new user</span>
+    </div>
+
+    <!-- Form -->
+    <div class="page-content">
+      <div class="form-field">
+        <label class="form-label" for="first-name">First name <span class="req">*</span></label>
+        <input class="form-input" id="first-name" type="text" placeholder="Enter first name" />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="last-name">Last name <span class="req">*</span></label>
+        <input class="form-input" id="last-name" type="text" placeholder="Enter last name" />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="email">Email <span class="req">*</span></label>
+        <input class="form-input" id="email" type="email" placeholder="Enter email address" />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="role">Role <span class="req">*</span></label>
+        <select class="form-select" id="role">
+          <option value="" disabled selected>Select a role</option>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="user">User</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Footer actions -->
+    <div class="page-footer">
+      <button class="btn-save">Save</button>
+      <button class="btn-cancel" onclick="history.back()">Cancel</button>
+    </div>
+
+  </div>
+
+</body>
+</html>
