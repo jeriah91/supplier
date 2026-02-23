@@ -276,6 +276,7 @@
       border: 1px solid #e2e8f0;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
 
     .entity-row {
@@ -328,7 +329,7 @@
 
     .detail-row {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .detail-label {
@@ -407,6 +408,107 @@
       font-weight: 400;
       letter-spacing: -0.28px;
       line-height: 20px;
+    }
+
+    /* ── Inline edit form ── */
+    .edit-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .edit-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: #0f172a;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .edit-input:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+    .edit-input.input-error { border-color: #ef4444; }
+    .edit-input.input-error:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+
+    .edit-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 16px;
+    }
+
+    .error-msg {
+      color: #ef4444;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -0.24px;
+      line-height: 16px;
+    }
+
+    .char-count {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -0.24px;
+      line-height: 16px;
+      margin-left: auto;
+    }
+
+    .edit-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-cancel-inline {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-cancel-inline:hover { background: #f8fafc; }
+
+    .btn-save-inline {
+      background: #2c66ef;
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-save-inline:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -663,9 +765,9 @@
             <div class="detail-rows">
               <div class="detail-row">
                 <div class="detail-label">Trading name<span class="req">*</span></div>
-                <div class="detail-value">
-                  Platypus Plumbing
-                  <button class="edit-btn" aria-label="Edit trading name">
+                <div class="detail-value" id="val-trading-name">
+                  <span class="field-text">Platypus Plumbing</span>
+                  <button class="edit-btn" onclick="startEdit('trading-name')" aria-label="Edit trading name">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -674,9 +776,9 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">Industry type</div>
-                <div class="detail-value unset">
-                  Not selected
-                  <button class="edit-btn" aria-label="Edit industry type">
+                <div class="detail-value unset" id="val-industry-type">
+                  <span class="field-text">Not selected</span>
+                  <button class="edit-btn" onclick="startEdit('industry-type')" aria-label="Edit industry type">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -685,9 +787,9 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">Timezone</div>
-                <div class="detail-value unset">
-                  Not selected
-                  <button class="edit-btn" aria-label="Edit timezone">
+                <div class="detail-value unset" id="val-timezone">
+                  <span class="field-text">Not selected</span>
+                  <button class="edit-btn" onclick="startEdit('timezone')" aria-label="Edit timezone">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -696,9 +798,9 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">State</div>
-                <div class="detail-value unset">
-                  Not selected
-                  <button class="edit-btn" aria-label="Edit state">
+                <div class="detail-value unset" id="val-detail-state">
+                  <span class="field-text">Not selected</span>
+                  <button class="edit-btn" onclick="startEdit('detail-state')" aria-label="Edit state">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -707,9 +809,9 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">Website</div>
-                <div class="detail-value unset">
-                  N/A
-                  <button class="edit-btn" aria-label="Edit website">
+                <div class="detail-value unset" id="val-website">
+                  <span class="field-text">N/A</span>
+                  <button class="edit-btn" onclick="startEdit('website')" aria-label="Edit website">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -794,9 +896,9 @@
             <div class="detail-rows">
               <div class="detail-row">
                 <div class="detail-label">First name<span class="req">*</span></div>
-                <div class="detail-value">
-                  John
-                  <button class="edit-btn" aria-label="Edit first name">
+                <div class="detail-value" id="val-first-name">
+                  <span class="field-text">John</span>
+                  <button class="edit-btn" onclick="startEdit('first-name')" aria-label="Edit first name">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -805,9 +907,9 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">Last name<span class="req">*</span></div>
-                <div class="detail-value">
-                  Smith
-                  <button class="edit-btn" aria-label="Edit last name">
+                <div class="detail-value" id="val-last-name">
+                  <span class="field-text">Smith</span>
+                  <button class="edit-btn" onclick="startEdit('last-name')" aria-label="Edit last name">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -816,9 +918,9 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">Email<span class="req">*</span></div>
-                <div class="detail-value">
-                  john@platypusplumbing.com.au
-                  <button class="edit-btn" aria-label="Edit email">
+                <div class="detail-value" id="val-email">
+                  <span class="field-text">john@platypusplumbing.com.au</span>
+                  <button class="edit-btn" onclick="startEdit('email')" aria-label="Edit email">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -827,9 +929,9 @@
               </div>
               <div class="detail-row">
                 <div class="detail-label">Phone<span class="req">*</span></div>
-                <div class="detail-value">
-                  0401111111
-                  <button class="edit-btn" aria-label="Edit phone">
+                <div class="detail-value" id="val-phone">
+                  <span class="field-text">0401111111</span>
+                  <button class="edit-btn" onclick="startEdit('phone')" aria-label="Edit phone">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                     </svg>
@@ -845,6 +947,7 @@
   </div><!-- /layout -->
 
   <script>
+    /* ── Sidebar ── */
     function openSidebar() {
       document.getElementById('mobSidebar').classList.add('is-open');
       document.getElementById('mobOverlay').classList.add('is-visible');
@@ -852,6 +955,111 @@
     function closeSidebar() {
       document.getElementById('mobSidebar').classList.remove('is-open');
       document.getElementById('mobOverlay').classList.remove('is-visible');
+    }
+
+    /* ── Inline edit ── */
+    const FIELD_CONFIG = {
+      'trading-name':  { required: true,  maxLen: 200, placeholder: 'e.g. Platypus Plumbing Pty Ltd', empty: null },
+      'industry-type': { required: false, maxLen: 200, placeholder: 'Enter industry type',            empty: 'Not selected' },
+      'timezone':      { required: false, maxLen: 200, placeholder: 'Enter timezone',                 empty: 'Not selected' },
+      'detail-state':  { required: false, maxLen: 200, placeholder: 'Enter state',                    empty: 'Not selected' },
+      'website':       { required: false, maxLen: 200, placeholder: 'Enter website URL',              empty: 'N/A' },
+      'first-name':    { required: true,  maxLen: 200, placeholder: 'Enter first name',               empty: null },
+      'last-name':     { required: true,  maxLen: 200, placeholder: 'Enter last name',                empty: null },
+      'email':         { required: true,  maxLen: 200, placeholder: 'Enter email address',            empty: null },
+      'phone':         { required: true,  maxLen:  20, placeholder: 'Enter phone number',             empty: null },
+    };
+
+    // Seed values from DOM on load
+    const fieldValues = {};
+    document.querySelectorAll('[id^="val-"]').forEach(el => {
+      const id = el.id.slice(4);
+      const cfg = FIELD_CONFIG[id];
+      const text = (el.querySelector('.field-text') || {}).textContent || '';
+      fieldValues[id] = (cfg && cfg.empty && text.trim() === cfg.empty) ? '' : text.trim();
+    });
+
+    let activeEdit = null;
+
+    function startEdit(id) {
+      if (activeEdit === id) return;
+      if (activeEdit) cancelEdit(activeEdit);
+      activeEdit = id;
+
+      const cfg = FIELD_CONFIG[id];
+      const stored = fieldValues[id] !== undefined ? fieldValues[id] : '';
+      const el = document.getElementById('val-' + id);
+
+      const pencilSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+
+      el.innerHTML = `
+        <div class="edit-form">
+          <input type="text" id="input-${id}" class="edit-input"
+            value="${esc(stored)}" placeholder="${esc(cfg.placeholder)}" maxlength="${cfg.maxLen}">
+          <div class="edit-meta">
+            ${cfg.required ? `<span class="error-msg" id="err-${id}"></span>` : '<span></span>'}
+            <span class="char-count" id="cc-${id}">${stored.length}/${cfg.maxLen} characters</span>
+          </div>
+          <div class="edit-actions">
+            <button class="btn-cancel-inline" onclick="cancelEdit('${id}')">Cancel</button>
+            <button class="btn-save-inline" id="save-${id}" onclick="saveEdit('${id}')">
+              Save ${pencilSvg}
+            </button>
+          </div>
+        </div>`;
+
+      const input = document.getElementById('input-' + id);
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+      input.addEventListener('input', () => onInput(id));
+      onInput(id); // run initial validation
+    }
+
+    function onInput(id) {
+      const cfg = FIELD_CONFIG[id];
+      const input = document.getElementById('input-' + id);
+      const val = input.value;
+      document.getElementById('cc-' + id).textContent = val.length + '/' + cfg.maxLen + ' characters';
+      if (!cfg.required) return;
+      const empty = val.trim() === '';
+      input.classList.toggle('input-error', empty);
+      const errEl = document.getElementById('err-' + id);
+      if (errEl) errEl.textContent = empty ? 'Required' : '';
+      document.getElementById('save-' + id).disabled = empty;
+    }
+
+    function saveEdit(id) {
+      const cfg = FIELD_CONFIG[id];
+      const input = document.getElementById('input-' + id);
+      if (!input || (cfg.required && input.value.trim() === '')) return;
+      fieldValues[id] = input.value.trim();
+      activeEdit = null;
+      renderView(id);
+    }
+
+    function cancelEdit(id) {
+      activeEdit = null;
+      renderView(id);
+    }
+
+    function renderView(id) {
+      const cfg = FIELD_CONFIG[id];
+      const stored = fieldValues[id];
+      const isEmpty = stored === '' || stored === undefined || stored === null;
+      const display = isEmpty ? (cfg.empty || '') : stored;
+      const el = document.getElementById('val-' + id);
+      el.className = 'detail-value' + (isEmpty ? ' unset' : '');
+      el.innerHTML = `
+        <span class="field-text">${esc(display)}</span>
+        <button class="edit-btn" onclick="startEdit('${id}')" aria-label="Edit field">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+        </button>`;
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
   </script>
 </body>
