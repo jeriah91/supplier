@@ -394,6 +394,134 @@
       color: #0f172a; font-size: 16px; font-weight: 600;
       letter-spacing: -0.32px; line-height: 20px;
     }
+
+    /* ── Add Person Drawer ── */
+    .ap-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+    }
+    .ap-overlay.is-visible { display: block; }
+
+    .ap-drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 620px; max-width: 100vw;
+      background: #fff;
+      z-index: 201;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+    }
+    .ap-drawer.is-open { transform: translateX(0); }
+    @media (max-width: 767px) { .ap-drawer { width: 100%; } }
+
+    .ap-header {
+      display: flex; align-items: center;
+      padding: 28px 32px;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0; background: #fff;
+    }
+    .ap-title {
+      flex: 1;
+      font-size: 28px; font-weight: 600;
+      letter-spacing: -0.56px; line-height: 34px;
+      color: #0f172a;
+    }
+    .ap-close {
+      background: none; border: none; cursor: pointer;
+      color: #64748b; padding: 4px;
+      display: flex; align-items: center;
+    }
+    .ap-close:hover { color: #0f172a; }
+
+    .ap-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+    .ap-section {
+      padding: 28px 32px;
+      display: flex; flex-direction: column; gap: 20px;
+      background: #fff;
+    }
+    .ap-section.ap-section-gray {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      flex: 1;
+    }
+    .ap-section-head { display: flex; flex-direction: column; gap: 4px; }
+    .ap-section-title {
+      font-size: 20px; font-weight: 600;
+      letter-spacing: -0.4px; line-height: 26px; color: #0f172a;
+    }
+    .ap-section-sub { font-size: 14px; color: #64748b; line-height: 20px; }
+
+    .ap-field { display: flex; align-items: center; gap: 16px; }
+    .ap-label {
+      width: 180px; flex-shrink: 0;
+      font-size: 14px; font-weight: 500;
+      color: #334155; line-height: 20px;
+    }
+    .ap-input {
+      flex: 1; padding: 10px 14px;
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      font-family: inherit; font-size: 15px;
+      color: #0f172a; line-height: 22px;
+      outline: none; background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .ap-input:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+    .ap-select {
+      flex: 1; padding: 10px 40px 10px 14px;
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      font-family: inherit; font-size: 15px;
+      color: #0f172a; line-height: 22px;
+      outline: none; background: #fff; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232c66ef' stroke-width='2.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .ap-select:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+
+    .ap-notify-row { display: flex; align-items: flex-start; gap: 12px; }
+    .ap-checkbox {
+      width: 20px; height: 20px; flex-shrink: 0;
+      accent-color: #2c66ef; margin-top: 2px; cursor: pointer;
+    }
+    .ap-notify-label {
+      display: block;
+      font-size: 15px; font-weight: 600; color: #0f172a; line-height: 22px;
+      cursor: pointer;
+    }
+    .ap-notify-desc { font-size: 13px; color: #64748b; line-height: 18px; margin-top: 3px; }
+
+    .ap-footer {
+      padding: 20px 32px;
+      border-top: 1px solid #e2e8f0;
+      display: flex; justify-content: flex-end; gap: 12px;
+      flex-shrink: 0; background: #fff;
+    }
+    .ap-btn-cancel {
+      background: #fff; border: 1px solid #e2e8f0;
+      color: #334155; font-family: inherit;
+      font-size: 15px; font-weight: 500;
+      padding: 10px 20px; border-radius: 8px; cursor: pointer;
+    }
+    .ap-btn-cancel:hover { background: #f8fafc; }
+    .ap-btn-add {
+      background: #2c66ef; border: none;
+      color: #fff; font-family: inherit;
+      font-size: 15px; font-weight: 500;
+      padding: 10px 20px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .ap-btn-add:hover { background: #1d56df; }
   </style>
 </head>
 <body>
@@ -685,7 +813,7 @@
           </svg>
         </button>
         <span class="mob-header-title">Compliance</span>
-        <button class="btn-primary" style="font-size:13px; padding:4px 10px; gap:6px;">
+        <button class="btn-primary" style="font-size:13px; padding:4px 10px; gap:6px;" onclick="openAddPerson()">
           Add new
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
@@ -698,7 +826,7 @@
         <!-- Desktop page header -->
         <div class="page-header">
           <h1 class="page-title">Compliance</h1>
-          <button class="btn-primary">
+          <button class="btn-primary" onclick="openAddPerson()">
             Add new
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
@@ -1011,6 +1139,80 @@
     </div>
   </div>
 
+  <!-- Add Person overlay + drawer -->
+  <div class="ap-overlay" id="apOverlay" onclick="closeAddPerson()"></div>
+
+  <aside class="ap-drawer" id="apDrawer">
+    <div class="ap-header">
+      <span class="ap-title">Add person</span>
+      <button class="ap-close" onclick="closeAddPerson()" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ap-body">
+
+      <!-- Details section -->
+      <div class="ap-section">
+        <div class="ap-section-head">
+          <div class="ap-section-title">Details</div>
+          <div class="ap-section-sub">Employee will be invited via Email or SMS</div>
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-fname">Legal First Name</label>
+          <input class="ap-input" id="ap-fname" type="text" placeholder="Enter first name" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-lname">Legal Last Name</label>
+          <input class="ap-input" id="ap-lname" type="text" placeholder="Enter last name" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-phone">Phone</label>
+          <input class="ap-input" id="ap-phone" type="tel" placeholder="Enter phone number" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-email">Email</label>
+          <input class="ap-input" id="ap-email" type="email" placeholder="Enter email address" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-role">Role</label>
+          <select class="ap-select" id="ap-role">
+            <option value="" disabled selected>Select a role</option>
+            <option value="plumber">Plumber</option>
+            <option value="electrician">Electrician</option>
+            <option value="carpenter">Carpenter</option>
+            <option value="manager">Manager</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Notifications section -->
+      <div class="ap-section ap-section-gray">
+        <div class="ap-section-title">Notifications</div>
+        <div class="ap-notify-row">
+          <input class="ap-checkbox" type="checkbox" id="ap-invite" checked />
+          <div>
+            <label class="ap-notify-label" for="ap-invite">Send compliance invite now</label>
+            <div class="ap-notify-desc">Immediately notify this contractor to provide their compliance documents</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ap-footer">
+      <button class="ap-btn-cancel" onclick="closeAddPerson()">Cancel</button>
+      <button class="ap-btn-add">
+        Add
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
   <script>
     function openSidebar() {
       document.getElementById('mobSidebar').classList.add('is-open');
@@ -1019,6 +1221,15 @@
     function closeSidebar() {
       document.getElementById('mobSidebar').classList.remove('is-open');
       document.getElementById('mobOverlay').classList.remove('is-visible');
+    }
+
+    function openAddPerson() {
+      document.getElementById('apDrawer').classList.add('is-open');
+      document.getElementById('apOverlay').classList.add('is-visible');
+    }
+    function closeAddPerson() {
+      document.getElementById('apDrawer').classList.remove('is-open');
+      document.getElementById('apOverlay').classList.remove('is-visible');
     }
 
     function toggleOrg(header) {
