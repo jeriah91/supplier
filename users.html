@@ -92,7 +92,7 @@
     }
 
     .nav-item {
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; gap: 16px;
       padding: 8px 16px; border-radius: 8px;
       cursor: pointer; width: 100%;
       background: none; border: none; font-family: inherit;
@@ -118,7 +118,7 @@
     .nav-group { display: flex; flex-direction: column; }
 
     .section-header {
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; gap: 16px;
       padding: 8px 16px; border-radius: 8px;
       cursor: pointer; width: 100%;
     }
@@ -131,6 +131,7 @@
     .chevron { width: 24px; height: 24px; flex-shrink: 0; color: #fff; }
     .section-header .chevron { transition: transform 0.2s ease; }
     .section-header.is-open .chevron { transform: rotate(180deg); }
+    .section-header.is-open > .badge { display: none; }
 
     .org-content { display: none; flex-direction: column; }
     .org-content.org-open { display: flex; }
@@ -692,6 +693,7 @@
     <div class="nav-group">
       <div class="section-header is-open" onclick="toggleOrg(this)">
         <span class="section-label">Bolton Clarke</span>
+        <span class="badge">4</span>
         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
         </svg>
@@ -977,6 +979,7 @@
         <div class="nav-group">
           <div class="section-header is-open" onclick="toggleOrg(this)">
             <span class="section-label">Bolton Clarke</span>
+            <span class="badge">4</span>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
             </svg>
