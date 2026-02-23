@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Detail</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #cbd5e1;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Mobile overlay & sidebar ── */
+    .mob-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+    .mob-overlay.is-visible { display: block; }
+
+    .mob-sidebar {
+      position: fixed;
+      inset: 0;
+      background: #0f172a;
+      z-index: 101;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 16px 24px;
+      gap: 32px;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      overflow-y: auto;
+    }
+    .mob-sidebar.is-open { transform: translateX(0); }
+
+    @media (min-width: 768px) {
+      .mob-overlay, .mob-sidebar { display: none !important; }
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      padding: 8px;
+    }
+    @media (max-width: 767px) {
+      .layout { padding: 0; flex-direction: column; }
+    }
+
+    /* ── Desktop sidebar ── */
+    .sidebar-wrap { flex-shrink: 0; padding-right: 4px; }
+    @media (max-width: 767px) { .sidebar-wrap { display: none; } }
+
+    .sidebar {
+      background: #0f172a;
+      width: 280px;
+      height: 100%;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 16px 24px;
+      gap: 24px;
+    }
+
+    /* ── Shared sidebar styles ── */
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 16px;
+    }
+    .logo-icon { width: 24px; height: 24px; flex-shrink: 0; }
+    .logo-text { color: #fff; font-weight: 600; }
+    .sidebar .logo-text { font-size: 18px; letter-spacing: -0.72px; line-height: 22px; }
+    .mob-sidebar .logo-text { font-size: 24px; letter-spacing: -0.96px; line-height: 28px; }
+
+    .close-btn {
+      background: none; border: none; cursor: pointer;
+      color: #fff; padding: 0; width: 24px; height: 24px;
+      flex-shrink: 0; margin-left: auto; display: flex;
+      align-items: center; justify-content: center;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 16px; border-radius: 8px;
+      cursor: pointer; width: 100%;
+      background: none; border: none; font-family: inherit;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.06); }
+    .nav-item.active { background: rgba(44,102,239,0.12); }
+
+    .nav-icon { width: 24px; height: 24px; flex-shrink: 0; color: #fff; }
+
+    .nav-label { flex: 1; color: #fff; font-weight: 500; white-space: nowrap; }
+    .sidebar .nav-label { font-size: 14px; letter-spacing: -0.28px; line-height: 24px; }
+    .mob-sidebar .nav-label { font-size: 20px; letter-spacing: -0.4px; line-height: 24px; }
+
+    .badge {
+      background: #ef4444; color: #fff;
+      font-weight: 600; border-radius: 12px; flex-shrink: 0;
+    }
+    .sidebar .badge { font-size: 10px; line-height: 11px; padding: 2px 6px; }
+    .mob-sidebar .badge { font-size: 14px; line-height: 18px; padding: 2px 8px; }
+
+    .nav-divider { height: 1px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+
+    .nav-group { display: flex; flex-direction: column; }
+
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 16px; border-radius: 8px;
+      cursor: pointer; width: 100%;
+    }
+    .section-header:hover { background: rgba(255,255,255,0.06); }
+
+    .section-label { flex: 1; color: #fff; font-weight: 500; white-space: nowrap; }
+    .sidebar .section-label { font-size: 14px; letter-spacing: -0.28px; line-height: 18px; }
+    .mob-sidebar .section-label { font-size: 20px; letter-spacing: -0.4px; line-height: 24px; }
+
+    .chevron { width: 24px; height: 24px; flex-shrink: 0; color: #fff; }
+    .section-header .chevron { transition: transform 0.2s ease; }
+    .section-header.is-open .chevron { transform: rotate(180deg); }
+
+    .org-content { display: none; flex-direction: column; }
+    .org-content.org-open { display: flex; }
+
+    .sidebar-spacer { flex: 1; min-height: 0; }
+
+    .profile-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 16px; border-radius: 8px;
+    }
+    .avatar {
+      border-radius: 50%; background: #64748b; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 600;
+    }
+    .sidebar .avatar { width: 32px; height: 32px; font-size: 11px; }
+    .mob-sidebar .avatar { width: 40px; height: 40px; font-size: 13px; }
+
+    .profile-info { flex: 1; min-width: 0; }
+    .profile-name { color: #fff; font-weight: 500; }
+    .profile-email { color: rgba(255,255,255,0.7); font-weight: 400; }
+    .sidebar .profile-name { font-size: 14px; letter-spacing: -0.28px; line-height: 18px; }
+    .sidebar .profile-email { font-size: 12px; letter-spacing: -0.24px; line-height: 16px; }
+    .mob-sidebar .profile-name { font-size: 20px; letter-spacing: -0.4px; line-height: 24px; }
+    .mob-sidebar .profile-email { font-size: 16px; letter-spacing: -0.32px; line-height: 20px; }
+
+    /* ── Main wrap ── */
+    .main-wrap {
+      flex: 1; min-width: 0; min-height: 0;
+      padding-left: 4px;
+      display: flex; flex-direction: column;
+    }
+    @media (max-width: 767px) { .main-wrap { padding-left: 0; } }
+
+    /* ── Mobile header ── */
+    .mob-header {
+      display: none;
+      background: #f1f5f9;
+      padding: 16px 24px;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 767px) { .mob-header { display: flex; } }
+
+    .ham-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 0; color: #334155; flex-shrink: 0;
+    }
+
+    .mob-header-identity {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .user-avatar-header {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #64748b; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 13px; font-weight: 600;
+    }
+
+    .mob-header-name {
+      color: #334155;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      line-height: 26px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mob-close-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 4px; color: #64748b; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+    }
+    .mob-close-btn:hover { background: #e2e8f0; }
+
+    /* ── Main panel ── */
+    .main {
+      background: #f1f5f9;
+      border-radius: 8px;
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    @media (max-width: 767px) { .main { border-radius: 0; } }
+
+    /* ── Desktop page header ── */
+    .page-header {
+      background: #f1f5f9;
+      padding: 24px;
+      display: flex; align-items: center; gap: 16px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 767px) { .page-header { display: none; } }
+
+    .page-header-identity {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .user-avatar-page {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #64748b; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 600;
+    }
+
+    .page-title {
+      color: #334155;
+      font-size: 36px; font-weight: 600;
+      letter-spacing: -1.44px; line-height: 40px;
+    }
+
+    .btn-back {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .btn-back:hover { background: #f8fafc; }
+
+    /* ── Page content ── */
+    .page-content {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-bottom: 24px;
+    }
+
+    .content-section {
+      background: #fff;
+      padding: 24px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      color: #0f172a;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      line-height: 26px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Info banner (yellow) ── */
+    .info-banner {
+      background: #fefce8;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #78350f;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+    }
+    .info-banner svg { flex-shrink: 0; color: #92400e; }
+
+    /* ── Stacked detail fields ── */
+    .detail-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .detail-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      color: #0f172a;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+    }
+    .field-label .req { color: #ef4444; }
+
+    .field-value {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #334155;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: -0.32px;
+      line-height: 22px;
+    }
+
+    .edit-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: #2c66ef;
+    }
+    .edit-btn:hover { opacity: 0.75; }
+
+    /* ── Inline edit form ── */
+    .edit-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .edit-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: #0f172a;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .edit-input:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+    .edit-input.input-error { border-color: #ef4444; }
+    .edit-input.input-error:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+
+    .edit-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 16px;
+    }
+
+    .error-msg {
+      color: #ef4444;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -0.24px;
+      line-height: 16px;
+    }
+
+    .char-count {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -0.24px;
+      line-height: 16px;
+      margin-left: auto;
+    }
+
+    .edit-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-cancel-inline {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-cancel-inline:hover { background: #f8fafc; }
+
+    .btn-save-inline {
+      background: #2c66ef;
+      border: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-save-inline:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    /* ── User type cards ── */
+    .user-type-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .user-type-card {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .user-type-card:hover { border-color: #94a3b8; }
+    .user-type-card.selected {
+      border-color: #0f172a;
+      border-width: 2px;
+    }
+
+    .user-type-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-type-card-name {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      line-height: 20px;
+      color: #64748b;
+    }
+    .user-type-card.selected .user-type-card-name {
+      color: #0f172a;
+    }
+
+    .user-type-check {
+      display: none;
+      flex-shrink: 0;
+    }
+    .user-type-card.selected .user-type-check {
+      display: flex;
+    }
+
+    .user-type-card-desc {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      color: #94a3b8;
+    }
+    .user-type-card.selected .user-type-card-desc {
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile overlay backdrop -->
+  <div class="mob-overlay" id="mobOverlay" onclick="closeSidebar()"></div>
+
+  <!-- Mobile sidebar panel -->
+  <aside class="mob-sidebar" id="mobSidebar">
+    <div class="sidebar-logo mob-sidebar-logo">
+      <div class="logo-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="4" fill="#2c66ef"/>
+          <path d="M5 8L12 5L19 8L12 11L5 8Z" fill="white" opacity="0.9"/>
+          <path d="M5 12L12 9L19 12L12 15L5 12Z" fill="white" opacity="0.6"/>
+          <path d="M5 16L12 13L19 16L12 19L5 16Z" fill="white" opacity="0.3"/>
+        </svg>
+      </div>
+      <span class="logo-text">Platypus Plumbing</span>
+      <button class="close-btn" onclick="closeSidebar()" aria-label="Close menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bolton Clarke (expanded) -->
+    <div class="nav-group">
+      <div class="section-header is-open" onclick="toggleOrg(this)">
+        <span class="section-label">Bolton Clarke</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+      <div class="org-content org-open">
+        <button class="nav-item" onclick="location.href='company-details.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+          <span class="nav-label">Company Details</span>
+        </button>
+        <button class="nav-item" onclick="location.href='index.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span class="nav-label">Compliance</span>
+          <span class="badge">4</span>
+        </button>
+        <button class="nav-item active" onclick="location.href='users.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="nav-label">Users</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-group">
+      <div class="section-header" onclick="toggleOrg(this)">
+        <span class="section-label">Catholic Health</span>
+        <span class="badge">2</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+      <div class="org-content">
+        <button class="nav-item" onclick="location.href='company-details.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+          <span class="nav-label">Company Details</span>
+        </button>
+        <button class="nav-item" onclick="location.href='index.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span class="nav-label">Compliance</span>
+          <span class="badge">2</span>
+        </button>
+        <button class="nav-item" onclick="location.href='users.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="nav-label">Users</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-group">
+      <div class="section-header" onclick="toggleOrg(this)">
+        <span class="section-label">Wallaby Aged Care</span>
+        <span class="badge">1</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+      <div class="org-content">
+        <button class="nav-item" onclick="location.href='company-details.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+          <span class="nav-label">Company Details</span>
+        </button>
+        <button class="nav-item" onclick="location.href='index.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span class="nav-label">Compliance</span>
+          <span class="badge">1</span>
+        </button>
+        <button class="nav-item" onclick="location.href='users.html'">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="nav-label">Users</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="profile-row">
+      <div class="avatar">FL</div>
+      <div class="profile-info">
+        <div class="profile-name">First Name Last Name</div>
+        <div class="profile-email">email@example.com</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+      </svg>
+    </div>
+  </aside>
+
+  <!-- Main layout -->
+  <div class="layout">
+
+    <!-- Desktop sidebar -->
+    <div class="sidebar-wrap">
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="4" fill="#2c66ef"/>
+              <path d="M5 8L12 5L19 8L12 11L5 8Z" fill="white" opacity="0.9"/>
+              <path d="M5 12L12 9L19 12L12 15L5 12Z" fill="white" opacity="0.6"/>
+              <path d="M5 16L12 13L19 16L12 19L5 16Z" fill="white" opacity="0.3"/>
+            </svg>
+          </div>
+          <span class="logo-text">Platypus Plumbing</span>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+            <span class="nav-label">To-do</span>
+            <span class="badge">6</span>
+          </div>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-group">
+          <div class="section-header is-open" onclick="toggleOrg(this)">
+            <span class="section-label">Bolton Clarke</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div class="org-content org-open">
+            <button class="nav-item" onclick="location.href='company-details.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+              <span class="nav-label">Company Details</span>
+            </button>
+            <button class="nav-item" onclick="location.href='index.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span class="nav-label">Compliance</span>
+              <span class="badge">4</span>
+            </button>
+            <button class="nav-item active" onclick="location.href='users.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="nav-label">Users</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-group">
+          <div class="section-header" onclick="toggleOrg(this)">
+            <span class="section-label">Catholic Health</span>
+            <span class="badge">2</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div class="org-content">
+            <button class="nav-item" onclick="location.href='company-details.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+              <span class="nav-label">Company Details</span>
+            </button>
+            <button class="nav-item" onclick="location.href='index.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span class="nav-label">Compliance</span>
+              <span class="badge">2</span>
+            </button>
+            <button class="nav-item" onclick="location.href='users.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="nav-label">Users</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-group">
+          <div class="section-header" onclick="toggleOrg(this)">
+            <span class="section-label">Wallaby Aged Care</span>
+            <span class="badge">1</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div class="org-content">
+            <button class="nav-item" onclick="location.href='company-details.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+              <span class="nav-label">Company Details</span>
+            </button>
+            <button class="nav-item" onclick="location.href='index.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <span class="nav-label">Compliance</span>
+              <span class="badge">1</span>
+            </button>
+            <button class="nav-item" onclick="location.href='users.html'">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="nav-label">Users</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="profile-row">
+          <div class="avatar">FL</div>
+          <div class="profile-info">
+            <div class="profile-name">First Name Last Name</div>
+            <div class="profile-email">email@example.com</div>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+          </svg>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main content -->
+    <div class="main-wrap">
+
+      <!-- Mobile header -->
+      <div class="mob-header">
+        <button class="ham-btn" onclick="openSidebar()" aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+        <div class="mob-header-identity">
+          <div class="user-avatar-header">MW</div>
+          <span class="mob-header-name">Marcus Workman</span>
+        </div>
+        <button class="mob-close-btn" onclick="location.href='users.html'" aria-label="Close">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="main">
+
+        <!-- Desktop page header -->
+        <div class="page-header">
+          <div class="page-header-identity">
+            <div class="user-avatar-page">MW</div>
+            <h1 class="page-title">Marcus Workman</h1>
+          </div>
+          <button class="btn-back" onclick="location.href='users.html'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Users
+          </button>
+        </div>
+
+        <!-- Page content -->
+        <div class="page-content">
+
+          <!-- ── Info banner ── -->
+          <div class="content-section" style="padding-bottom: 16px; gap: 0;">
+            <div class="info-banner">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+              Information you provided will only be shared with Wallaby Aged Care.
+            </div>
+          </div>
+
+          <!-- ── Details ── -->
+          <div class="content-section">
+            <h2 class="section-title">Details</h2>
+
+            <div class="detail-fields">
+
+              <div class="detail-field">
+                <div class="field-label">First Name <span class="req">*</span></div>
+                <div class="field-value" id="val-first-name">
+                  <span class="field-text">Markus</span>
+                  <button class="edit-btn" onclick="startEdit('first-name')" aria-label="Edit first name">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="detail-field">
+                <div class="field-label">Last Name <span class="req">*</span></div>
+                <div class="field-value" id="val-last-name">
+                  <span class="field-text">Workman</span>
+                  <button class="edit-btn" onclick="startEdit('last-name')" aria-label="Edit last name">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="detail-field">
+                <div class="field-label">Email <span class="req">*</span></div>
+                <div class="field-value" id="val-email">
+                  <span class="field-text">workman.markus@platypusplumbing.com.au</span>
+                  <button class="edit-btn" onclick="startEdit('email')" aria-label="Edit email">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── User Type ── -->
+          <div class="content-section">
+            <h2 class="section-title">
+              User Type
+              <button class="edit-btn" aria-label="Edit user type">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
+            </h2>
+
+            <div class="user-type-cards" id="userTypeCards">
+
+              <div class="user-type-card selected" onclick="selectUserType(this)">
+                <div class="user-type-card-header">
+                  <span class="user-type-card-name">Account Owner</span>
+                  <span class="user-type-check">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                      <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="user-type-card-desc">This user owns the account and a primary contact.</div>
+              </div>
+
+              <div class="user-type-card" onclick="selectUserType(this)">
+                <div class="user-type-card-header">
+                  <span class="user-type-card-name">Compliance Manager</span>
+                  <span class="user-type-check">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                      <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+                <div class="user-type-card-desc">Manages all compliance documents on behalf of their contractors.</div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /page-content -->
+      </div><!-- /main -->
+    </div><!-- /main-wrap -->
+  </div><!-- /layout -->
+
+  <script>
+    function openSidebar() {
+      document.getElementById('mobSidebar').classList.add('is-open');
+      document.getElementById('mobOverlay').classList.add('is-visible');
+    }
+    function closeSidebar() {
+      document.getElementById('mobSidebar').classList.remove('is-open');
+      document.getElementById('mobOverlay').classList.remove('is-visible');
+    }
+
+    function toggleOrg(header) {
+      const navGroup = header.parentElement;
+      const content = navGroup.querySelector('.org-content');
+      if (!content) return;
+      const sidebar = header.closest('.sidebar, .mob-sidebar');
+      sidebar.querySelectorAll('.org-content').forEach(c => { if (c !== content) c.classList.remove('org-open'); });
+      sidebar.querySelectorAll('.section-header').forEach(h => { if (h !== header) h.classList.remove('is-open'); });
+      const opening = content.classList.toggle('org-open');
+      header.classList.toggle('is-open', opening);
+    }
+
+    /* ── User type card selection ── */
+    function selectUserType(card) {
+      document.querySelectorAll('.user-type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    }
+
+    /* ── Inline edit ── */
+    const FIELD_CONFIG = {
+      'first-name': { required: true, maxLen: 100, placeholder: 'Enter first name' },
+      'last-name':  { required: true, maxLen: 100, placeholder: 'Enter last name' },
+      'email':      { required: true, maxLen: 200, placeholder: 'Enter email address' },
+    };
+
+    const fieldValues = {};
+    document.querySelectorAll('[id^="val-"]').forEach(el => {
+      const id = el.id.slice(4);
+      fieldValues[id] = (el.querySelector('.field-text') || {}).textContent?.trim() || '';
+    });
+
+    let activeEdit = null;
+
+    function startEdit(id) {
+      if (activeEdit === id) return;
+      if (activeEdit) cancelEdit(activeEdit);
+      activeEdit = id;
+
+      const cfg = FIELD_CONFIG[id];
+      const stored = fieldValues[id] || '';
+      const el = document.getElementById('val-' + id);
+
+      const checkSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+
+      el.innerHTML = `
+        <div class="edit-form">
+          <input type="text" id="input-${id}" class="edit-input"
+            value="${esc(stored)}" placeholder="${esc(cfg.placeholder)}" maxlength="${cfg.maxLen}">
+          <div class="edit-meta">
+            <span class="error-msg" id="err-${id}"></span>
+            <span class="char-count" id="cc-${id}">${stored.length}/${cfg.maxLen} characters</span>
+          </div>
+          <div class="edit-actions">
+            <button class="btn-cancel-inline" onclick="cancelEdit('${id}')">Cancel</button>
+            <button class="btn-save-inline" id="save-${id}" onclick="saveEdit('${id}')">
+              Save ${checkSvg}
+            </button>
+          </div>
+        </div>`;
+
+      const input = document.getElementById('input-' + id);
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+      input.addEventListener('input', () => onInput(id));
+      onInput(id);
+    }
+
+    function onInput(id) {
+      const cfg = FIELD_CONFIG[id];
+      const input = document.getElementById('input-' + id);
+      const val = input.value;
+      document.getElementById('cc-' + id).textContent = val.length + '/' + cfg.maxLen + ' characters';
+      const empty = val.trim() === '';
+      input.classList.toggle('input-error', empty);
+      const errEl = document.getElementById('err-' + id);
+      if (errEl) errEl.textContent = empty ? 'Required' : '';
+      document.getElementById('save-' + id).disabled = empty;
+    }
+
+    function saveEdit(id) {
+      const cfg = FIELD_CONFIG[id];
+      const input = document.getElementById('input-' + id);
+      if (!input || (cfg.required && input.value.trim() === '')) return;
+      fieldValues[id] = input.value.trim();
+      activeEdit = null;
+      renderView(id);
+    }
+
+    function cancelEdit(id) {
+      activeEdit = null;
+      renderView(id);
+    }
+
+    function renderView(id) {
+      const stored = fieldValues[id] || '';
+      const el = document.getElementById('val-' + id);
+      el.className = 'field-value';
+      el.innerHTML = `
+        <span class="field-text">${esc(stored)}</span>
+        <button class="edit-btn" onclick="startEdit('${id}')" aria-label="Edit field">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+        </button>`;
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>

@@ -329,6 +329,7 @@
       box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08);
     }
 
+    .data-table tbody tr { cursor: pointer; }
     .data-table tr:hover td { background: #f4f7fe; }
     .data-table tr:hover td:first-child { background: #f4f7fe; }
 
@@ -516,6 +517,151 @@
       cursor: pointer;
     }
     .btn-save:hover { background: #1d56df; }
+
+    /* ── User detail drawer ── */
+    .user-drawer { width: 540px; }
+
+    .user-drawer-identity {
+      display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;
+    }
+
+    .user-avatar-sq {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: #64748b; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 13px; font-weight: 600;
+    }
+
+    .drawer-user-name {
+      color: #0f172a; font-size: 20px; font-weight: 600;
+      letter-spacing: -0.4px; line-height: 26px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .ud-body {
+      flex: 1; min-height: 0; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 8px;
+      background: #f1f5f9;
+    }
+
+    .ud-section {
+      background: #fff; padding: 24px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+
+    .ud-section-title {
+      color: #0f172a; font-size: 20px; font-weight: 600;
+      letter-spacing: -0.4px; line-height: 26px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .ud-rows { display: flex; flex-direction: column; gap: 16px; }
+
+    .ud-row { display: flex; align-items: flex-start; }
+
+    .ud-label {
+      width: 160px; flex-shrink: 0;
+      color: #334155; font-size: 14px; font-weight: 600;
+      letter-spacing: -0.28px; line-height: 20px;
+      padding-top: 1px;
+    }
+    .ud-label .req { color: #ef4444; font-weight: 600; }
+
+    .ud-value {
+      flex: 1; display: flex; align-items: center; gap: 8px;
+      color: #334155; font-size: 14px; font-weight: 400;
+      letter-spacing: -0.28px; line-height: 20px;
+    }
+
+    /* Reuse .edit-btn, .edit-input, .edit-meta, .error-msg, .char-count,
+       .edit-actions, .btn-cancel-inline, .btn-save-inline from add-user form */
+    .edit-btn {
+      background: none; border: none; cursor: pointer; padding: 0;
+      display: flex; align-items: center; flex-shrink: 0; color: #2c66ef;
+    }
+    .edit-btn:hover { opacity: 0.75; }
+
+    .ud-edit-form { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+
+    .ud-edit-input {
+      width: 100%; padding: 8px 12px;
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      font-family: inherit; font-size: 14px; font-weight: 400;
+      color: #0f172a; letter-spacing: -0.28px; line-height: 20px;
+      outline: none; background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .ud-edit-input:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+    .ud-edit-input.input-error { border-color: #ef4444; }
+    .ud-edit-input.input-error:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+
+    .ud-edit-meta {
+      display: flex; align-items: center;
+      justify-content: space-between; min-height: 16px;
+    }
+    .ud-error-msg {
+      color: #ef4444; font-size: 12px; font-weight: 400;
+      letter-spacing: -0.24px; line-height: 16px;
+    }
+    .ud-char-count {
+      color: #94a3b8; font-size: 12px; font-weight: 400;
+      letter-spacing: -0.24px; line-height: 16px; margin-left: auto;
+    }
+    .ud-edit-actions { display: flex; align-items: center; gap: 8px; }
+
+    .ud-btn-cancel {
+      background: #fff; border: 1px solid #e2e8f0; color: #334155;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 20px;
+      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+    }
+    .ud-btn-cancel:hover { background: #f8fafc; }
+
+    .ud-btn-save {
+      background: #2c66ef; border: none; color: #fff;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 20px;
+      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .ud-btn-save:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+    /* User type cards — side by side */
+    .ud-type-cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+
+    .ud-type-card {
+      border: 1.5px solid #e2e8f0; border-radius: 10px;
+      padding: 14px 16px; cursor: pointer;
+      transition: border-color 0.15s;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .ud-type-card:hover { border-color: #94a3b8; }
+    .ud-type-card.selected { border-color: #0f172a; border-width: 2px; }
+
+    .ud-type-card-header { display: flex; align-items: center; gap: 8px; }
+
+    .ud-type-card-name {
+      font-size: 14px; font-weight: 600;
+      letter-spacing: -0.28px; line-height: 20px; color: #94a3b8;
+    }
+    .ud-type-card.selected .ud-type-card-name { color: #0f172a; }
+
+    .ud-type-check { display: none; flex-shrink: 0; }
+    .ud-type-card.selected .ud-type-check { display: flex; }
+
+    .ud-type-card-desc {
+      font-size: 13px; font-weight: 400;
+      letter-spacing: -0.26px; line-height: 18px; color: #94a3b8;
+    }
+    .ud-type-card.selected .ud-type-card-desc { color: #64748b; }
   </style>
 </head>
 <body>
@@ -654,7 +800,110 @@
   </aside>
 
   <!-- Drawer overlay -->
-  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeAnyDrawer()"></div>
+
+  <!-- User detail drawer (desktop) -->
+  <aside class="drawer user-drawer" id="userDetailDrawer" aria-label="User detail">
+    <div class="drawer-header">
+      <div class="user-drawer-identity">
+        <div class="user-avatar-sq">MW</div>
+        <span class="drawer-user-name">Marcus Workman</span>
+      </div>
+      <button class="drawer-close" onclick="closeUserDrawer()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="ud-body">
+
+      <!-- Details section -->
+      <div class="ud-section">
+        <h2 class="ud-section-title">Details</h2>
+        <div class="ud-rows">
+
+          <div class="ud-row">
+            <div class="ud-label">First Name<span class="req"> *</span></div>
+            <div class="ud-value" id="uval-first-name">
+              <span class="field-text">Markus</span>
+              <button class="edit-btn" onclick="startUEdit('first-name')" aria-label="Edit first name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="ud-row">
+            <div class="ud-label">Last Name<span class="req"> *</span></div>
+            <div class="ud-value" id="uval-last-name">
+              <span class="field-text">Workman</span>
+              <button class="edit-btn" onclick="startUEdit('last-name')" aria-label="Edit last name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="ud-row">
+            <div class="ud-label">Email<span class="req"> *</span></div>
+            <div class="ud-value" id="uval-email">
+              <span class="field-text">workman.markus@platypusplumbing.com.au</span>
+              <button class="edit-btn" onclick="startUEdit('email')" aria-label="Edit email">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- User Type section -->
+      <div class="ud-section">
+        <h2 class="ud-section-title">
+          User Type
+          <button class="edit-btn" aria-label="Edit user type">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+          </button>
+        </h2>
+        <div class="ud-type-cards">
+
+          <div class="ud-type-card selected" onclick="selectUType(this)">
+            <div class="ud-type-card-header">
+              <span class="ud-type-card-name">Account Owner</span>
+              <span class="ud-type-check">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            <div class="ud-type-card-desc">This user owns the account and a primary contact.</div>
+          </div>
+
+          <div class="ud-type-card" onclick="selectUType(this)">
+            <div class="ud-type-card-header">
+              <span class="ud-type-card-name">Compliance Manager</span>
+              <span class="ud-type-check">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            <div class="ud-type-card-desc">Manages all compliance documents on behalf of their contractors.</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </aside>
 
   <!-- Add new user drawer (desktop only) -->
   <aside class="drawer" id="addUserDrawer" aria-label="Add new user">
@@ -892,7 +1141,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr onclick="openUserRow()">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#6366f1;">JS</div>
@@ -907,7 +1156,7 @@
                       </td>
                       <td><span class="activity-text">20 Feb, 9:00AM</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="openUserRow()">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#0ea5e9;">SJ</div>
@@ -922,7 +1171,7 @@
                       </td>
                       <td><span class="activity-text">19 Feb, 3:00PM</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="openUserRow()">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#f59e0b;">MD</div>
@@ -937,7 +1186,7 @@
                       </td>
                       <td><span class="activity-text">10 Feb, 9:00AM</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="openUserRow()">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#10b981;">EC</div>
@@ -952,7 +1201,7 @@
                       </td>
                       <td><span class="activity-text">18 Feb, 2:00PM</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="openUserRow()">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#ef4444;">TW</div>
@@ -967,7 +1216,7 @@
                       </td>
                       <td><span class="activity-text">15 Feb, 5:00PM</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="openUserRow()">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#8b5cf6;">LC</div>
@@ -982,7 +1231,7 @@
                       </td>
                       <td><span class="activity-dash">-</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="openUserRow()">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#14b8a6;">RK</div>
@@ -1027,6 +1276,131 @@
       sidebar.querySelectorAll('.section-header').forEach(h => { if (h !== header) h.classList.remove('is-open'); });
       const opening = content.classList.toggle('org-open');
       header.classList.toggle('is-open', opening);
+    }
+
+    /* ── User row click ── */
+    function openUserRow() {
+      if (window.innerWidth < 768) {
+        location.href = 'user-detail.html';
+      } else {
+        openUserDrawer();
+      }
+    }
+
+    function openUserDrawer() {
+      // Close add-user drawer if open
+      document.getElementById('addUserDrawer').classList.remove('is-open');
+      document.getElementById('userDetailDrawer').classList.add('is-open');
+      document.getElementById('drawerOverlay').classList.add('is-visible');
+    }
+
+    function closeUserDrawer() {
+      document.getElementById('userDetailDrawer').classList.remove('is-open');
+      document.getElementById('drawerOverlay').classList.remove('is-visible');
+      if (uActiveEdit) cancelUEdit(uActiveEdit);
+    }
+
+    function closeAnyDrawer() {
+      closeDrawer();
+      closeUserDrawer();
+    }
+
+    /* ── User type card selection ── */
+    function selectUType(card) {
+      document.querySelectorAll('#userDetailDrawer .ud-type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    }
+
+    /* ── Inline edit for user detail drawer ── */
+    const U_FIELD_CONFIG = {
+      'first-name': { required: true, maxLen: 100, placeholder: 'Enter first name' },
+      'last-name':  { required: true, maxLen: 100, placeholder: 'Enter last name' },
+      'email':      { required: true, maxLen: 200, placeholder: 'Enter email address' },
+    };
+
+    const uFieldValues = {
+      'first-name': 'Markus',
+      'last-name':  'Workman',
+      'email':      'workman.markus@platypusplumbing.com.au',
+    };
+
+    let uActiveEdit = null;
+
+    function startUEdit(id) {
+      if (uActiveEdit === id) return;
+      if (uActiveEdit) cancelUEdit(uActiveEdit);
+      uActiveEdit = id;
+
+      const cfg = U_FIELD_CONFIG[id];
+      const stored = uFieldValues[id] || '';
+      const el = document.getElementById('uval-' + id);
+
+      const checkSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+
+      el.innerHTML = `
+        <div class="ud-edit-form">
+          <input type="text" id="uinput-${id}" class="ud-edit-input"
+            value="${uEsc(stored)}" placeholder="${uEsc(cfg.placeholder)}" maxlength="${cfg.maxLen}">
+          <div class="ud-edit-meta">
+            <span class="ud-error-msg" id="uerr-${id}"></span>
+            <span class="ud-char-count" id="ucc-${id}">${stored.length}/${cfg.maxLen} characters</span>
+          </div>
+          <div class="ud-edit-actions">
+            <button class="ud-btn-cancel" onclick="cancelUEdit('${id}')">Cancel</button>
+            <button class="ud-btn-save" id="usave-${id}" onclick="saveUEdit('${id}')">
+              Save ${checkSvg}
+            </button>
+          </div>
+        </div>`;
+
+      const input = document.getElementById('uinput-' + id);
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+      input.addEventListener('input', () => onUInput(id));
+      onUInput(id);
+    }
+
+    function onUInput(id) {
+      const cfg = U_FIELD_CONFIG[id];
+      const input = document.getElementById('uinput-' + id);
+      const val = input.value;
+      document.getElementById('ucc-' + id).textContent = val.length + '/' + cfg.maxLen + ' characters';
+      const empty = val.trim() === '';
+      input.classList.toggle('input-error', empty);
+      const errEl = document.getElementById('uerr-' + id);
+      if (errEl) errEl.textContent = empty ? 'Required' : '';
+      document.getElementById('usave-' + id).disabled = empty;
+    }
+
+    function saveUEdit(id) {
+      const cfg = U_FIELD_CONFIG[id];
+      const input = document.getElementById('uinput-' + id);
+      if (!input || (cfg.required && input.value.trim() === '')) return;
+      uFieldValues[id] = input.value.trim();
+      uActiveEdit = null;
+      renderUView(id);
+    }
+
+    function cancelUEdit(id) {
+      uActiveEdit = null;
+      renderUView(id);
+    }
+
+    function renderUView(id) {
+      const stored = uFieldValues[id] || '';
+      const el = document.getElementById('uval-' + id);
+      el.className = 'ud-value';
+      el.innerHTML = `
+        <span class="field-text">${uEsc(stored)}</span>
+        <button class="edit-btn" onclick="startUEdit('${id}')" aria-label="Edit field">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+        </button>`;
+    }
+
+    function uEsc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
     function addNewUser() {
