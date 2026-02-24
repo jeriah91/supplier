@@ -284,9 +284,68 @@
       width: 72px; height: 72px;
       color: #10b981;
     }
+
+    /* ── Prototype Nav Bar ── */
+    .proto-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 9999;
+      height: 40px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .proto-nav-library {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .proto-nav-library:hover { opacity: 0.75; }
+    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .proto-nav-title {
+      flex: 1;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+    }
+    .proto-nav-updated {
+      flex: 1;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+      text-align: right;
+      white-space: nowrap;
+    }
+    body { padding-top: 40px; }
   </style>
 </head>
 <body>
+  <!-- Prototype nav bar -->
+  <nav class="proto-nav">
+    <a href="index.html" class="proto-nav-library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-title">Prototype / Portal</span>
+    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+  </nav>
 
   <!-- Mobile overlay backdrop -->
   <div class="mob-overlay" id="mobOverlay" onclick="closeSidebar()"></div>
@@ -699,6 +758,15 @@
       const opening = content.classList.toggle('org-open');
       header.classList.toggle('is-open', opening);
     }
+  </script>
+  <script>
+    (function() {
+      var d = new Date(document.lastModified);
+      var pad = function(n) { return String(n).padStart(2, '0'); };
+      document.getElementById('protoLastUpdated').textContent =
+        'Last updated ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    })();
   </script>
 </body>
 </html>
