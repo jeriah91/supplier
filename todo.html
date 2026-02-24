@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Company Details</title>
+  <title>To-do</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -95,11 +95,11 @@
       display: flex; align-items: center; gap: 16px;
       padding: 8px 16px; border-radius: 8px;
       cursor: pointer; width: 100%; text-align: left;
-      text-decoration: none;
       background: none; border: none; font-family: inherit;
     }
     .nav-item:hover { background: rgba(255,255,255,0.06); }
-    .nav-item.active { background: rgba(44,102,239,0.12); }
+    .nav-item.active { background: #334155; }
+    .nav-item.active:hover { background: #3d4f6a; }
 
     .nav-icon { width: 24px; height: 24px; flex-shrink: 0; color: #fff; }
 
@@ -217,304 +217,53 @@
       letter-spacing: -1.44px; line-height: 40px;
     }
 
-    /* ── Buttons ── */
-    .btn-primary {
-      background: #2c66ef; color: #fff;
-      font-size: 14px; font-weight: 500;
-      letter-spacing: -0.56px; line-height: 24px;
-      padding: 4px 12px; border-radius: 8px;
-      border: none; cursor: pointer;
-      display: flex; align-items: center; gap: 10px;
-      flex-shrink: 0; white-space: nowrap;
-    }
-
-    /* ── Company Details page content ── */
-    .page-content {
-      flex: 1;
-      min-height: 0;
+    /* ── To-do content ── */
+    .todo-content {
+      flex: 1; min-height: 0;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding-bottom: 24px;
-    }
-
-    .content-section {
-      background: #fff;
       padding: 24px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
     }
 
-    /* ── Section title ── */
-    .section-title {
-      color: #0f172a;
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: -0.4px;
-      line-height: 26px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* ── Info banner (yellow) ── */
-    .info-banner {
-      background: #fefce8;
+    .todo-card {
+      background: #fff;
       border-radius: 8px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #78350f;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      flex-shrink: 0;
-    }
-    .info-banner svg { flex-shrink: 0; color: #92400e; }
-
-    /* ── Entity card ── */
-    .entity-card {
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 16px;
     }
 
-    .entity-row {
-      display: flex;
-      align-items: center;
-      padding: 14px 16px;
-      gap: 16px;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .entity-row:last-child { border-bottom: none; }
-
-    .entity-label {
-      width: 120px;
-      flex-shrink: 0;
-      color: #64748b;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-
-    .entity-value {
-      color: #0f172a;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-
-    .entity-note {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 12px 16px;
-      color: #64748b;
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: -0.26px;
-      line-height: 18px;
-      border-top: 1px solid #e2e8f0;
-    }
-    .entity-note svg { flex-shrink: 0; margin-top: 1px; }
-
-    /* ── Detail rows (Other details, Key Contact) ── */
-    .detail-rows {
+    .todo-list {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .detail-row {
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .detail-label {
-      width: 180px;
-      flex-shrink: 0;
-      color: #334155;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-
-    .detail-label .req { color: #ef4444; }
-
-    .detail-value {
+    .todo-item {
       display: flex;
       align-items: center;
-      gap: 6px;
-      color: #0f172a;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-
-    .detail-value.unset {
-      color: #94a3b8;
-      font-weight: 400;
-    }
-
-    .edit-btn {
-      background: none;
-      border: none;
+      gap: 16px;
       cursor: pointer;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
+      padding: 4px 0;
+      border-radius: 4px;
+      transition: opacity 0.15s;
+    }
+    .todo-item:hover { opacity: 0.75; }
+
+    .todo-item-label {
+      flex: 1;
+      color: #334155;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.32px;
+      line-height: 26px;
+    }
+
+    .todo-arrow {
+      width: 24px; height: 24px; flex-shrink: 0;
       color: #2c66ef;
     }
-    .edit-btn:hover { opacity: 0.75; }
 
-    /* ── Address sections ── */
-    .address-type {
-      color: #64748b;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-
-    .address-rows {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .address-row {
-      display: flex;
-      align-items: center;
-    }
-
-    .address-label {
-      width: 160px;
-      flex-shrink: 0;
-      color: #334155;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-
-    .address-value {
-      color: #0f172a;
-      font-size: 14px;
-      font-weight: 400;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-
-    /* ── Inline edit form ── */
-    .edit-form {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .edit-input {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 400;
-      color: #0f172a;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      outline: none;
-      background: #fff;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .edit-input:focus {
-      border-color: #2c66ef;
-      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
-    }
-    .edit-input.input-error { border-color: #ef4444; }
-    .edit-input.input-error:focus {
-      border-color: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
-    }
-
-    .edit-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 16px;
-    }
-
-    .error-msg {
-      color: #ef4444;
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: -0.24px;
-      line-height: 16px;
-    }
-
-    .char-count {
-      color: #94a3b8;
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: -0.24px;
-      line-height: 16px;
-      margin-left: auto;
-    }
-
-    .edit-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-
-    .btn-cancel-inline {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      color: #334155;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      padding: 5px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .btn-cancel-inline:hover { background: #f8fafc; }
-
-    .btn-save-inline {
-      background: #2c66ef;
-      border: none;
-      color: #fff;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      padding: 5px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-save-inline:disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
+    .todo-divider {
+      height: 1px;
+      background: #e2e8f0;
     }
   </style>
 </head>
@@ -542,6 +291,18 @@
       </button>
     </div>
 
+    <div class="nav-group">
+      <button class="nav-item active" onclick="location.href='todo.html'">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+        </svg>
+        <span class="nav-label">To-do</span>
+        <span class="badge">6</span>
+      </button>
+    </div>
+
+    <div class="nav-divider"></div>
+
     <!-- Bolton Clarke (expanded) -->
     <div class="nav-group">
       <div class="section-header is-open" onclick="toggleOrg(this)">
@@ -552,7 +313,7 @@
         </svg>
       </div>
       <div class="org-content org-open">
-        <button class="nav-item active" onclick="location.href='company-details.html'">
+        <button class="nav-item" onclick="location.href='company-details.html'">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
           </svg>
@@ -673,7 +434,7 @@
         </div>
 
         <div class="nav-group">
-          <button class="nav-item" onclick="location.href='todo.html'">
+          <button class="nav-item active">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
             </svg>
@@ -693,7 +454,7 @@
             </svg>
           </div>
           <div class="org-content org-open">
-            <button class="nav-item active" onclick="location.href='company-details.html'">
+            <button class="nav-item" onclick="location.href='company-details.html'">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
               </svg>
@@ -706,7 +467,7 @@
               <span class="nav-label">Compliance</span>
               <span class="badge">4</span>
             </button>
-            <button class="nav-item">
+            <button class="nav-item" onclick="location.href='users.html'">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -739,7 +500,7 @@
               <span class="nav-label">Compliance</span>
               <span class="badge">2</span>
             </button>
-            <button class="nav-item">
+            <button class="nav-item" onclick="location.href='users.html'">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -772,7 +533,7 @@
               <span class="nav-label">Compliance</span>
               <span class="badge">1</span>
             </button>
-            <button class="nav-item">
+            <button class="nav-item" onclick="location.href='users.html'">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -806,244 +567,73 @@
             <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
-        <span class="mob-header-title">Company Details</span>
+        <span class="mob-header-title">To-do</span>
       </div>
 
       <div class="main">
 
         <!-- Desktop page header -->
         <div class="page-header">
-          <h1 class="page-title">Company Details</h1>
+          <h1 class="page-title">To-do</h1>
         </div>
 
-        <!-- Page content -->
-        <div class="page-content">
+        <!-- To-do list -->
+        <div class="todo-content">
+          <div class="todo-card">
+            <div class="todo-list">
 
-          <!-- ── Business Details ── -->
-          <div class="content-section">
-            <h2 class="section-title">Business Details</h2>
-
-            <div class="info-banner">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"/>
-              </svg>
-              Information you provided will only be shared with Wallaby Aged Care.
-            </div>
-
-            <div class="entity-card">
-              <div class="entity-row">
-                <div class="entity-label">Entity Name</div>
-                <div class="entity-value">Platypus Plumbing</div>
-              </div>
-              <div class="entity-row">
-                <div class="entity-label">Entity Type</div>
-                <div class="entity-value">Australian Private Company</div>
-              </div>
-              <div class="entity-row">
-                <div class="entity-label">ABN</div>
-                <div class="entity-value">218471922828</div>
-              </div>
-              <div class="entity-note">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2c66ef" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path stroke-linecap="round" d="M12 8v4M12 16h.01"/>
+              <div class="todo-item">
+                <span class="todo-item-label">Add company details</span>
+                <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
                 </svg>
-                Contact the organisation if you need to update the Legal Name and ABN number.
               </div>
-            </div>
-          </div>
 
-          <!-- ── Other details ── -->
-          <div class="content-section">
-            <h2 class="section-title">Other details</h2>
+              <div class="todo-divider"></div>
 
-            <div class="detail-rows">
-              <div class="detail-row">
-                <div class="detail-label">Trading name<span class="req">*</span></div>
-                <div class="detail-value" id="val-trading-name">
-                  <span class="field-text">Platypus Plumbing</span>
-                  <button class="edit-btn" onclick="startEdit('trading-name')" aria-label="Edit trading name">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-label">Industry type</div>
-                <div class="detail-value unset" id="val-industry-type">
-                  <span class="field-text">Not selected</span>
-                  <button class="edit-btn" onclick="startEdit('industry-type')" aria-label="Edit industry type">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-label">Timezone</div>
-                <div class="detail-value unset" id="val-timezone">
-                  <span class="field-text">Not selected</span>
-                  <button class="edit-btn" onclick="startEdit('timezone')" aria-label="Edit timezone">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-label">State</div>
-                <div class="detail-value unset" id="val-detail-state">
-                  <span class="field-text">Not selected</span>
-                  <button class="edit-btn" onclick="startEdit('detail-state')" aria-label="Edit state">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-label">Website</div>
-                <div class="detail-value unset" id="val-website">
-                  <span class="field-text">N/A</span>
-                  <button class="edit-btn" onclick="startEdit('website')" aria-label="Edit website">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ── Business Address ── -->
-          <div class="content-section">
-            <h2 class="section-title">
-              Business Address
-              <button class="edit-btn" aria-label="Edit business address">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              <div class="todo-item">
+                <span class="todo-item-label">Add employees</span>
+                <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
                 </svg>
-              </button>
-            </h2>
-
-            <div>
-              <div class="address-type" style="margin-bottom: 14px;">Residential/Office</div>
-              <div class="address-rows">
-                <div class="address-row">
-                  <div class="address-label">Address</div>
-                  <div class="address-value">15 Collingwood Road</div>
-                </div>
-                <div class="address-row">
-                  <div class="address-label">City/Suburb</div>
-                  <div class="address-value">Collingwood</div>
-                </div>
-                <div class="address-row">
-                  <div class="address-label">Postcode</div>
-                  <div class="address-value">3066</div>
-                </div>
-                <div class="address-row">
-                  <div class="address-label">State</div>
-                  <div class="address-value">Victoria</div>
-                </div>
               </div>
-            </div>
-          </div>
 
-          <!-- ── Mailing Address ── -->
-          <div class="content-section">
-            <h2 class="section-title">
-              Mailing Address
-              <button class="edit-btn" aria-label="Edit mailing address">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              <div class="todo-divider"></div>
+
+              <div class="todo-item">
+                <span class="todo-item-label">Add company requirements</span>
+                <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
                 </svg>
-              </button>
-            </h2>
-
-            <div>
-              <div class="address-type" style="margin-bottom: 14px;">Residential/Office</div>
-              <div class="address-rows">
-                <div class="address-row">
-                  <div class="address-label">Address</div>
-                  <div class="address-value">23 Wilson Avenue</div>
-                </div>
-                <div class="address-row">
-                  <div class="address-label">City/Suburb</div>
-                  <div class="address-value">Brunswick</div>
-                </div>
-                <div class="address-row">
-                  <div class="address-label">Postcode</div>
-                  <div class="address-value">3066</div>
-                </div>
-                <div class="address-row">
-                  <div class="address-label">State</div>
-                  <div class="address-value">Victoria</div>
-                </div>
               </div>
+
+              <div class="todo-divider"></div>
+
+              <div class="todo-item">
+                <span class="todo-item-label">Required: Public Liability</span>
+                <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                </svg>
+              </div>
+
+              <div class="todo-divider"></div>
+
+              <div class="todo-item">
+                <span class="todo-item-label">Add Markus Workman's requirements</span>
+                <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                </svg>
+              </div>
+
             </div>
           </div>
+        </div>
 
-          <!-- ── Key Contact ── -->
-          <div class="content-section">
-            <h2 class="section-title">Key Contact</h2>
-
-            <div class="detail-rows">
-              <div class="detail-row">
-                <div class="detail-label">First name<span class="req">*</span></div>
-                <div class="detail-value" id="val-first-name">
-                  <span class="field-text">John</span>
-                  <button class="edit-btn" onclick="startEdit('first-name')" aria-label="Edit first name">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-label">Last name<span class="req">*</span></div>
-                <div class="detail-value" id="val-last-name">
-                  <span class="field-text">Smith</span>
-                  <button class="edit-btn" onclick="startEdit('last-name')" aria-label="Edit last name">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-label">Email<span class="req">*</span></div>
-                <div class="detail-value" id="val-email">
-                  <span class="field-text">john@platypusplumbing.com.au</span>
-                  <button class="edit-btn" onclick="startEdit('email')" aria-label="Edit email">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="detail-row">
-                <div class="detail-label">Phone<span class="req">*</span></div>
-                <div class="detail-value" id="val-phone">
-                  <span class="field-text">0401111111</span>
-                  <button class="edit-btn" onclick="startEdit('phone')" aria-label="Edit phone">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /page-content -->
-      </div><!-- /main -->
-    </div><!-- /main-wrap -->
-  </div><!-- /layout -->
+      </div>
+    </div>
+  </div>
 
   <script>
-    /* ── Sidebar ── */
     function openSidebar() {
       document.getElementById('mobSidebar').classList.add('is-open');
       document.getElementById('mobOverlay').classList.add('is-visible');
@@ -1058,116 +648,10 @@
       const content = navGroup.querySelector('.org-content');
       if (!content) return;
       const sidebar = header.closest('.sidebar, .mob-sidebar');
-      // Accordion: close all others in this sidebar
       sidebar.querySelectorAll('.org-content').forEach(c => { if (c !== content) c.classList.remove('org-open'); });
       sidebar.querySelectorAll('.section-header').forEach(h => { if (h !== header) h.classList.remove('is-open'); });
       const opening = content.classList.toggle('org-open');
       header.classList.toggle('is-open', opening);
-    }
-
-    /* ── Inline edit ── */
-    const FIELD_CONFIG = {
-      'trading-name':  { required: true,  maxLen: 200, placeholder: 'e.g. Platypus Plumbing Pty Ltd', empty: null },
-      'industry-type': { required: false, maxLen: 200, placeholder: 'Enter industry type',            empty: 'Not selected' },
-      'timezone':      { required: false, maxLen: 200, placeholder: 'Enter timezone',                 empty: 'Not selected' },
-      'detail-state':  { required: false, maxLen: 200, placeholder: 'Enter state',                    empty: 'Not selected' },
-      'website':       { required: false, maxLen: 200, placeholder: 'Enter website URL',              empty: 'N/A' },
-      'first-name':    { required: true,  maxLen: 200, placeholder: 'Enter first name',               empty: null },
-      'last-name':     { required: true,  maxLen: 200, placeholder: 'Enter last name',                empty: null },
-      'email':         { required: true,  maxLen: 200, placeholder: 'Enter email address',            empty: null },
-      'phone':         { required: true,  maxLen:  20, placeholder: 'Enter phone number',             empty: null },
-    };
-
-    // Seed values from DOM on load
-    const fieldValues = {};
-    document.querySelectorAll('[id^="val-"]').forEach(el => {
-      const id = el.id.slice(4);
-      const cfg = FIELD_CONFIG[id];
-      const text = (el.querySelector('.field-text') || {}).textContent || '';
-      fieldValues[id] = (cfg && cfg.empty && text.trim() === cfg.empty) ? '' : text.trim();
-    });
-
-    let activeEdit = null;
-
-    function startEdit(id) {
-      if (activeEdit === id) return;
-      if (activeEdit) cancelEdit(activeEdit);
-      activeEdit = id;
-
-      const cfg = FIELD_CONFIG[id];
-      const stored = fieldValues[id] !== undefined ? fieldValues[id] : '';
-      const el = document.getElementById('val-' + id);
-
-      const pencilSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
-
-      el.innerHTML = `
-        <div class="edit-form">
-          <input type="text" id="input-${id}" class="edit-input"
-            value="${esc(stored)}" placeholder="${esc(cfg.placeholder)}" maxlength="${cfg.maxLen}">
-          <div class="edit-meta">
-            ${cfg.required ? `<span class="error-msg" id="err-${id}"></span>` : '<span></span>'}
-            <span class="char-count" id="cc-${id}">${stored.length}/${cfg.maxLen} characters</span>
-          </div>
-          <div class="edit-actions">
-            <button class="btn-cancel-inline" onclick="cancelEdit('${id}')">Cancel</button>
-            <button class="btn-save-inline" id="save-${id}" onclick="saveEdit('${id}')">
-              Save ${pencilSvg}
-            </button>
-          </div>
-        </div>`;
-
-      const input = document.getElementById('input-' + id);
-      input.focus();
-      input.setSelectionRange(input.value.length, input.value.length);
-      input.addEventListener('input', () => onInput(id));
-      onInput(id); // run initial validation
-    }
-
-    function onInput(id) {
-      const cfg = FIELD_CONFIG[id];
-      const input = document.getElementById('input-' + id);
-      const val = input.value;
-      document.getElementById('cc-' + id).textContent = val.length + '/' + cfg.maxLen + ' characters';
-      if (!cfg.required) return;
-      const empty = val.trim() === '';
-      input.classList.toggle('input-error', empty);
-      const errEl = document.getElementById('err-' + id);
-      if (errEl) errEl.textContent = empty ? 'Required' : '';
-      document.getElementById('save-' + id).disabled = empty;
-    }
-
-    function saveEdit(id) {
-      const cfg = FIELD_CONFIG[id];
-      const input = document.getElementById('input-' + id);
-      if (!input || (cfg.required && input.value.trim() === '')) return;
-      fieldValues[id] = input.value.trim();
-      activeEdit = null;
-      renderView(id);
-    }
-
-    function cancelEdit(id) {
-      activeEdit = null;
-      renderView(id);
-    }
-
-    function renderView(id) {
-      const cfg = FIELD_CONFIG[id];
-      const stored = fieldValues[id];
-      const isEmpty = stored === '' || stored === undefined || stored === null;
-      const display = isEmpty ? (cfg.empty || '') : stored;
-      const el = document.getElementById('val-' + id);
-      el.className = 'detail-value' + (isEmpty ? ' unset' : '');
-      el.innerHTML = `
-        <span class="field-text">${esc(display)}</span>
-        <button class="edit-btn" onclick="startEdit('${id}')" aria-label="Edit field">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-          </svg>
-        </button>`;
-    }
-
-    function esc(s) {
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
   </script>
 </body>
