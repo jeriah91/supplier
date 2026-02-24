@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prototype Library – Zipline</title>
+  <title>Prototypes – Zipline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -92,6 +92,21 @@
       text-align: center;
     }
 
+    /* ── Design System link ── */
+    .design-system-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #334155;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.32px;
+      line-height: 26px;
+    }
+    .design-system-link:hover { opacity: 0.7; }
+    .design-system-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+
     /* ── Mobile ── */
     @media (max-width: 767px) {
       .page { padding: 24px; gap: 24px; }
@@ -111,7 +126,7 @@
     </div>
 
     <!-- Heading -->
-    <h1 class="page-heading">Prototype Library</h1>
+    <h1 class="page-heading">Prototypes</h1>
 
     <!-- Cards grid -->
     <div class="grid">
@@ -144,6 +159,15 @@
       </a>
 
     </div>
+
+    <!-- Design System link -->
+    <a class="design-system-link" href="https://www.figma.com/design/nFB2XGFurKqBMJSAeMZXKc/2501---Supplier?node-id=6023-1587&m=dev" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+      Design System
+    </a>
+
   </div>
 
   <script>
