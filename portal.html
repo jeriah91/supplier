@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Users</title>
+  <title>Compliance Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -98,7 +98,6 @@
       background: none; border: none; font-family: inherit;
     }
     .nav-item:hover { background: rgba(255,255,255,0.06); }
-    .nav-item.active { background: rgba(44,102,239,0.12); }
 
     .nav-icon { width: 24px; height: 24px; flex-shrink: 0; color: #fff; }
 
@@ -226,6 +225,14 @@
       display: flex; align-items: center; gap: 10px;
       flex-shrink: 0; white-space: nowrap;
     }
+    .btn-outline {
+      border: 1px solid #2c66ef; color: #2c66ef;
+      background: #fff;
+      font-size: 14px; font-weight: 500;
+      letter-spacing: -0.56px; line-height: 24px;
+      padding: 4px 12px; border-radius: 8px;
+      cursor: pointer; flex-shrink: 0; white-space: nowrap;
+    }
 
     /* ── Status pills ── */
     .status-pill {
@@ -236,16 +243,31 @@
       width: fit-content;
     }
     .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .status-active { background: #a7f3d0; color: #059669; }
-    .status-active .dot { background: #059669; }
-    .status-inactive { background: #f1f5f9; color: #64748b; }
-    .status-inactive .dot { background: #64748b; }
+    .status-approved { background: #a7f3d0; color: #059669; }
+    .status-approved .dot { background: #059669; }
+    .status-in-review { background: #bfdbfe; color: #2563eb; }
+    .status-in-review .dot { background: #2563eb; }
+
+    /* ── Summary section ── */
+    .summary-section { flex-shrink: 0; }
+    .summary-card {
+      background: #fff;
+      padding: 24px;
+      display: flex; align-items: center; gap: 32px;
+      height: 96px;
+    }
+    .summary-info { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .summary-title {
+      color: #0f172a; font-size: 16px; font-weight: 600;
+      letter-spacing: -0.32px; line-height: 20px;
+    }
 
     /* ── Table section ── */
     .table-section {
       flex: 1; min-height: 0;
       display: flex; flex-direction: column;
       overflow: hidden;
+      padding-top: 24px; /* gap from summary card */
     }
     .table-wrap {
       flex: 1; min-height: 0;
@@ -261,7 +283,7 @@
     .table-toolbar-title {
       color: #0f172a; font-size: 16px; font-weight: 600;
       letter-spacing: -0.32px; line-height: 26px;
-      flex: 1;
+      flex-shrink: 0; width: 180px;
     }
     .filter-select {
       display: flex; align-items: center; gap: 8px;
@@ -292,9 +314,10 @@
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      min-width: 600px;
+      min-width: 520px;
     }
 
+    /* Header row — sticky top */
     .data-table th {
       background: #f1f5f9;
       color: #64748b;
@@ -309,6 +332,7 @@
       border-bottom: 1px solid #e2e8f0;
     }
 
+    /* Data cells */
     .data-table td {
       padding: 16px;
       vertical-align: middle;
@@ -317,9 +341,11 @@
     }
     .data-table tbody tr:last-child td { border-bottom: none; }
 
+    /* Column separators */
     .data-table th + th,
     .data-table td + td { border-left: 1px solid #e2e8f0; }
 
+    /* Sticky first column (Name) */
     .data-table th:first-child {
       position: sticky; left: 0; z-index: 3;
       box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08);
@@ -330,28 +356,35 @@
       box-shadow: 2px 0 4px -2px rgba(0,0,0,0.08);
     }
 
-    .data-table tbody tr { cursor: pointer; }
+    /* Row hover */
     .data-table tr:hover td { background: #f4f7fe; }
     .data-table tr:hover td:first-child { background: #f4f7fe; }
 
     /* ── Table cell content ── */
-    .user-cell {
+    .name-cell {
       display: flex; align-items: center;
-      gap: 10px; white-space: nowrap;
+      gap: 8px; white-space: nowrap;
     }
-    .user-avatar {
-      width: 32px; height: 32px; border-radius: 50%;
+    .compliance-icon {
+      width: 24px; height: 24px; border-radius: 4px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; color: #fff;
-      flex-shrink: 0;
+      flex-shrink: 0; padding: 2px;
     }
-    .user-name {
+    .compliance-icon.non-compliant { background: #fecaca; }
+    .compliance-icon.compliant { background: #a7f3d0; }
+
+    .name-text {
       color: #0f172a; font-size: 16px; font-weight: 600;
       letter-spacing: -0.32px; line-height: 20px; white-space: nowrap;
     }
-    .role-text {
-      color: #334155; font-size: 16px; font-weight: 400;
-      letter-spacing: -0.32px; line-height: 20px; white-space: nowrap;
+    .non-compliant-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 6px; background: #fecaca; border-radius: 12px;
+      white-space: nowrap;
+    }
+    .non-compliant-badge span {
+      color: #dc2626; font-size: 12px; font-weight: 600;
+      letter-spacing: -0.24px; line-height: 16px;
     }
     .activity-text {
       color: #0f172a; font-size: 16px; font-weight: 400;
@@ -362,307 +395,133 @@
       letter-spacing: -0.32px; line-height: 20px;
     }
 
-    /* ── Drawer overlay ── */
-    .drawer-overlay {
+    /* ── Add Person Drawer ── */
+    .ap-overlay {
       display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
       z-index: 200;
     }
-    .drawer-overlay.is-visible { display: block; }
+    .ap-overlay.is-visible { display: block; }
 
-    /* ── Drawer panel ── */
-    .drawer {
+    .ap-drawer {
       position: fixed;
       top: 0; right: 0; bottom: 0;
-      width: 440px;
-      max-width: 100%;
+      width: 440px; max-width: 100vw;
       background: #fff;
       z-index: 201;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       transform: translateX(100%);
-      transition: transform 0.3s ease;
+      transition: transform 0.25s ease;
       box-shadow: -4px 0 24px rgba(0,0,0,0.12);
     }
-    .drawer.is-open { transform: translateX(0); }
+    .ap-drawer.is-open { transform: translateX(0); }
+    @media (max-width: 767px) { .ap-drawer { width: 100%; } }
 
-    .drawer-header {
+    .ap-header {
       display: flex; align-items: center;
-      padding: 24px;
+      padding: 28px 32px;
       border-bottom: 1px solid #e2e8f0;
-      flex-shrink: 0;
+      flex-shrink: 0; background: #fff;
     }
-    .drawer-title {
+    .ap-title {
       flex: 1;
+      font-size: 28px; font-weight: 600;
+      letter-spacing: -0.56px; line-height: 34px;
       color: #0f172a;
-      font-size: 20px;
-      font-weight: 600;
-      letter-spacing: -0.4px;
-      line-height: 26px;
     }
-    .drawer-close {
+    .ap-close {
       background: none; border: none; cursor: pointer;
       color: #64748b; padding: 4px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 6px;
+      display: flex; align-items: center;
     }
-    .drawer-close:hover { background: #f1f5f9; color: #334155; }
+    .ap-close:hover { color: #0f172a; }
 
-    .drawer-body {
-      flex: 1; min-height: 0;
-      overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+    .ap-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
 
-    .drawer-footer {
-      padding: 16px 24px;
-      border-top: 1px solid #e2e8f0;
-      display: flex; align-items: center; gap: 12px;
-      justify-content: flex-end;
-      flex-shrink: 0;
-    }
-
-    /* ── Form fields ── */
-    .form-field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .form-label {
-      color: #334155;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-    }
-    .form-label .req { color: #ef4444; }
-
-    .form-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 400;
-      color: #0f172a;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      outline: none;
-      background: #fff;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .form-input:focus {
-      border-color: #2c66ef;
-      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
-    }
-    .form-input::placeholder { color: #94a3b8; }
-
-    .form-select {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 400;
-      color: #0f172a;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      outline: none;
-      background: #fff;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 40px;
-      cursor: pointer;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .form-select:focus {
-      border-color: #2c66ef;
-      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
-    }
-
-    .btn-cancel {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      color: #334155;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      padding: 9px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .btn-cancel:hover { background: #f8fafc; }
-
-    .btn-save {
-      background: #2c66ef;
-      border: none;
-      color: #fff;
-      font-family: inherit;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: -0.28px;
-      line-height: 20px;
-      padding: 9px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .btn-save:hover { background: #1d56df; }
-
-    /* ── User detail drawer ── */
-    .user-drawer { width: 440px; }
-
-    .user-drawer-identity {
-      display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;
-    }
-
-    .user-avatar-sq {
-      width: 40px; height: 40px; border-radius: 8px;
-      background: #64748b; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 13px; font-weight: 600;
-    }
-
-    .drawer-user-name {
-      color: #0f172a; font-size: 20px; font-weight: 600;
-      letter-spacing: -0.4px; line-height: 26px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    .ud-body {
-      flex: 1; min-height: 0; overflow-y: auto;
-      display: flex; flex-direction: column; gap: 8px;
-      background: #f1f5f9;
-    }
-
-    .ud-section {
-      background: #fff; padding: 24px;
+    .ap-section {
+      padding: 28px 32px;
       display: flex; flex-direction: column; gap: 20px;
+      background: #fff;
     }
-
-    .ud-section-title {
-      color: #0f172a; font-size: 20px; font-weight: 600;
-      letter-spacing: -0.4px; line-height: 26px;
-      display: flex; align-items: center; gap: 8px;
+    .ap-section.ap-section-gray {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      flex: 1;
     }
-
-    .ud-rows { display: flex; flex-direction: column; gap: 16px; }
-
-    .ud-row { display: flex; align-items: flex-start; }
-
-    .ud-label {
-      width: 160px; flex-shrink: 0;
-      color: #334155; font-size: 14px; font-weight: 600;
-      letter-spacing: -0.28px; line-height: 20px;
-      padding-top: 1px;
+    .ap-section-head { display: flex; flex-direction: column; gap: 4px; }
+    .ap-section-title {
+      font-size: 20px; font-weight: 600;
+      letter-spacing: -0.4px; line-height: 26px; color: #0f172a;
     }
-    .ud-label .req { color: #ef4444; font-weight: 600; }
+    .ap-section-sub { font-size: 14px; color: #64748b; line-height: 20px; }
 
-    .ud-value {
-      flex: 1; display: flex; align-items: center; gap: 8px;
-      color: #334155; font-size: 14px; font-weight: 400;
-      letter-spacing: -0.28px; line-height: 20px;
+    .ap-field { display: flex; align-items: center; gap: 16px; }
+    .ap-label {
+      width: 180px; flex-shrink: 0;
+      font-size: 14px; font-weight: 500;
+      color: #334155; line-height: 20px;
     }
-
-    /* Reuse .edit-btn, .edit-input, .edit-meta, .error-msg, .char-count,
-       .edit-actions, .btn-cancel-inline, .btn-save-inline from add-user form */
-    .edit-btn {
-      background: none; border: none; cursor: pointer; padding: 0;
-      display: flex; align-items: center; flex-shrink: 0; color: #2c66ef;
-    }
-    .edit-btn:hover { opacity: 0.75; }
-
-    .ud-edit-form { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-
-    .ud-edit-input {
-      width: 100%; padding: 8px 12px;
+    .ap-input {
+      flex: 1; padding: 10px 14px;
       border: 1px solid #cbd5e1; border-radius: 8px;
-      font-family: inherit; font-size: 14px; font-weight: 400;
-      color: #0f172a; letter-spacing: -0.28px; line-height: 20px;
+      font-family: inherit; font-size: 15px;
+      color: #0f172a; line-height: 22px;
       outline: none; background: #fff;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .ud-edit-input:focus {
+    .ap-input:focus {
       border-color: #2c66ef;
       box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
     }
-    .ud-edit-input.input-error { border-color: #ef4444; }
-    .ud-edit-input.input-error:focus {
-      border-color: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    .ap-select {
+      flex: 1; padding: 10px 40px 10px 14px;
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      font-family: inherit; font-size: 15px;
+      color: #0f172a; line-height: 22px;
+      outline: none; background: #fff; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232c66ef' stroke-width='2.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .ap-select:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
     }
 
-    .ud-edit-meta {
-      display: flex; align-items: center;
-      justify-content: space-between; min-height: 16px;
+    .ap-notify-row { display: flex; align-items: flex-start; gap: 12px; }
+    .ap-checkbox {
+      width: 20px; height: 20px; flex-shrink: 0;
+      accent-color: #2c66ef; margin-top: 2px; cursor: pointer;
     }
-    .ud-error-msg {
-      color: #ef4444; font-size: 12px; font-weight: 400;
-      letter-spacing: -0.24px; line-height: 16px;
+    .ap-notify-label {
+      display: block;
+      font-size: 15px; font-weight: 600; color: #0f172a; line-height: 22px;
+      cursor: pointer;
     }
-    .ud-char-count {
-      color: #94a3b8; font-size: 12px; font-weight: 400;
-      letter-spacing: -0.24px; line-height: 16px; margin-left: auto;
-    }
-    .ud-edit-actions { display: flex; align-items: center; gap: 8px; }
+    .ap-notify-desc { font-size: 13px; color: #64748b; line-height: 18px; margin-top: 3px; }
 
-    .ud-btn-cancel {
-      background: #fff; border: 1px solid #e2e8f0; color: #334155;
-      font-family: inherit; font-size: 14px; font-weight: 500;
-      letter-spacing: -0.28px; line-height: 20px;
-      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+    .ap-footer {
+      padding: 20px 32px;
+      border-top: 1px solid #e2e8f0;
+      display: flex; justify-content: flex-end; gap: 12px;
+      flex-shrink: 0; background: #fff;
     }
-    .ud-btn-cancel:hover { background: #f8fafc; }
-
-    .ud-btn-save {
-      background: #2c66ef; border: none; color: #fff;
-      font-family: inherit; font-size: 14px; font-weight: 500;
-      letter-spacing: -0.28px; line-height: 20px;
-      padding: 5px 12px; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; gap: 6px;
+    .ap-btn-cancel {
+      background: #fff; border: 1px solid #e2e8f0;
+      color: #334155; font-family: inherit;
+      font-size: 15px; font-weight: 500;
+      padding: 10px 20px; border-radius: 8px; cursor: pointer;
     }
-    .ud-btn-save:disabled { background: #cbd5e1; cursor: not-allowed; }
-
-    /* User type cards — side by side */
-    .ud-type-cards {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    .ap-btn-cancel:hover { background: #f8fafc; }
+    .ap-btn-add {
+      background: #2c66ef; border: none;
+      color: #fff; font-family: inherit;
+      font-size: 15px; font-weight: 500;
+      padding: 10px 20px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
     }
-
-    .ud-type-card {
-      border: 1.5px solid #e2e8f0; border-radius: 10px;
-      padding: 14px 16px; cursor: pointer;
-      transition: border-color 0.15s;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .ud-type-card:hover { border-color: #94a3b8; }
-    .ud-type-card.selected { border-color: #0f172a; border-width: 2px; }
-
-    .ud-type-card-header { display: flex; align-items: center; gap: 8px; }
-
-    .ud-type-card-name {
-      font-size: 14px; font-weight: 600;
-      letter-spacing: -0.28px; line-height: 20px; color: #94a3b8;
-    }
-    .ud-type-card.selected .ud-type-card-name { color: #0f172a; }
-
-    .ud-type-check { display: none; flex-shrink: 0; }
-    .ud-type-card.selected .ud-type-check { display: flex; }
-
-    .ud-type-card-desc {
-      font-size: 13px; font-weight: 400;
-      letter-spacing: -0.26px; line-height: 18px; color: #94a3b8;
-    }
-    .ud-type-card.selected .ud-type-card-desc { color: #64748b; }
+    .ap-btn-add:hover { background: #1d56df; }
   </style>
 </head>
 <body>
@@ -705,14 +564,14 @@
           </svg>
           <span class="nav-label">Company Details</span>
         </button>
-        <button class="nav-item" onclick="location.href='portal.html'">
+        <button class="nav-item" style="background: rgba(44,102,239,0.12);">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
           <span class="nav-label">Compliance</span>
           <span class="badge">4</span>
         </button>
-        <button class="nav-item active" onclick="location.href='users.html'">
+        <button class="nav-item" onclick="location.href='users.html'">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
@@ -801,151 +660,6 @@
     </div>
   </aside>
 
-  <!-- Drawer overlay -->
-  <div class="drawer-overlay" id="drawerOverlay" onclick="closeAnyDrawer()"></div>
-
-  <!-- User detail drawer (desktop) -->
-  <aside class="drawer user-drawer" id="userDetailDrawer" aria-label="User detail">
-    <div class="drawer-header">
-      <div class="user-drawer-identity">
-        <div class="user-avatar-sq">MW</div>
-        <span class="drawer-user-name">Marcus Workman</span>
-      </div>
-      <button class="drawer-close" onclick="closeUserDrawer()" aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-    <div class="ud-body">
-
-      <!-- Details section -->
-      <div class="ud-section">
-        <h2 class="ud-section-title">Details</h2>
-        <div class="ud-rows">
-
-          <div class="ud-row">
-            <div class="ud-label">First Name<span class="req"> *</span></div>
-            <div class="ud-value" id="uval-first-name">
-              <span class="field-text">Markus</span>
-              <button class="edit-btn" onclick="startUEdit('first-name')" aria-label="Edit first name">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="ud-row">
-            <div class="ud-label">Last Name<span class="req"> *</span></div>
-            <div class="ud-value" id="uval-last-name">
-              <span class="field-text">Workman</span>
-              <button class="edit-btn" onclick="startUEdit('last-name')" aria-label="Edit last name">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="ud-row">
-            <div class="ud-label">Email<span class="req"> *</span></div>
-            <div class="ud-value" id="uval-email">
-              <span class="field-text">workman.markus@platypusplumbing.com.au</span>
-              <button class="edit-btn" onclick="startUEdit('email')" aria-label="Edit email">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- User Type section -->
-      <div class="ud-section">
-        <h2 class="ud-section-title">
-          User Type
-          <button class="edit-btn" aria-label="Edit user type">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-            </svg>
-          </button>
-        </h2>
-        <div class="ud-type-cards">
-
-          <div class="ud-type-card selected" onclick="selectUType(this)">
-            <div class="ud-type-card-header">
-              <span class="ud-type-card-name">Account Owner</span>
-              <span class="ud-type-check">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
-                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </div>
-            <div class="ud-type-card-desc">This user owns the account and a primary contact.</div>
-          </div>
-
-          <div class="ud-type-card" onclick="selectUType(this)">
-            <div class="ud-type-card-header">
-              <span class="ud-type-card-name">Compliance Manager</span>
-              <span class="ud-type-check">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
-                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </div>
-            <div class="ud-type-card-desc">Manages all compliance documents on behalf of their contractors.</div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </aside>
-
-  <!-- Add new user drawer (desktop only) -->
-  <aside class="drawer" id="addUserDrawer" aria-label="Add new user">
-    <div class="drawer-header">
-      <span class="drawer-title">Add new user</span>
-      <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-    <div class="drawer-body">
-      <div class="form-field">
-        <label class="form-label" for="d-first-name">First name <span class="req">*</span></label>
-        <input class="form-input" id="d-first-name" type="text" placeholder="Enter first name" />
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="d-last-name">Last name <span class="req">*</span></label>
-        <input class="form-input" id="d-last-name" type="text" placeholder="Enter last name" />
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="d-email">Email <span class="req">*</span></label>
-        <input class="form-input" id="d-email" type="email" placeholder="Enter email address" />
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="d-role">Role <span class="req">*</span></label>
-        <select class="form-select" id="d-role">
-          <option value="" disabled selected>Select a role</option>
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-          <option value="user">User</option>
-        </select>
-      </div>
-    </div>
-    <div class="drawer-footer">
-      <button class="btn-cancel" onclick="closeDrawer()">Cancel</button>
-      <button class="btn-save">Save</button>
-    </div>
-  </aside>
-
   <!-- Main layout -->
   <div class="layout">
 
@@ -991,14 +705,14 @@
               </svg>
               <span class="nav-label">Company Details</span>
             </button>
-            <button class="nav-item" onclick="location.href='portal.html'">
+            <button class="nav-item" style="background: rgba(44,102,239,0.12);">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
               <span class="nav-label">Compliance</span>
               <span class="badge">4</span>
             </button>
-            <button class="nav-item active" onclick="location.href='users.html'">
+            <button class="nav-item" onclick="location.href='users.html'">
               <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
@@ -1098,8 +812,8 @@
             <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
-        <span class="mob-header-title">Users</span>
-        <button class="btn-primary" onclick="addNewUser()" style="font-size:13px; padding:4px 10px; gap:6px;">
+        <span class="mob-header-title">Compliance</span>
+        <button class="btn-primary" style="font-size:13px; padding:4px 10px; gap:6px;" onclick="openAddPerson()">
           Add new
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
@@ -1111,8 +825,8 @@
 
         <!-- Desktop page header -->
         <div class="page-header">
-          <h1 class="page-title">Users</h1>
-          <button class="btn-primary" onclick="addNewUser()">
+          <h1 class="page-title">Compliance</h1>
+          <button class="btn-primary" onclick="openAddPerson()">
             Add new
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
@@ -1120,11 +834,25 @@
           </button>
         </div>
 
+        <!-- Summary card -->
+        <div class="summary-section">
+          <div class="summary-card">
+            <div class="summary-info">
+              <div class="summary-title">Overall Company Compliance</div>
+              <div class="status-pill status-approved">
+                <span class="dot"></span>
+                Approved
+              </div>
+            </div>
+            <button class="btn-outline">View</button>
+          </div>
+        </div>
+
         <!-- Table section -->
         <div class="table-section">
           <div class="table-wrap">
             <div class="table-toolbar">
-              <div class="table-toolbar-title">All users</div>
+              <div class="table-toolbar-title">Compliance Status</div>
               <div class="filter-select">
                 <span class="filter-label">Show all</span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2">
@@ -1138,116 +866,267 @@
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Role</th>
                       <th>Status</th>
                       <th>Last activity</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr onclick="openUserRow()">
+                    <tr>
                       <td>
-                        <div class="user-cell">
-                          <div class="user-avatar" style="background:#6366f1;">JS</div>
-                          <span class="user-name">John Smith</span>
+                        <div class="name-cell">
+                          <div class="compliance-icon non-compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M10 6v5M10 14h.01" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+                              <circle cx="10" cy="10" r="8" stroke="#dc2626" stroke-width="1.5"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Martin Saris</span>
                         </div>
                       </td>
-                      <td><span class="role-text">Admin</span></td>
                       <td>
-                        <div class="status-pill status-active">
-                          <span class="dot"></span>Active
-                        </div>
-                      </td>
-                      <td><span class="activity-text">20 Feb, 9:00AM</span></td>
-                    </tr>
-                    <tr onclick="openUserRow()">
-                      <td>
-                        <div class="user-cell">
-                          <div class="user-avatar" style="background:#0ea5e9;">SJ</div>
-                          <span class="user-name">Sarah Johnson</span>
-                        </div>
-                      </td>
-                      <td><span class="role-text">Manager</span></td>
-                      <td>
-                        <div class="status-pill status-active">
-                          <span class="dot"></span>Active
-                        </div>
-                      </td>
-                      <td><span class="activity-text">19 Feb, 3:00PM</span></td>
-                    </tr>
-                    <tr onclick="openUserRow()">
-                      <td>
-                        <div class="user-cell">
-                          <div class="user-avatar" style="background:#f59e0b;">MD</div>
-                          <span class="user-name">Mike Davis</span>
-                        </div>
-                      </td>
-                      <td><span class="role-text">User</span></td>
-                      <td>
-                        <div class="status-pill status-inactive">
-                          <span class="dot"></span>Inactive
-                        </div>
-                      </td>
-                      <td><span class="activity-text">10 Feb, 9:00AM</span></td>
-                    </tr>
-                    <tr onclick="openUserRow()">
-                      <td>
-                        <div class="user-cell">
-                          <div class="user-avatar" style="background:#10b981;">EC</div>
-                          <span class="user-name">Emily Chen</span>
-                        </div>
-                      </td>
-                      <td><span class="role-text">Manager</span></td>
-                      <td>
-                        <div class="status-pill status-active">
-                          <span class="dot"></span>Active
-                        </div>
-                      </td>
-                      <td><span class="activity-text">18 Feb, 2:00PM</span></td>
-                    </tr>
-                    <tr onclick="openUserRow()">
-                      <td>
-                        <div class="user-cell">
-                          <div class="user-avatar" style="background:#ef4444;">TW</div>
-                          <span class="user-name">Tom Wilson</span>
-                        </div>
-                      </td>
-                      <td><span class="role-text">User</span></td>
-                      <td>
-                        <div class="status-pill status-active">
-                          <span class="dot"></span>Active
-                        </div>
-                      </td>
-                      <td><span class="activity-text">15 Feb, 5:00PM</span></td>
-                    </tr>
-                    <tr onclick="openUserRow()">
-                      <td>
-                        <div class="user-cell">
-                          <div class="user-avatar" style="background:#8b5cf6;">LC</div>
-                          <span class="user-name">Laura Campbell</span>
-                        </div>
-                      </td>
-                      <td><span class="role-text">User</span></td>
-                      <td>
-                        <div class="status-pill status-inactive">
-                          <span class="dot"></span>Inactive
+                        <div class="non-compliant-badge">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 6v5M10 14h.01" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="10" cy="10" r="8" stroke="#dc2626" stroke-width="1.5"/>
+                          </svg>
+                          <span>Non-compliant</span>
                         </div>
                       </td>
                       <td><span class="activity-dash">-</span></td>
                     </tr>
-                    <tr onclick="openUserRow()">
+                    <tr>
                       <td>
-                        <div class="user-cell">
-                          <div class="user-avatar" style="background:#14b8a6;">RK</div>
-                          <span class="user-name">Ryan Kim</span>
+                        <div class="name-cell">
+                          <div class="compliance-icon non-compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M10 6v5M10 14h.01" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+                              <circle cx="10" cy="10" r="8" stroke="#dc2626" stroke-width="1.5"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Jaylon Bergson</span>
                         </div>
                       </td>
-                      <td><span class="role-text">Manager</span></td>
                       <td>
-                        <div class="status-pill status-active">
-                          <span class="dot"></span>Active
+                        <div class="non-compliant-badge">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 6v5M10 14h.01" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="10" cy="10" r="8" stroke="#dc2626" stroke-width="1.5"/>
+                          </svg>
+                          <span>Non-compliant</span>
                         </div>
                       </td>
-                      <td><span class="activity-text">12 Feb, 11:00AM</span></td>
+                      <td><span class="activity-dash">-</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon non-compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M10 6v5M10 14h.01" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+                              <circle cx="10" cy="10" r="8" stroke="#dc2626" stroke-width="1.5"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Cullen Burke</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-in-review">
+                          <span class="dot"></span>
+                          In review
+                        </div>
+                      </td>
+                      <td><span class="activity-dash">-</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon non-compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M10 6v5M10 14h.01" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+                              <circle cx="10" cy="10" r="8" stroke="#dc2626" stroke-width="1.5"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Foster Clemons</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-in-review">
+                          <span class="dot"></span>
+                          In review
+                        </div>
+                      </td>
+                      <td><span class="activity-dash">-</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Carter Peters</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">15 Feb, 11:00AM</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Marcus Workman</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">15 Feb, 3:00PM</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Jamison Whitfield A...</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">12 Feb, 10:00AM</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Ekstrom Bothman</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">1 Jan, 11:00AM</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Martin Vetrovs</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">24 Dec 2024</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Alfredo Stanton</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">12 Dec 2024</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Ruben Korsgaard</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">1 Dec 2024</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Alfredo Dias</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">18 Oct 2024</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="name-cell">
+                          <div class="compliance-icon compliant">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                              <path d="M5 10l4 4 7-7" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <span class="name-text">Davis Dias</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="status-pill status-approved">
+                          <span class="dot"></span>
+                          Approved
+                        </div>
+                      </td>
+                      <td><span class="activity-text">12 Aug 2024</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -1260,6 +1139,80 @@
     </div>
   </div>
 
+  <!-- Add Person overlay + drawer -->
+  <div class="ap-overlay" id="apOverlay" onclick="closeAddPerson()"></div>
+
+  <aside class="ap-drawer" id="apDrawer">
+    <div class="ap-header">
+      <span class="ap-title">Add person</span>
+      <button class="ap-close" onclick="closeAddPerson()" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ap-body">
+
+      <!-- Details section -->
+      <div class="ap-section">
+        <div class="ap-section-head">
+          <div class="ap-section-title">Details</div>
+          <div class="ap-section-sub">Employee will be invited via Email or SMS</div>
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-fname">Legal First Name</label>
+          <input class="ap-input" id="ap-fname" type="text" placeholder="Enter first name" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-lname">Legal Last Name</label>
+          <input class="ap-input" id="ap-lname" type="text" placeholder="Enter last name" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-phone">Phone</label>
+          <input class="ap-input" id="ap-phone" type="tel" placeholder="Enter phone number" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-email">Email</label>
+          <input class="ap-input" id="ap-email" type="email" placeholder="Enter email address" />
+        </div>
+        <div class="ap-field">
+          <label class="ap-label" for="ap-role">Role</label>
+          <select class="ap-select" id="ap-role">
+            <option value="" disabled selected>Select a role</option>
+            <option value="plumber">Plumber</option>
+            <option value="electrician">Electrician</option>
+            <option value="carpenter">Carpenter</option>
+            <option value="manager">Manager</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Notifications section -->
+      <div class="ap-section ap-section-gray">
+        <div class="ap-section-title">Notifications</div>
+        <div class="ap-notify-row">
+          <input class="ap-checkbox" type="checkbox" id="ap-invite" checked />
+          <div>
+            <label class="ap-notify-label" for="ap-invite">Send compliance invite now</label>
+            <div class="ap-notify-desc">Immediately notify this contractor to provide their compliance documents</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ap-footer">
+      <button class="ap-btn-cancel" onclick="closeAddPerson()">Cancel</button>
+      <button class="ap-btn-add">
+        Add
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
   <script>
     function openSidebar() {
       document.getElementById('mobSidebar').classList.add('is-open');
@@ -1270,159 +1223,25 @@
       document.getElementById('mobOverlay').classList.remove('is-visible');
     }
 
+    function openAddPerson() {
+      document.getElementById('apDrawer').classList.add('is-open');
+      document.getElementById('apOverlay').classList.add('is-visible');
+    }
+    function closeAddPerson() {
+      document.getElementById('apDrawer').classList.remove('is-open');
+      document.getElementById('apOverlay').classList.remove('is-visible');
+    }
+
     function toggleOrg(header) {
       const navGroup = header.parentElement;
       const content = navGroup.querySelector('.org-content');
       if (!content) return;
       const sidebar = header.closest('.sidebar, .mob-sidebar');
+      // Accordion: close all others in this sidebar
       sidebar.querySelectorAll('.org-content').forEach(c => { if (c !== content) c.classList.remove('org-open'); });
       sidebar.querySelectorAll('.section-header').forEach(h => { if (h !== header) h.classList.remove('is-open'); });
       const opening = content.classList.toggle('org-open');
       header.classList.toggle('is-open', opening);
-    }
-
-    /* ── User row click ── */
-    function openUserRow() {
-      if (window.innerWidth < 768) {
-        location.href = 'user-detail.html';
-      } else {
-        openUserDrawer();
-      }
-    }
-
-    function openUserDrawer() {
-      // Close add-user drawer if open
-      document.getElementById('addUserDrawer').classList.remove('is-open');
-      document.getElementById('userDetailDrawer').classList.add('is-open');
-      document.getElementById('drawerOverlay').classList.add('is-visible');
-    }
-
-    function closeUserDrawer() {
-      document.getElementById('userDetailDrawer').classList.remove('is-open');
-      document.getElementById('drawerOverlay').classList.remove('is-visible');
-      if (uActiveEdit) cancelUEdit(uActiveEdit);
-    }
-
-    function closeAnyDrawer() {
-      closeDrawer();
-      closeUserDrawer();
-    }
-
-    /* ── User type card selection ── */
-    function selectUType(card) {
-      document.querySelectorAll('#userDetailDrawer .ud-type-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-    }
-
-    /* ── Inline edit for user detail drawer ── */
-    const U_FIELD_CONFIG = {
-      'first-name': { required: true, maxLen: 100, placeholder: 'Enter first name' },
-      'last-name':  { required: true, maxLen: 100, placeholder: 'Enter last name' },
-      'email':      { required: true, maxLen: 200, placeholder: 'Enter email address' },
-    };
-
-    const uFieldValues = {
-      'first-name': 'Markus',
-      'last-name':  'Workman',
-      'email':      'workman.markus@platypusplumbing.com.au',
-    };
-
-    let uActiveEdit = null;
-
-    function startUEdit(id) {
-      if (uActiveEdit === id) return;
-      if (uActiveEdit) cancelUEdit(uActiveEdit);
-      uActiveEdit = id;
-
-      const cfg = U_FIELD_CONFIG[id];
-      const stored = uFieldValues[id] || '';
-      const el = document.getElementById('uval-' + id);
-
-      const checkSvg = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
-
-      el.innerHTML = `
-        <div class="ud-edit-form">
-          <input type="text" id="uinput-${id}" class="ud-edit-input"
-            value="${uEsc(stored)}" placeholder="${uEsc(cfg.placeholder)}" maxlength="${cfg.maxLen}">
-          <div class="ud-edit-meta">
-            <span class="ud-error-msg" id="uerr-${id}"></span>
-            <span class="ud-char-count" id="ucc-${id}">${stored.length}/${cfg.maxLen} characters</span>
-          </div>
-          <div class="ud-edit-actions">
-            <button class="ud-btn-cancel" onclick="cancelUEdit('${id}')">Cancel</button>
-            <button class="ud-btn-save" id="usave-${id}" onclick="saveUEdit('${id}')">
-              Save ${checkSvg}
-            </button>
-          </div>
-        </div>`;
-
-      const input = document.getElementById('uinput-' + id);
-      input.focus();
-      input.setSelectionRange(input.value.length, input.value.length);
-      input.addEventListener('input', () => onUInput(id));
-      onUInput(id);
-    }
-
-    function onUInput(id) {
-      const cfg = U_FIELD_CONFIG[id];
-      const input = document.getElementById('uinput-' + id);
-      const val = input.value;
-      document.getElementById('ucc-' + id).textContent = val.length + '/' + cfg.maxLen + ' characters';
-      const empty = val.trim() === '';
-      input.classList.toggle('input-error', empty);
-      const errEl = document.getElementById('uerr-' + id);
-      if (errEl) errEl.textContent = empty ? 'Required' : '';
-      document.getElementById('usave-' + id).disabled = empty;
-    }
-
-    function saveUEdit(id) {
-      const cfg = U_FIELD_CONFIG[id];
-      const input = document.getElementById('uinput-' + id);
-      if (!input || (cfg.required && input.value.trim() === '')) return;
-      uFieldValues[id] = input.value.trim();
-      uActiveEdit = null;
-      renderUView(id);
-    }
-
-    function cancelUEdit(id) {
-      uActiveEdit = null;
-      renderUView(id);
-    }
-
-    function renderUView(id) {
-      const stored = uFieldValues[id] || '';
-      const el = document.getElementById('uval-' + id);
-      el.className = 'ud-value';
-      el.innerHTML = `
-        <span class="field-text">${uEsc(stored)}</span>
-        <button class="edit-btn" onclick="startUEdit('${id}')" aria-label="Edit field">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-          </svg>
-        </button>`;
-    }
-
-    function uEsc(s) {
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function addNewUser() {
-      // On mobile (<768px) navigate to the add-user page; on desktop open drawer
-      if (window.innerWidth < 768) {
-        location.href = 'add-user.html';
-      } else {
-        openDrawer();
-      }
-    }
-
-    function openDrawer() {
-      document.getElementById('addUserDrawer').classList.add('is-open');
-      document.getElementById('drawerOverlay').classList.add('is-visible');
-    }
-
-    function closeDrawer() {
-      document.getElementById('addUserDrawer').classList.remove('is-open');
-      document.getElementById('drawerOverlay').classList.remove('is-visible');
     }
   </script>
 </body>
