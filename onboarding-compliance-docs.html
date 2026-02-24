@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Key Contact – Zipline</title>
+  <title>Business Compliance Docs – Zipline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -40,6 +40,7 @@
     .page-subheading {
       font-size: 16px; font-weight: 400;
       color: #0f172a; letter-spacing: -0.32px; line-height: 18px;
+      max-width: 491px;
     }
 
     /* ── Progress bar ── */
@@ -49,7 +50,7 @@
     }
     .progress-fill {
       height: 100%; background: #2c66ef;
-      border-radius: 4px; width: 75%;
+      border-radius: 4px; width: 100%;
     }
 
     /* ── Content ── */
@@ -66,7 +67,7 @@
     }
     .step-track {
       display: flex; flex-direction: column; align-items: center;
-      width: 24px; height: 46px; flex-shrink: 0;
+      width: 28px; height: 46px; flex-shrink: 0;
     }
     .step-line { width: 2px; flex: 1; background: #cbd5e1; }
     .step-line.green { background: #a7f3d0; }
@@ -78,7 +79,7 @@
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; z-index: 1;
     }
-    .step-circle svg { width: 14px; height: 14px; }
+    .step-circle svg { width: 14px; height: 14px; color: #cbd5e1; }
     .step-circle.done {
       border-color: #a7f3d0;
       background: #a7f3d0;
@@ -89,7 +90,6 @@
       background: #fff;
     }
     .step-circle.active svg { display: none; }
-    .step-circle svg { color: #cbd5e1; }
     .step-label {
       font-size: 16px; font-weight: 600;
       color: #334155; letter-spacing: -0.32px; line-height: 26px;
@@ -101,7 +101,7 @@
     /* ── Form area ── */
     .form-area {
       flex: 1; min-width: 0;
-      display: flex; flex-direction: column; gap: 32px;
+      display: flex; flex-direction: column; gap: 24px;
     }
 
     /* Section heading */
@@ -120,47 +120,45 @@
     .banner-icon { width: 20px; height: 20px; flex-shrink: 0; color: #92400e; }
     .banner-text { font-size: 15px; color: #000; letter-spacing: -0.352px; line-height: 20px; }
 
-    /* Form fields */
-    .form-fields { display: flex; flex-direction: column; gap: 16px; max-width: 640px; }
+    /* ── Embed window ── */
+    .embed-window {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex: 1;
+      min-height: 520px;
+    }
 
-    .field-row { display: flex; gap: 4px; align-items: flex-start; }
-    .field-label {
-      width: 184px; flex-shrink: 0;
-      font-size: 16px; font-weight: 600;
-      color: #334155; letter-spacing: -0.32px; line-height: 26px;
-      padding-top: 7px;
+    /* Phone frame around the iframe */
+    .phone-frame {
+      width: 376px;
+      flex-shrink: 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      background: #f8fafc;
+      /* Mimic a phone: fixed height, internal scroll */
+      height: 560px;
+      position: relative;
     }
-    .field-label .star { color: #ef4444; }
-    .field-input-wrap { flex: 1; min-width: 0; }
-    .field-input {
-      width: 100%; height: 40px;
-      border: 2px solid #ccc; border-radius: 8px;
-      padding: 0 12px;
-      font-family: inherit; font-size: 16px; color: #0f172a;
-      background: #fff; outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
+    .phone-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
     }
-    .field-input:focus {
-      border-color: #2c66ef;
-      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
-    }
-    .field-input::placeholder { color: #808080; }
 
-    /* Navigation */
+    /* ── Navigation ── */
     .nav-row {
-      display: flex; justify-content: flex-end; gap: 8px;
-      max-width: 640px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .btn-next {
-      background: #2c66ef; color: #fff;
-      border: none; border-radius: 8px;
-      padding: 4px 12px;
-      font-family: inherit; font-size: 14px; font-weight: 500;
-      letter-spacing: -0.56px; line-height: 24px;
-      display: flex; align-items: center; gap: 8px;
-      cursor: pointer; transition: background 0.15s;
-    }
-    .btn-next:hover { background: #1d56df; }
+    .nav-spacer { flex: 1; }
     .btn-back {
       background: #e2e8f0; color: #0f172a;
       border: none; border-radius: 8px;
@@ -171,25 +169,51 @@
       cursor: pointer; transition: background 0.15s;
     }
     .btn-back:hover { background: #cbd5e1; }
+    .btn-later {
+      background: #fff; color: #2c66ef;
+      border: 1px solid #2c66ef; border-radius: 8px;
+      padding: 4px 12px;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.56px; line-height: 24px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-later:hover { background: #eff4ff; }
+    .btn-next {
+      background: #2c66ef; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 4px 12px;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.56px; line-height: 24px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-next:hover { background: #1d56df; }
 
     /* ── Mobile ── */
     @media (max-width: 767px) {
       .page { padding: 24px; gap: 24px; }
       .page-heading { font-size: 28px; letter-spacing: -1.12px; line-height: 34px; }
+      .page-subheading { max-width: 100%; font-size: 14px; }
       .stepper { display: none; }
       .content { gap: 0; }
-      .form-area { gap: 24px; }
+      .form-area { gap: 20px; }
       .section-title { font-size: 20px; }
 
-      .field-row { flex-direction: column; gap: 4px; }
-      .field-label { width: auto; padding-top: 0; }
-      .field-input-wrap { width: 100%; }
+      .embed-window {
+        padding: 12px;
+        min-height: 480px;
+      }
+      .phone-frame {
+        width: 100%;
+        height: 480px;
+      }
 
       .nav-row { display: none; }
       .nav-row-mobile {
         display: flex;
-        justify-content: flex-end;
         gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
     }
     @media (min-width: 768px) {
@@ -207,8 +231,8 @@
 
     <!-- Page title -->
     <div class="page-title">
-      <div class="page-heading">Get started with Zipline</div>
-      <div class="page-subheading">Let's get you up and running.</div>
+      <div class="page-heading">Your business compliance docs</div>
+      <div class="page-subheading">Upload key business documents required for compliance, such as insurance certificates, licenses, and any relevant accreditations. You can come back and update these anytime.</div>
     </div>
 
     <!-- Progress bar -->
@@ -250,7 +274,21 @@
           <span class="step-label">Business Address</span>
         </div>
 
-        <!-- Step 3: active -->
+        <!-- Step 3: done -->
+        <div class="step">
+          <div class="step-track">
+            <div class="step-line green"></div>
+            <div class="step-circle done">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="step-line green"></div>
+          </div>
+          <span class="step-label">Key Contact</span>
+        </div>
+
+        <!-- Step 4: active (last) -->
         <div class="step">
           <div class="step-track">
             <div class="step-line green"></div>
@@ -259,32 +297,18 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
               </svg>
             </div>
-            <div class="step-line"></div>
-          </div>
-          <span class="step-label active">Key Contact</span>
-        </div>
-
-        <!-- Step 4: inactive -->
-        <div class="step">
-          <div class="step-track">
-            <div class="step-line"></div>
-            <div class="step-circle">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
             <div class="step-line hidden"></div>
           </div>
-          <span class="step-label">Business Compliance Docs</span>
+          <span class="step-label active">Business Compliance Docs</span>
         </div>
 
       </div>
 
-      <!-- Right: form -->
+      <!-- Right: upload area -->
       <div class="form-area">
 
         <div class="section-heading">
-          <div class="section-title">Key Contact</div>
+          <div class="section-title">Required Checks</div>
           <div class="banner">
             <svg class="banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -293,51 +317,28 @@
           </div>
         </div>
 
-        <div class="form-fields">
-
-          <!-- First name -->
-          <div class="field-row">
-            <div class="field-label">First name<span class="star">*</span></div>
-            <div class="field-input-wrap">
-              <input class="field-input" type="text" placeholder="e.g. John" />
-            </div>
+        <!-- Embed window with worker app iframe -->
+        <div class="embed-window">
+          <div class="phone-frame">
+            <iframe
+              src="mobile-requirements.html"
+              title="Worker compliance app"
+              scrolling="yes"
+            ></iframe>
           </div>
-
-          <!-- Last name -->
-          <div class="field-row">
-            <div class="field-label">Last name<span class="star">*</span></div>
-            <div class="field-input-wrap">
-              <input class="field-input" type="text" placeholder="e.g. Smith" />
-            </div>
-          </div>
-
-          <!-- Email -->
-          <div class="field-row">
-            <div class="field-label">Email<span class="star">*</span></div>
-            <div class="field-input-wrap">
-              <input class="field-input" type="email" placeholder="e.g. john@platypusplumbing.com.au" />
-            </div>
-          </div>
-
-          <!-- Phone -->
-          <div class="field-row">
-            <div class="field-label">Phone<span class="star">*</span></div>
-            <div class="field-input-wrap">
-              <input class="field-input" type="tel" placeholder="e.g. 0401 111 111" />
-            </div>
-          </div>
-
         </div>
 
-        <!-- Desktop nav -->
+        <!-- Desktop nav: Back | spacer | Complete later | Next -->
         <div class="nav-row">
-          <button class="btn-back" onclick="location.href='onboarding-business-address.html'">
+          <button class="btn-back" onclick="location.href='onboarding-key-contact.html'">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
             Back
           </button>
-          <button class="btn-next" onclick="location.href='onboarding-compliance-docs.html'">
+          <div class="nav-spacer"></div>
+          <button class="btn-later" onclick="location.href='#'">Complete later</button>
+          <button class="btn-next" onclick="location.href='#'">
             Next
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
@@ -347,13 +348,14 @@
 
         <!-- Mobile nav -->
         <div class="nav-row-mobile">
-          <button class="btn-back" onclick="location.href='onboarding-business-address.html'">
+          <button class="btn-back" onclick="location.href='onboarding-key-contact.html'">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
             </svg>
             Back
           </button>
-          <button class="btn-next" onclick="location.href='onboarding-compliance-docs.html'">
+          <button class="btn-later" onclick="location.href='#'">Complete later</button>
+          <button class="btn-next" onclick="location.href='#'">
             Next
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
