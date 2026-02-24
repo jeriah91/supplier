@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design System – Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #334155;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Proto nav ── */
+    .proto-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 9999; height: 40px; background: #000;
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+      flex-shrink: 0;
+    }
+    .proto-nav-library {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: #fff; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px; white-space: nowrap; flex-shrink: 0;
+    }
+    .proto-nav-library:hover { opacity: 0.75; }
+    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .proto-nav-title { flex: 1; color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; line-height: 24px; }
+    .proto-nav-updated { flex: 1; color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; line-height: 24px; text-align: right; white-space: nowrap; }
+    body { padding-top: 40px; }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 32px 40px 24px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .logo { height: 23px; display: flex; align-items: center; margin-bottom: 20px; }
+    .logo img { width: 100px; height: 23px; object-fit: contain; }
+    .page-heading { font-size: 36px; font-weight: 600; color: #334155; letter-spacing: -1.44px; line-height: 40px; }
+
+    /* ── Main 3-col layout ── */
+    .main {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+    }
+
+    /* ── Left: Nav panel ── */
+    .nav-panel {
+      width: 240px;
+      flex-shrink: 0;
+      overflow-y: auto;
+      padding: 12px 8px;
+      border-right: 1px solid #e2e8f0;
+    }
+    .cat-group { display: flex; flex-direction: column; }
+    .cat-header {
+      display: flex;
+      align-items: center;
+      padding: 8px 8px 8px 8px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1e293b;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+      width: 100%;
+      text-align: left;
+      border-radius: 6px;
+      gap: 8px;
+    }
+    .cat-header:hover { background: #f8fafc; }
+    .cat-chevron {
+      width: 16px; height: 16px; flex-shrink: 0;
+      margin-left: auto;
+      transition: transform 0.2s;
+      color: #94a3b8;
+    }
+    .cat-header.open .cat-chevron { transform: rotate(180deg); }
+
+    .cat-items { display: none; flex-direction: column; padding: 2px 0 4px 0; }
+    .cat-items.open { display: flex; }
+
+    .cat-item-wrap { display: flex; align-items: stretch; padding: 0 0 0 8px; }
+    .cat-item-tree {
+      width: 20px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .cat-item-tree::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: #e2e8f0;
+    }
+    .cat-item-wrap:last-child .cat-item-tree::before { bottom: 50%; }
+    .cat-item-tree::after {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      width: 10px;
+      height: 1px;
+      background: #e2e8f0;
+    }
+    .cat-item {
+      flex: 1;
+      min-width: 0;
+      padding: 4px 8px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 400;
+      color: #475569;
+      letter-spacing: -0.26px;
+      line-height: 22px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 1px 4px 1px 0;
+    }
+    .cat-item:hover { background: #f1f5f9; color: #1e293b; }
+    .cat-item.active { background: #eff6ff; color: #2c66ef; font-weight: 500; }
+
+    /* ── Middle: Preview panel ── */
+    .preview-panel {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #e2e8f0;
+      overflow: hidden;
+    }
+    .preview-name {
+      padding: 16px 24px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.36px;
+      line-height: 26px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .preview-canvas {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      padding: 40px;
+      overflow: auto;
+    }
+    .preview-empty {
+      color: #94a3b8;
+      font-size: 14px;
+      text-align: center;
+      line-height: 24px;
+    }
+
+    /* ── Right: Specs panel ── */
+    .specs-panel {
+      width: 380px;
+      flex-shrink: 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .specs-heading {
+      padding: 16px 24px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.36px;
+      line-height: 26px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .specs-body {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .specs-empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 14px;
+      padding: 40px;
+      text-align: center;
+      line-height: 24px;
+    }
+    .spec-block { display: flex; flex-direction: column; gap: 8px; }
+    .spec-block-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+    .spec-code-wrap {
+      position: relative;
+      background: #1e293b;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .spec-code {
+      display: block;
+      padding: 14px 44px 14px 16px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 11.5px;
+      line-height: 1.65;
+      color: #cbd5e1;
+      white-space: pre;
+      overflow-x: auto;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .spec-copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      border-radius: 6px;
+      padding: 6px;
+      cursor: pointer;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .spec-copy-btn:hover { background: rgba(255,255,255,0.16); color: #e2e8f0; }
+    .spec-copy-btn svg { width: 14px; height: 14px; }
+    .spec-copy-btn.copied { color: #4ade80; }
+  </style>
+</head>
+<body>
+
+  <!-- Proto nav bar -->
+  <nav class="proto-nav">
+    <a href="index.html" class="proto-nav-library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-title">Design System</span>
+    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+  </nav>
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="logo">
+      <img src="https://www.figma.com/api/mcp/asset/73914091-8657-4909-81c6-dce51488ce2a" alt="Zipline" />
+    </div>
+    <h1 class="page-heading">Design System</h1>
+  </div>
+
+  <!-- Three-column body -->
+  <div class="main">
+    <nav class="nav-panel" id="navPanel"></nav>
+    <div class="preview-panel">
+      <div class="preview-name" id="previewName">Select a component</div>
+      <div class="preview-canvas" id="previewCanvas">
+        <div class="preview-empty">← Choose a component from the left panel</div>
+      </div>
+    </div>
+    <aside class="specs-panel">
+      <div class="specs-heading">Specs</div>
+      <div id="specsBody" class="specs-empty">Select a component to view its CSS and HTML snippets.</div>
+    </aside>
+  </div>
+
+  <script>
+    // ─── Component Data ───────────────────────────────────────────────────────
+    const DS = [
+      {
+        category: 'Buttons',
+        items: [
+          {
+            name: 'Primary Button',
+            previewCSS: `.ds-btn-primary {
+  background: #2c66ef; color: #fff; border: none;
+  border-radius: 8px; padding: 4px 12px;
+  font-family: Inter, sans-serif; font-size: 14px;
+  font-weight: 500; letter-spacing: -0.56px; line-height: 24px;
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.ds-btn-primary:hover { background: #1d56df; }`,
+            previewHTML: `<button class="ds-btn-primary">Continue</button>`,
+            css: `.btn-primary {
+  background: #2c66ef;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.56px;
+  line-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.btn-primary:hover { background: #1d56df; }`,
+            html: `<button class="btn-primary">Continue</button>`
+          },
+          {
+            name: 'Secondary Button',
+            previewCSS: `.ds-btn-secondary {
+  background: #e2e8f0; color: #0f172a; border: none;
+  border-radius: 8px; padding: 4px 12px;
+  font-family: Inter, sans-serif; font-size: 14px;
+  font-weight: 500; letter-spacing: -0.56px; line-height: 24px;
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.ds-btn-secondary:hover { background: #cbd5e1; }`,
+            previewHTML: `<button class="ds-btn-secondary">Back</button>`,
+            css: `.btn-secondary {
+  background: #e2e8f0;
+  color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.56px;
+  line-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.btn-secondary:hover { background: #cbd5e1; }`,
+            html: `<button class="btn-secondary">Back</button>`
+          },
+          {
+            name: 'Outline Button',
+            previewCSS: `.ds-btn-outline {
+  border: 1px solid #2c66ef; color: #2c66ef; background: #fff;
+  font-family: Inter, sans-serif; font-size: 14px;
+  font-weight: 500; letter-spacing: -0.56px; line-height: 24px;
+  padding: 4px 12px; border-radius: 8px; cursor: pointer;
+  display: inline-flex; align-items: center;
+}
+.ds-btn-outline:hover { background: #eff6ff; }`,
+            previewHTML: `<button class="ds-btn-outline">Cancel</button>`,
+            css: `.btn-outline {
+  border: 1px solid #2c66ef;
+  color: #2c66ef;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.56px;
+  line-height: 24px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-outline:hover { background: #eff6ff; }`,
+            html: `<button class="btn-outline">Cancel</button>`
+          },
+          {
+            name: 'Disabled Button',
+            previewCSS: `.ds-btn-disabled {
+  background: #e2e8f0; color: #94a3b8; border: none;
+  border-radius: 20px; padding: 7px 24px;
+  font-family: Inter, sans-serif; font-size: 16px;
+  font-weight: 700; line-height: 26px; cursor: not-allowed;
+}`,
+            previewHTML: `<button class="ds-btn-disabled" disabled>Continue</button>`,
+            css: `.btn-disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 26px;
+  cursor: not-allowed;
+}`,
+            html: `<button class="btn-disabled" disabled>Continue</button>`
+          },
+          {
+            name: 'Pill Button (Active)',
+            previewCSS: `.ds-btn-pill {
+  background: #197fe6; color: #fff; border: none;
+  border-radius: 20px; padding: 7px 24px;
+  font-family: Inter, sans-serif; font-size: 16px;
+  font-weight: 700; line-height: 26px; cursor: pointer;
+  transition: background 0.15s;
+}
+.ds-btn-pill:hover { background: #1569c8; }`,
+            previewHTML: `<button class="ds-btn-pill">Continue</button>`,
+            css: `.btn-pill-active {
+  background: #197fe6;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 7px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 26px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-pill-active:hover { background: #1569c8; }`,
+            html: `<button class="btn-pill-active">Continue</button>`
+          }
+        ]
+      },
+      {
+        category: 'Form Controls',
+        items: [
+          {
+            name: 'Text Input',
+            previewCSS: `.ds-field-wrap { display: flex; flex-direction: column; gap: 6px; font-family: Inter, sans-serif; }
+.ds-field-label { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.32px; line-height: 26px; }
+.ds-field-input {
+  width: 280px; height: 40px; border: 2px solid #ccc;
+  border-radius: 8px; padding: 0 12px;
+  font-family: Inter, sans-serif; font-size: 16px; color: #0f172a;
+  background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ds-field-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+.ds-field-input::placeholder { color: #808080; }`,
+            previewHTML: `<div class="ds-field-wrap">
+  <label class="ds-field-label">First Name <span style="color:#ef4444">*</span></label>
+  <input class="ds-field-input" type="text" placeholder="Enter first name" />
+</div>`,
+            css: `.field-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: -0.32px;
+  line-height: 26px;
+}
+.field-label .star { color: #ef4444; }
+
+.field-input {
+  width: 100%;
+  height: 40px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 16px;
+  color: #0f172a;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field-input:focus {
+  border-color: #2c66ef;
+  box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+}
+.field-input::placeholder { color: #808080; }`,
+            html: `<label class="field-label">
+  First Name <span class="star">*</span>
+</label>
+<input
+  class="field-input"
+  type="text"
+  placeholder="Enter first name"
+/>`
+          },
+          {
+            name: 'Select',
+            previewCSS: `.ds-field-select {
+  width: 280px; height: 40px; border: 2px solid #ccc;
+  border-radius: 8px; padding: 0 36px 0 12px;
+  font-family: Inter, sans-serif; font-size: 16px; color: #808080;
+  background: #fff url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E") no-repeat right 12px center;
+  appearance: none; outline: none; cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ds-field-select:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }`,
+            previewHTML: `<select class="ds-field-select">
+  <option value="" disabled selected>Select a role</option>
+  <option>Nurse</option>
+  <option>Carer</option>
+  <option>Admin</option>
+</select>`,
+            css: `.field-select {
+  width: 100%;
+  height: 40px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 0 36px 0 12px;
+  font-size: 16px;
+  color: #808080;
+  background: #fff url("data:image/svg+xml,…")
+              no-repeat right 12px center;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field-select:focus {
+  border-color: #2c66ef;
+  box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+}
+.field-select.has-value { color: #0f172a; }`,
+            html: `<select class="field-select">
+  <option value="" disabled selected>
+    Select a role
+  </option>
+  <option>Nurse</option>
+  <option>Carer</option>
+</select>`
+          },
+          {
+            name: 'Checkbox',
+            previewCSS: `.ds-cb-row { display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-family:Inter,sans-serif; }
+.ds-cb-wrap { flex-shrink:0; width:20px; height:20px; position:relative; margin-top:3px; }
+.ds-cb-wrap input { opacity:0; position:absolute; inset:0; cursor:pointer; margin:0; width:100%; height:100%; }
+.ds-cb-custom { width:20px; height:20px; border:2px solid #ccc; border-radius:4px; background:#fff; display:flex; align-items:center; justify-content:center; pointer-events:none; transition:background 0.12s,border-color 0.12s; }
+.ds-cb-custom svg { width:12px; height:12px; display:none; }
+.ds-cb-wrap input:checked ~ .ds-cb-custom { background:#197fe6; border-color:#197fe6; }
+.ds-cb-wrap input:checked ~ .ds-cb-custom svg { display:block; }
+.ds-cb-text { font-size:16px; font-weight:400; line-height:26px; color:#54565a; }`,
+            previewHTML: `<label class="ds-cb-row">
+  <div class="ds-cb-wrap">
+    <input type="checkbox" checked />
+    <div class="ds-cb-custom">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+  </div>
+  <span class="ds-cb-text">I agree to the terms and conditions</span>
+</label>`,
+            css: `.checkbox-wrap {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  margin-top: 3px;
+}
+.checkbox-wrap input {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  margin: 0;
+}
+.checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: background 0.12s, border-color 0.12s;
+}
+.checkbox-wrap input:checked ~ .checkbox-custom {
+  background: #197fe6;
+  border-color: #197fe6;
+}`,
+            html: `<label class="checkbox-row">
+  <div class="checkbox-wrap">
+    <input type="checkbox" />
+    <div class="checkbox-custom">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="#fff" stroke-width="3">
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+  </div>
+  <span class="checkbox-text">Label</span>
+</label>`
+          }
+        ]
+      },
+      {
+        category: 'Badges & Tags',
+        items: [
+          {
+            name: 'Tag: Caution',
+            previewCSS: `.ds-tag-caution {
+  display:inline-flex; padding:4px 8px;
+  border:2px solid #ffeabf; border-radius:8px;
+  font-family:Inter,sans-serif; font-size:12px; font-weight:700;
+  color:#ffaa00; line-height:16px;
+}`,
+            previewHTML: `<span class="ds-tag-caution">Approval required</span>`,
+            css: `.tag-caution {
+  display: inline-flex;
+  padding: 4px 8px;
+  border: 2px solid #ffeabf;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffaa00;
+  line-height: 16px;
+}`,
+            html: `<span class="tag-caution">Approval required</span>`
+          },
+          {
+            name: 'Status: Approved',
+            previewCSS: `.ds-status-pill { display:inline-flex; align-items:center; gap:4px; padding:2px 6px; border-radius:12px; font-family:Inter,sans-serif; font-size:12px; font-weight:600; letter-spacing:-0.24px; line-height:16px; }
+.ds-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.ds-status-approved { background:#a7f3d0; color:#059669; }
+.ds-status-approved .ds-dot { background:#059669; }`,
+            previewHTML: `<span class="ds-status-pill ds-status-approved">
+  <span class="ds-dot"></span>Approved
+</span>`,
+            css: `.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.24px;
+  line-height: 16px;
+}
+.status-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-approved { background: #a7f3d0; color: #059669; }
+.status-approved .dot { background: #059669; }`,
+            html: `<span class="status-pill status-approved">
+  <span class="dot"></span>
+  Approved
+</span>`
+          },
+          {
+            name: 'Status: In Review',
+            previewCSS: `.ds-status-pill2 { display:inline-flex; align-items:center; gap:4px; padding:2px 6px; border-radius:12px; font-family:Inter,sans-serif; font-size:12px; font-weight:600; letter-spacing:-0.24px; line-height:16px; }
+.ds-dot2 { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.ds-status-review { background:#bfdbfe; color:#2563eb; }
+.ds-status-review .ds-dot2 { background:#2563eb; }`,
+            previewHTML: `<span class="ds-status-pill2 ds-status-review">
+  <span class="ds-dot2"></span>In review
+</span>`,
+            css: `.status-in-review {
+  background: #bfdbfe;
+  color: #2563eb;
+}
+.status-in-review .dot { background: #2563eb; }`,
+            html: `<span class="status-pill status-in-review">
+  <span class="dot"></span>
+  In review
+</span>`
+          },
+          {
+            name: 'Badge: Count',
+            previewCSS: `.ds-badge {
+  background:#ef4444; color:#fff;
+  font-family:Inter,sans-serif; font-size:10px; font-weight:600;
+  line-height:11px; padding:2px 6px; border-radius:12px;
+  display:inline-flex; align-items:center;
+}`,
+            previewHTML: `<span class="ds-badge">4</span>`,
+            css: `.badge {
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 11px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+}`,
+            html: `<span class="badge">4</span>`
+          }
+        ]
+      },
+      {
+        category: 'Cards',
+        items: [
+          {
+            name: 'Basic Card',
+            previewCSS: `.ds-card {
+  background:#fff; border:1px solid #e2e8f0;
+  border-radius:8px; overflow:hidden; width:280px;
+  font-family:Inter,sans-serif;
+}
+.ds-card-section { padding:16px 20px; font-size:14px; color:#334155; line-height:24px; }`,
+            previewHTML: `<div class="ds-card">
+  <div class="ds-card-section">Card content goes here.</div>
+</div>`,
+            css: `.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.card-section { padding: 16px 20px; }`,
+            html: `<div class="card">
+  <div class="card-section">
+    Content goes here.
+  </div>
+</div>`
+          },
+          {
+            name: 'Card with Sections',
+            previewCSS: `.ds-card2 { background:#fff; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden; width:280px; font-family:Inter,sans-serif; }
+.ds-card2 .s { padding:16px 20px; }
+.ds-card2 .d { height:1px; background:#e2e8f0; }
+.ds-card2 .t { font-size:16px; font-weight:700; color:#334155; line-height:26px; margin-bottom:4px; }
+.ds-card2 .b { font-size:14px; color:#64748b; line-height:24px; }`,
+            previewHTML: `<div class="ds-card2">
+  <div class="s"><div class="t">Section Title</div><div class="b">Section content and description.</div></div>
+  <div class="d"></div>
+  <div class="s"><div class="b">Second section content.</div></div>
+</div>`,
+            css: `.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.card-section { padding: 16px 20px; }
+.card-divider { height: 1px; background: #e2e8f0; }`,
+            html: `<div class="card">
+  <div class="card-section">
+    <h3>Section Title</h3>
+    <p>Content here.</p>
+  </div>
+  <div class="card-divider"></div>
+  <div class="card-section">
+    <p>Another section.</p>
+  </div>
+</div>`
+          }
+        ]
+      },
+      {
+        category: 'Progress',
+        items: [
+          {
+            name: 'Progress Bar',
+            previewCSS: `.ds-pb-wrap { display:flex; flex-direction:column; gap:12px; width:280px; font-family:Inter,sans-serif; }
+.ds-pb-label { font-size:14px; color:#64748b; }
+.ds-pb { height:4px; background:#e2e8f0; border-radius:4px; overflow:hidden; }
+.ds-pb-fill { height:100%; background:#197fe6; border-radius:4px; transition:width 0.3s ease; }`,
+            previewHTML: `<div class="ds-pb-wrap">
+  <div class="ds-pb-label">0% — Empty</div>
+  <div class="ds-pb"><div class="ds-pb-fill" style="width:0%"></div></div>
+  <div class="ds-pb-label">60% — In progress</div>
+  <div class="ds-pb"><div class="ds-pb-fill" style="width:60%"></div></div>
+  <div class="ds-pb-label">100% — Complete</div>
+  <div class="ds-pb"><div class="ds-pb-fill" style="width:100%"></div></div>
+</div>`,
+            css: `.progress-bar {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #197fe6;
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.3s ease;
+}`,
+            html: `<div class="progress-bar">
+  <div class="progress-fill"
+       style="width: 60%">
+  </div>
+</div>`
+          }
+        ]
+      },
+      {
+        category: 'Navigation',
+        items: [
+          {
+            name: 'Sidebar Nav Item',
+            previewCSS: `.ds-sidebar-bg { background:#0f172a; border-radius:8px; padding:8px; width:220px; font-family:Inter,sans-serif; display:flex; flex-direction:column; gap:2px; }
+.ds-nav-item { display:flex; align-items:center; gap:16px; padding:8px 16px; border-radius:8px; cursor:pointer; border:none; background:none; width:100%; }
+.ds-nav-item:hover { background:rgba(255,255,255,0.06); }
+.ds-nav-item.active { background:rgba(255,255,255,0.1); }
+.ds-nav-label { flex:1; color:#fff; font-size:14px; font-weight:500; letter-spacing:-0.28px; line-height:24px; }
+.ds-nav-icon { width:24px; height:24px; flex-shrink:0; color:#fff; }`,
+            previewHTML: `<div class="ds-sidebar-bg">
+  <button class="ds-nav-item active">
+    <svg class="ds-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    <span class="ds-nav-label">To-Do</span>
+  </button>
+  <button class="ds-nav-item">
+    <svg class="ds-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+    <span class="ds-nav-label">Users</span>
+  </button>
+</div>`,
+            css: `.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.nav-label {
+  flex: 1;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.28px;
+  line-height: 24px;
+}
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #fff;
+}`,
+            html: `<button class="nav-item">
+  <svg class="nav-icon" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor"
+       stroke-width="2">
+    <!-- icon path -->
+  </svg>
+  <span class="nav-label">To-Do</span>
+</button>`
+          },
+          {
+            name: 'Avatar',
+            previewCSS: `.ds-avatar-row { display:flex; align-items:center; gap:12px; font-family:Inter,sans-serif; }
+.ds-avatar { border-radius:50%; background:#64748b; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600; flex-shrink:0; }
+.ds-avatar-sm { width:32px; height:32px; font-size:11px; }
+.ds-avatar-md { width:40px; height:40px; font-size:14px; }
+.ds-avatar-lg { width:48px; height:48px; font-size:16px; }`,
+            previewHTML: `<div class="ds-avatar-row">
+  <div class="ds-avatar ds-avatar-sm">JL</div>
+  <div class="ds-avatar ds-avatar-md">JL</div>
+  <div class="ds-avatar ds-avatar-lg">JL</div>
+</div>`,
+            css: `.avatar {
+  border-radius: 50%;
+  background: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+/* Sizes */
+.avatar-sm { width: 32px; height: 32px; font-size: 11px; }
+.avatar-md { width: 40px; height: 40px; font-size: 14px; }
+.avatar-lg { width: 48px; height: 48px; font-size: 16px; }`,
+            html: `<div class="avatar avatar-sm">JL</div>
+<div class="avatar avatar-md">JL</div>
+<div class="avatar avatar-lg">JL</div>`
+          }
+        ]
+      },
+      {
+        category: 'Typography',
+        items: [
+          {
+            name: 'Heading — Page (36px)',
+            previewCSS: `.ds-h1 { font-family:Inter,sans-serif; font-size:36px; font-weight:600; color:#334155; letter-spacing:-1.44px; line-height:40px; }`,
+            previewHTML: `<h1 class="ds-h1">Page Heading</h1>`,
+            css: `.heading-page {
+  font-size: 36px;
+  font-weight: 600;
+  color: #334155;
+  letter-spacing: -1.44px;
+  line-height: 40px;
+}`,
+            html: `<h1 class="heading-page">Page Heading</h1>`
+          },
+          {
+            name: 'Heading — Section (20px)',
+            previewCSS: `.ds-h2 { font-family:Inter,sans-serif; font-size:20px; font-weight:700; color:#334155; letter-spacing:-0.4px; line-height:30px; }`,
+            previewHTML: `<h2 class="ds-h2">Section Heading</h2>`,
+            css: `.heading-section {
+  font-size: 20px;
+  font-weight: 700;
+  color: #334155;
+  letter-spacing: -0.4px;
+  line-height: 30px;
+}`,
+            html: `<h2 class="heading-section">Section Heading</h2>`
+          },
+          {
+            name: 'Body Text (16px)',
+            previewCSS: `.ds-body { font-family:Inter,sans-serif; font-size:16px; font-weight:400; color:#334155; line-height:26px; max-width:320px; }`,
+            previewHTML: `<p class="ds-body">This is body text used for descriptions and general content throughout the application interface.</p>`,
+            css: `.body-text {
+  font-size: 16px;
+  font-weight: 400;
+  color: #334155;
+  line-height: 26px;
+}`,
+            html: `<p class="body-text">Body copy goes here.</p>`
+          },
+          {
+            name: 'Label (14px)',
+            previewCSS: `.ds-label { font-family:Inter,sans-serif; font-size:14px; font-weight:500; color:#64748b; letter-spacing:-0.28px; line-height:24px; }`,
+            previewHTML: `<span class="ds-label">Field label / Meta text</span>`,
+            css: `.label-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: -0.28px;
+  line-height: 24px;
+}`,
+            html: `<span class="label-text">Field label</span>`
+          }
+        ]
+      },
+      {
+        category: 'Colors',
+        items: [
+          {
+            name: 'Color Palette',
+            previewCSS: `.ds-colors { display:flex; flex-wrap:wrap; gap:16px; font-family:Inter,sans-serif; max-width:440px; }
+.ds-swatch-group { display:flex; flex-direction:column; gap:6px; align-items:center; }
+.ds-swatch { width:56px; height:56px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); }
+.ds-swatch-name { font-size:10px; font-weight:600; color:#334155; text-align:center; line-height:14px; }
+.ds-swatch-hex { font-size:10px; color:#94a3b8; text-align:center; font-family:'SF Mono',monospace; }`,
+            previewHTML: `<div class="ds-colors">
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#2c66ef"></div><span class="ds-swatch-name">Primary</span><span class="ds-swatch-hex">#2c66ef</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#197fe6"></div><span class="ds-swatch-name">Alt Blue</span><span class="ds-swatch-hex">#197fe6</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#334155"></div><span class="ds-swatch-name">Text Dark</span><span class="ds-swatch-hex">#334155</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#64748b"></div><span class="ds-swatch-name">Text Mid</span><span class="ds-swatch-hex">#64748b</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#94a3b8"></div><span class="ds-swatch-name">Muted</span><span class="ds-swatch-hex">#94a3b8</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#e2e8f0"></div><span class="ds-swatch-name">Border</span><span class="ds-swatch-hex">#e2e8f0</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#f8fafc"></div><span class="ds-swatch-name">BG Light</span><span class="ds-swatch-hex">#f8fafc</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#059669"></div><span class="ds-swatch-name">Success</span><span class="ds-swatch-hex">#059669</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#ef4444"></div><span class="ds-swatch-name">Danger</span><span class="ds-swatch-hex">#ef4444</span></div>
+  <div class="ds-swatch-group"><div class="ds-swatch" style="background:#ffaa00"></div><span class="ds-swatch-name">Warning</span><span class="ds-swatch-hex">#ffaa00</span></div>
+</div>`,
+            css: `/* Brand */
+--color-primary:    #2c66ef;
+--color-alt-blue:   #197fe6;
+
+/* Text */
+--color-text-dark:  #334155;
+--color-text-mid:   #64748b;
+--color-text-muted: #94a3b8;
+--color-text-body:  #0f172a;
+
+/* Borders & Backgrounds */
+--color-border:     #e2e8f0;
+--color-bg-light:   #f8fafc;
+--color-bg-mid:     #f1f5f9;
+
+/* Semantic */
+--color-success:    #059669;
+--color-danger:     #ef4444;
+--color-warning:    #ffaa00;`,
+            html: `<style>
+  :root {
+    --color-primary: #2c66ef;
+    --color-success: #059669;
+    --color-danger:  #ef4444;
+    --color-warning: #ffaa00;
+    --color-border:  #e2e8f0;
+    --color-bg:      #f8fafc;
+  }
+</style>`
+          }
+        ]
+      }
+    ];
+
+    // ─── Render Nav ───────────────────────────────────────────────────────────
+    const navPanel = document.getElementById('navPanel');
+
+    DS.forEach((group, gi) => {
+      const catGroup = document.createElement('div');
+      catGroup.className = 'cat-group';
+
+      const header = document.createElement('button');
+      header.className = 'cat-header';
+      header.innerHTML = `<span>${group.category}</span><svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>`;
+
+      const itemsList = document.createElement('div');
+      itemsList.className = 'cat-items';
+
+      group.items.forEach((item, ii) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'cat-item-wrap';
+        const tree = document.createElement('div');
+        tree.className = 'cat-item-tree';
+        const btn = document.createElement('button');
+        btn.className = 'cat-item';
+        btn.textContent = item.name;
+        btn.dataset.gi = gi;
+        btn.dataset.ii = ii;
+        btn.addEventListener('click', () => selectItem(gi, ii, btn));
+        wrap.appendChild(tree);
+        wrap.appendChild(btn);
+        itemsList.appendChild(wrap);
+      });
+
+      header.addEventListener('click', () => toggleCat(gi, header, itemsList));
+      catGroup.appendChild(header);
+      catGroup.appendChild(itemsList);
+      navPanel.appendChild(catGroup);
+    });
+
+    // Open first category and select first item
+    const firstHeader = navPanel.querySelector('.cat-header');
+    const firstItems  = navPanel.querySelector('.cat-items');
+    if (firstHeader && firstItems) {
+      firstHeader.classList.add('open');
+      firstItems.classList.add('open');
+      const firstBtn = firstItems.querySelector('.cat-item');
+      if (firstBtn) firstBtn.click();
+    }
+
+    function toggleCat(gi, header, itemsList) {
+      const isOpen = itemsList.classList.contains('open');
+      document.querySelectorAll('.cat-header').forEach(h => h.classList.remove('open'));
+      document.querySelectorAll('.cat-items').forEach(l => l.classList.remove('open'));
+      if (!isOpen) {
+        header.classList.add('open');
+        itemsList.classList.add('open');
+      }
+    }
+
+    // ─── Preview style tag ────────────────────────────────────────────────────
+    const previewStyleEl = document.createElement('style');
+    previewStyleEl.id = 'ds-preview-style';
+    document.head.appendChild(previewStyleEl);
+
+    function selectItem(gi, ii, btn) {
+      document.querySelectorAll('.cat-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const item = DS[gi].items[ii];
+
+      // Update preview style + HTML
+      previewStyleEl.textContent = item.previewCSS;
+      document.getElementById('previewName').textContent = item.name;
+      document.getElementById('previewCanvas').innerHTML = item.previewHTML;
+
+      // Update specs panel
+      const specsBody = document.getElementById('specsBody');
+      specsBody.className = 'specs-body';
+      specsBody.innerHTML = `
+        <div class="spec-block">
+          <div class="spec-block-label">CSS</div>
+          <div class="spec-code-wrap">
+            <pre class="spec-code">${escHtml(item.css)}</pre>
+            <button class="spec-copy-btn" data-copy="css" title="Copy CSS">
+              ${copyIcon()}
+            </button>
+          </div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-block-label">HTML</div>
+          <div class="spec-code-wrap">
+            <pre class="spec-code">${escHtml(item.html)}</pre>
+            <button class="spec-copy-btn" data-copy="html" title="Copy HTML">
+              ${copyIcon()}
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Attach copy handlers
+      specsBody.querySelectorAll('.spec-copy-btn').forEach(copyBtn => {
+        copyBtn.addEventListener('click', () => {
+          const type = copyBtn.dataset.copy;
+          const text = type === 'css' ? item.css : item.html;
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = checkIcon();
+            setTimeout(() => {
+              copyBtn.classList.remove('copied');
+              copyBtn.innerHTML = copyIcon();
+            }, 1500);
+          });
+        });
+      });
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function copyIcon() {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+    }
+    function checkIcon() {
+      return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+    }
+
+    // Last updated
+    (function() {
+      var d = new Date(document.lastModified);
+      var pad = function(n) { return String(n).padStart(2, '0'); };
+      document.getElementById('protoLastUpdated').textContent =
+        'Last updated ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    })();
+  </script>
+</body>
+</html>
