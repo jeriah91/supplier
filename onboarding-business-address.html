@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Address – Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      min-height: 100vh;
+      color: #0f172a;
+    }
+
+    /* ── Page wrapper ── */
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 40px;
+      max-width: 1428px;
+      margin: 0 auto;
+      gap: 32px;
+    }
+
+    /* ── Logo ── */
+    .logo { flex-shrink: 0; height: 23px; display: flex; align-items: center; }
+    .logo img { height: 23px; width: auto; }
+
+    /* ── Page title ── */
+    .page-title { display: flex; flex-direction: column; gap: 8px; }
+    .page-heading {
+      font-size: 36px; font-weight: 600;
+      color: #334155; letter-spacing: -1.44px; line-height: 40px;
+    }
+    .page-subheading {
+      font-size: 16px; font-weight: 400;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 18px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      height: 5px; background: #ccdafb;
+      border-radius: 4px; overflow: hidden;
+      flex-shrink: 0;
+    }
+    .progress-fill {
+      height: 100%; background: #2c66ef;
+      border-radius: 4px;
+      width: 50%;
+    }
+
+    /* ── Content: stepper + form ── */
+    .content { display: flex; gap: 56px; flex: 1; }
+
+    /* ── Stepper (left sidebar) ── */
+    .stepper {
+      flex-shrink: 0; width: 266px;
+      display: flex; flex-direction: column;
+    }
+    .step {
+      display: flex; align-items: center;
+      gap: 16px; height: 46px; position: relative;
+    }
+    .step-track {
+      display: flex; flex-direction: column; align-items: center;
+      width: 24px; height: 46px; flex-shrink: 0;
+    }
+    .step-line { width: 2px; flex: 1; background: #cbd5e1; }
+    .step-line.hidden { background: transparent; }
+    .step-circle {
+      width: 24px; height: 24px;
+      border: 2px solid #cbd5e1;
+      border-radius: 50%; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; z-index: 1;
+    }
+    .step-circle svg { width: 12px; height: 12px; color: #cbd5e1; }
+    .step-circle.done {
+      border-color: #10b981;
+      background: #10b981;
+    }
+    .step-circle.done svg { color: #fff; }
+    .step-circle.active {
+      border-color: #334155;
+      background: #fff;
+    }
+    .step-circle.active svg { color: #cbd5e1; }
+    .step-label {
+      font-size: 16px; font-weight: 600;
+      color: #334155; letter-spacing: -0.32px; line-height: 26px;
+      padding: 4px 12px; border-radius: 8px;
+      white-space: nowrap;
+    }
+    .step-label.active { background: #e2e8f0; }
+
+    /* ── Form area (right) ── */
+    .form-area {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Section title */
+    .section-title {
+      font-size: 24px; font-weight: 600;
+      color: #334155; letter-spacing: -0.48px; line-height: 26px;
+    }
+
+    /* ── Segmented control ── */
+    .seg-control {
+      display: inline-flex;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      width: fit-content;
+    }
+    .seg-btn {
+      padding: 6px 16px;
+      font-family: inherit;
+      font-size: 14px; font-weight: 500;
+      color: #64748b;
+      background: #f8fafc;
+      border: none;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s, box-shadow 0.12s;
+      line-height: 20px;
+      letter-spacing: -0.28px;
+    }
+    .seg-btn:first-child { border-radius: 7px 0 0 7px; }
+    .seg-btn:last-child  { border-radius: 0 7px 7px 0; }
+    .seg-btn.active {
+      background: #fff;
+      color: #0f172a;
+      font-weight: 600;
+      box-shadow: 0 0 0 1.5px #334155 inset;
+    }
+
+    /* ── Required note ── */
+    .required-note { font-size: 16px; line-height: 18px; }
+    .required-note span.star { color: #ef4444; font-weight: 700; }
+
+    /* ── Form fields ── */
+    .form-fields { display: flex; flex-direction: column; gap: 16px; max-width: 640px; }
+
+    .field-row {
+      display: flex; gap: 4px; align-items: flex-start;
+    }
+    .field-label {
+      width: 180px; flex-shrink: 0;
+      font-size: 16px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 26px;
+      padding-top: 7px;
+    }
+    .field-label .star { color: #ef4444; }
+    .field-input-wrap {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; gap: 4px;
+      position: relative;
+    }
+    .field-input, .field-select {
+      width: 100%;
+      height: 40px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 16px; color: #0f172a;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field-input:focus, .field-select:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+    .field-input::placeholder { color: #808080; }
+    .field-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+      color: #808080;
+    }
+    .field-select.has-value { color: #0f172a; }
+
+    /* ── Address autocomplete dropdown ── */
+    .address-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      z-index: 100;
+      overflow: hidden;
+    }
+    .address-dropdown.open { display: block; }
+    .dropdown-hint {
+      padding: 12px 16px;
+      font-size: 14px; color: #94a3b8;
+      line-height: 18px;
+    }
+    .dropdown-suggestion {
+      padding: 11px 16px;
+      font-size: 14px; color: #0f172a;
+      line-height: 20px; cursor: pointer;
+      border-top: 1px solid #f1f5f9;
+      transition: background 0.1s;
+    }
+    .dropdown-suggestion:hover { background: #e2e8f0; }
+    .dropdown-manual {
+      padding: 11px 16px;
+      font-size: 14px; color: #2c66ef;
+      font-weight: 500; line-height: 20px;
+      cursor: pointer; border-top: 1px solid #e2e8f0;
+      transition: background 0.1s;
+    }
+    .dropdown-manual:hover { background: #f8fafc; }
+
+    /* ── Divider ── */
+    .section-divider { height: 1px; background: #e2e8f0; max-width: 640px; }
+
+    /* ── Mailing address section ── */
+    .mailing-heading {
+      font-size: 20px; font-weight: 600;
+      color: #334155; letter-spacing: -0.4px; line-height: 26px;
+    }
+    .checkbox-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      cursor: pointer;
+    }
+    .checkbox-wrap {
+      width: 18px; height: 18px;
+      flex-shrink: 0; margin-top: 2px;
+      position: relative;
+    }
+    .checkbox-wrap input[type="checkbox"] {
+      opacity: 0; position: absolute; inset: 0;
+      width: 100%; height: 100%; cursor: pointer; margin: 0;
+    }
+    .checkbox-custom {
+      width: 18px; height: 18px;
+      border: 2px solid #2c66ef;
+      border-radius: 4px;
+      background: #2c66ef;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .checkbox-custom svg { width: 11px; height: 11px; color: #fff; }
+    .checkbox-wrap input:not(:checked) ~ .checkbox-custom {
+      background: #fff;
+      border-color: #cbd5e1;
+    }
+    .checkbox-wrap input:not(:checked) ~ .checkbox-custom svg { display: none; }
+    .checkbox-text { display: flex; flex-direction: column; gap: 2px; }
+    .checkbox-label {
+      font-size: 16px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 22px;
+    }
+    .checkbox-desc {
+      font-size: 14px; color: #64748b;
+      line-height: 18px; letter-spacing: -0.28px;
+    }
+
+    /* ── Navigation ── */
+    .nav-row {
+      display: flex; justify-content: flex-end; gap: 8px;
+      max-width: 640px;
+    }
+    .btn-next {
+      background: #2c66ef; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 4px 12px;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.56px; line-height: 24px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-next:hover { background: #1d56df; }
+    .btn-back {
+      background: #e2e8f0; color: #0f172a;
+      border: none; border-radius: 8px;
+      padding: 4px 12px;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.56px; line-height: 24px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-back:hover { background: #cbd5e1; }
+
+    /* ── Mobile ── */
+    @media (max-width: 767px) {
+      .page { padding: 24px; gap: 24px; }
+      .page-heading { font-size: 28px; letter-spacing: -1.12px; line-height: 34px; }
+      .stepper { display: none; }
+      .content { gap: 0; }
+      .form-area { gap: 24px; }
+      .section-title { font-size: 20px; }
+
+      /* Mobile: label above input */
+      .field-row { flex-direction: column; gap: 4px; }
+      .field-label { width: auto; padding-top: 0; }
+      .field-input-wrap { width: 100%; }
+
+      .nav-row { display: none; }
+      .nav-row-mobile {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+    }
+    @media (min-width: 768px) {
+      .nav-row-mobile { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Logo -->
+    <div class="logo">
+      <img src="https://www.figma.com/api/mcp/asset/7a712c2a-1cd5-4e77-9676-03fa268f4997" alt="Zipline" />
+    </div>
+
+    <!-- Page title -->
+    <div class="page-title">
+      <div class="page-heading">Get started with Zipline</div>
+      <div class="page-subheading">Let's get you up and running.</div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Left: step sidebar (desktop only) -->
+      <div class="stepper">
+
+        <!-- Step 1: done -->
+        <div class="step">
+          <div class="step-track">
+            <div class="step-line hidden"></div>
+            <div class="step-circle done">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="step-line"></div>
+          </div>
+          <span class="step-label">Business Details</span>
+        </div>
+
+        <!-- Step 2: active -->
+        <div class="step">
+          <div class="step-track">
+            <div class="step-line"></div>
+            <div class="step-circle active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="step-line"></div>
+          </div>
+          <span class="step-label active">Business Address</span>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step">
+          <div class="step-track">
+            <div class="step-line"></div>
+            <div class="step-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="step-line"></div>
+          </div>
+          <span class="step-label">Key Contact</span>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step">
+          <div class="step-track">
+            <div class="step-line"></div>
+            <div class="step-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div class="step-line hidden"></div>
+          </div>
+          <span class="step-label">Business Compliance Docs</span>
+        </div>
+
+      </div>
+
+      <!-- Right: form content -->
+      <div class="form-area">
+
+        <div class="section-title">Business Address</div>
+
+        <!-- Segmented control -->
+        <div class="seg-control" id="segControl">
+          <button class="seg-btn active" id="segResidential" onclick="switchSeg('residential')">
+            Residential / Office
+          </button>
+          <button class="seg-btn" id="segPoBox" onclick="switchSeg('pobox')">
+            PO Box
+          </button>
+        </div>
+
+        <div class="required-note"><span class="star">*</span> Required</div>
+
+        <!-- Residential / Office fields -->
+        <div class="form-fields" id="residentialFields">
+
+          <!-- Address -->
+          <div class="field-row">
+            <div class="field-label">Address<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <input
+                class="field-input"
+                id="addressInput"
+                type="text"
+                placeholder="Start typing your address…"
+                autocomplete="off"
+                oninput="handleAddressInput(this)"
+                onblur="scheduleCloseDropdown()"
+                onfocus="handleAddressInput(this)"
+              />
+              <div class="address-dropdown" id="addressDropdown">
+                <div class="dropdown-hint" id="dropdownHint">Keep typing address to display results</div>
+                <div id="dropdownSuggestions"></div>
+                <div class="dropdown-manual" onclick="enterManually()">Enter address manually</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- City/Suburb -->
+          <div class="field-row">
+            <div class="field-label">City / Suburb<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <input class="field-input" id="cityInput" type="text" placeholder="e.g. Sydney" />
+            </div>
+          </div>
+
+          <!-- Postcode -->
+          <div class="field-row">
+            <div class="field-label">Postcode<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <input class="field-input" id="postcodeInput" type="text" placeholder="e.g. 2000" maxlength="4" />
+            </div>
+          </div>
+
+          <!-- State -->
+          <div class="field-row">
+            <div class="field-label">State<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <select class="field-select" id="stateSelect" onchange="this.classList.toggle('has-value', this.value !== '')">
+                <option value="">Select</option>
+                <option>NSW</option>
+                <option>VIC</option>
+                <option>QLD</option>
+                <option>WA</option>
+                <option>SA</option>
+                <option>TAS</option>
+                <option>ACT</option>
+                <option>NT</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- PO Box fields -->
+        <div class="form-fields" id="poBoxFields" style="display:none">
+
+          <!-- PO Box number -->
+          <div class="field-row">
+            <div class="field-label">PO Box<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <input class="field-input" type="text" placeholder="e.g. 1234" />
+            </div>
+          </div>
+
+          <!-- City/Suburb -->
+          <div class="field-row">
+            <div class="field-label">City / Suburb<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <input class="field-input" type="text" placeholder="e.g. Sydney" />
+            </div>
+          </div>
+
+          <!-- Postcode -->
+          <div class="field-row">
+            <div class="field-label">Postcode<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <input class="field-input" type="text" placeholder="e.g. 2000" maxlength="4" />
+            </div>
+          </div>
+
+          <!-- State -->
+          <div class="field-row">
+            <div class="field-label">State<span class="star">*</span></div>
+            <div class="field-input-wrap">
+              <select class="field-select" onchange="this.classList.toggle('has-value', this.value !== '')">
+                <option value="">Select</option>
+                <option>NSW</option>
+                <option>VIC</option>
+                <option>QLD</option>
+                <option>WA</option>
+                <option>SA</option>
+                <option>TAS</option>
+                <option>ACT</option>
+                <option>NT</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Divider -->
+        <div class="section-divider"></div>
+
+        <!-- Mailing address -->
+        <div class="mailing-heading">Mailing Address</div>
+
+        <label class="checkbox-row">
+          <div class="checkbox-wrap">
+            <input type="checkbox" id="sameAddress" checked />
+            <div class="checkbox-custom">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </div>
+          <div class="checkbox-text">
+            <span class="checkbox-label">Same as the business address</span>
+            <span class="checkbox-desc">Your mailing address will be set to the business address above.</span>
+          </div>
+        </label>
+
+        <!-- Desktop nav -->
+        <div class="nav-row">
+          <button class="btn-back" onclick="location.href='onboarding-business-details.html'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+            </svg>
+            Back
+          </button>
+          <button class="btn-next" onclick="location.href='#'">
+            Next
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile nav -->
+        <div class="nav-row-mobile">
+          <button class="btn-back" onclick="location.href='onboarding-business-details.html'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+            </svg>
+            Back
+          </button>
+          <button class="btn-next" onclick="location.href='#'">
+            Next
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Segmented control ──
+    function switchSeg(mode) {
+      const res = document.getElementById('segResidential');
+      const po  = document.getElementById('segPoBox');
+      const resFields = document.getElementById('residentialFields');
+      const poFields  = document.getElementById('poBoxFields');
+      if (mode === 'residential') {
+        res.classList.add('active');
+        po.classList.remove('active');
+        resFields.style.display = '';
+        poFields.style.display = 'none';
+      } else {
+        po.classList.add('active');
+        res.classList.remove('active');
+        poFields.style.display = '';
+        resFields.style.display = 'none';
+      }
+    }
+
+    // ── Address autocomplete ──
+    const SUGGESTIONS = [
+      { line1: '1 Martin Place', line2: 'Sydney NSW 2000' },
+      { line1: '100 George Street', line2: 'Sydney NSW 2000' },
+      { line1: '50 Bridge Street', line2: 'Sydney NSW 2000' },
+      { line1: '200 Kent Street', line2: 'Sydney NSW 2000' },
+      { line1: '10 Barrack Street', line2: 'Sydney NSW 2000' },
+    ];
+
+    let closeTimer = null;
+
+    function handleAddressInput(input) {
+      const val = input.value.trim();
+      const dropdown = document.getElementById('addressDropdown');
+      const hint = document.getElementById('dropdownHint');
+      const suggestionsEl = document.getElementById('dropdownSuggestions');
+
+      if (val.length === 0) {
+        dropdown.classList.remove('open');
+        return;
+      }
+
+      dropdown.classList.add('open');
+
+      if (val.length < 3) {
+        hint.style.display = '';
+        suggestionsEl.innerHTML = '';
+        return;
+      }
+
+      hint.style.display = 'none';
+      const filtered = SUGGESTIONS.filter(s =>
+        (s.line1 + ' ' + s.line2).toLowerCase().includes(val.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        hint.style.display = '';
+        hint.textContent = 'No results found';
+        suggestionsEl.innerHTML = '';
+      } else {
+        hint.style.display = 'none';
+        suggestionsEl.innerHTML = filtered.map(s => `
+          <div class="dropdown-suggestion" onmousedown="selectAddress('${s.line1}, ${s.line2}')">
+            ${s.line1}, ${s.line2}
+          </div>
+        `).join('');
+      }
+    }
+
+    function selectAddress(fullAddress) {
+      const input = document.getElementById('addressInput');
+      input.value = fullAddress;
+      document.getElementById('addressDropdown').classList.remove('open');
+
+      // Try to auto-fill city/postcode/state from selection
+      const parts = fullAddress.split(', ');
+      if (parts.length >= 2) {
+        const last = parts[parts.length - 1]; // e.g. "Sydney NSW 2000"
+        const tokens = last.split(' ');
+        if (tokens.length >= 3) {
+          document.getElementById('cityInput').value = tokens[0];
+          const state = tokens[tokens.length - 2];
+          const postcode = tokens[tokens.length - 1];
+          document.getElementById('postcodeInput').value = postcode;
+          const sel = document.getElementById('stateSelect');
+          for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].text === state) {
+              sel.selectedIndex = i;
+              sel.classList.add('has-value');
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    function enterManually() {
+      document.getElementById('addressDropdown').classList.remove('open');
+      document.getElementById('addressInput').focus();
+    }
+
+    function scheduleCloseDropdown() {
+      closeTimer = setTimeout(() => {
+        document.getElementById('addressDropdown').classList.remove('open');
+      }, 150);
+    }
+  </script>
+</body>
+</html>
