@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Requirement – QuickStart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Mulish', sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+      color: #334155;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page {
+      max-width: 375px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      text-decoration: none;
+      line-height: 24px;
+    }
+    .back-link svg { width: 24px; height: 24px; flex-shrink: 0; color: #197fe6; }
+    .help-link {
+      font-size: 14px;
+      font-weight: 700;
+      color: #197fe6;
+      text-decoration: none;
+      line-height: 24px;
+    }
+
+    /* ── Page heading ── */
+    .page-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .page-heading {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 30px;
+      color: #334155;
+    }
+    .auto-save {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 400;
+      color: #64748b;
+      line-height: 16px;
+    }
+    .auto-save svg { width: 16px; height: 16px; flex-shrink: 0; color: #10b981; }
+
+    /* ── Info card ── */
+    .card {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card-section { padding: 16px 20px; }
+    .card-divider { height: 1px; background: #e2e8f0; }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .info-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 26px;
+      color: #334155;
+    }
+    .info-toggle {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #197fe6;
+      cursor: pointer;
+      line-height: 24px;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .info-toggle svg { width: 20px; height: 20px; }
+    .info-body {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      color: #334155;
+    }
+    .info-body ol {
+      padding-left: 20px;
+      margin-top: 4px;
+    }
+    .info-body li { margin-bottom: 2px; }
+    .see-more {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #197fe6;
+      text-decoration: none;
+      line-height: 24px;
+    }
+
+    /* ── Upload card ── */
+    .upload-card {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -2px rgba(0,0,0,0.06), 0 10px 15px -3px rgba(0,0,0,0.10);
+    }
+    .upload-section { padding: 16px 20px; background: #fff; }
+
+    .add-files-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .add-files-row svg { width: 20px; height: 20px; flex-shrink: 0; color: #197fe6; }
+    .add-files-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 26px;
+      color: #334155;
+    }
+    .add-files-sub {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      color: #334155;
+      margin-bottom: 16px;
+    }
+
+    .btn-choose {
+      display: block;
+      width: 100%;
+      background: #fff;
+      border: 2px solid #197fe6;
+      border-radius: 16px;
+      padding: 4px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #197fe6;
+      text-align: center;
+      line-height: 24px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .btn-choose:hover { background: #f0f7ff; }
+
+    .not-added {
+      padding: 16px 20px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #94a3b8;
+      line-height: 24px;
+      border-top: 1px solid #e2e8f0;
+      background: #fff;
+    }
+
+    /* Uploaded files list (hidden by default) */
+    .files-list { display: none; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-top: 1px solid #e2e8f0;
+      background: #fff;
+      font-size: 14px;
+      color: #334155;
+    }
+    .file-item svg { width: 18px; height: 18px; color: #197fe6; flex-shrink: 0; }
+    .file-name { flex: 1; font-weight: 700; }
+    .file-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #94a3b8;
+      padding: 0;
+      display: flex;
+    }
+    .file-remove svg { width: 16px; height: 16px; color: #94a3b8; }
+
+    /* ── Footer: Done button ── */
+    .footer {
+      max-width: 375px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .btn-done {
+      background: #e2e8f0;
+      color: #94a3b8;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 24px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 26px;
+      cursor: not-allowed;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-done.active {
+      background: #197fe6;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Hidden file input */
+    #fileInput { display: none; }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <div class="header">
+      <a href="mobile-requirements.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+        </svg>
+        Back
+      </a>
+      <a href="#" class="help-link">Help</a>
+    </div>
+
+    <!-- Page title -->
+    <div class="page-title">
+      <div class="page-heading" id="pageHeading">Immunisations</div>
+      <div class="auto-save">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" d="M12 2a10 10 0 100 20A10 10 0 0012 2zm4.707 7.293a1 1 0 00-1.414 0L11 13.586l-2.293-2.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l5-5a1 1 0 000-1.414z" clip-rule="evenodd"/>
+        </svg>
+        Your progress is automatically saved.
+      </div>
+    </div>
+
+    <!-- Info card -->
+    <div class="card">
+      <div class="card-section">
+        <div class="info-header">
+          <span class="info-title">Info</span>
+          <button class="info-toggle" onclick="toggleInfo()" id="infoToggle">
+            Hide
+            <svg id="infoChevron" viewBox="0 0 24 24" fill="none" stroke="#197fe6" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="info-body" id="infoBody">
+          <p>Overall Silverchain process is:</p>
+          <ol>
+            <li>Survey</li>
+            <li>Evidence</li>
+            <li>Additional immunisations or evidence if needed</li>
+          </ol>
+          <a href="#" class="see-more">See more</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload card -->
+    <div class="upload-card">
+      <div class="upload-section">
+        <div class="add-files-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <span class="add-files-title">Add files</span>
+        </div>
+        <div class="add-files-sub">PNG, JPEG, PDF, 10MB max.</div>
+        <button class="btn-choose" onclick="document.getElementById('fileInput').click()">Choose a file</button>
+        <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.pdf" multiple onchange="handleFiles(this)" />
+      </div>
+
+      <!-- Files list (shown when files added) -->
+      <div class="files-list" id="filesList"></div>
+
+      <!-- Not added yet (hidden when files present) -->
+      <div class="not-added" id="notAdded">Not added yet</div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <button class="btn-done" id="doneBtn" onclick="handleDone()">Done</button>
+  </div>
+
+  <script>
+    // Set page title from URL param
+    const TITLES = {
+      'functional-assessment': 'Functional Assessment',
+      'reference-check':       'Reference Check',
+      'primary-use':           'Primary Use in Community Document',
+      'statutory-declaration': 'Statutory Declaration',
+      'work-rights':           'Australian Work Rights',
+      'secondary-1':           'Secondary Use in Community 1',
+      'secondary-2':           'Secondary Use in Community 2',
+      'selfie':                'Selfie with Primary ID',
+      'criminal-check':        'Nationally Coordinated Criminal History Check',
+      'qualifications':        'Professional Qualifications',
+      'immunisation':          'Immunisations',
+    };
+    const params = new URLSearchParams(location.search);
+    const item = params.get('item');
+    if (item && TITLES[item]) {
+      document.getElementById('pageHeading').textContent = TITLES[item];
+      document.title = TITLES[item] + ' – QuickStart';
+    }
+
+    // Info toggle
+    function toggleInfo() {
+      const body = document.getElementById('infoBody');
+      const toggle = document.getElementById('infoToggle');
+      const chevron = document.getElementById('infoChevron');
+      const isHidden = body.style.display === 'none';
+      body.style.display = isHidden ? '' : 'none';
+      toggle.childNodes[0].textContent = isHidden ? 'Hide' : 'Show';
+      chevron.querySelector('path').setAttribute('d', isHidden ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7');
+    }
+
+    // File handling
+    let uploadedFiles = [];
+
+    function handleFiles(input) {
+      const newFiles = Array.from(input.files);
+      uploadedFiles = uploadedFiles.concat(newFiles);
+      renderFiles();
+      input.value = '';
+    }
+
+    function renderFiles() {
+      const list = document.getElementById('filesList');
+      const notAdded = document.getElementById('notAdded');
+      const doneBtn = document.getElementById('doneBtn');
+
+      if (uploadedFiles.length === 0) {
+        list.style.display = 'none';
+        notAdded.style.display = '';
+        doneBtn.classList.remove('active');
+        return;
+      }
+
+      notAdded.style.display = 'none';
+      list.style.display = '';
+      doneBtn.classList.add('active');
+
+      list.innerHTML = uploadedFiles.map((f, i) => `
+        <div class="file-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <span class="file-name">${escHtml(f.name)}</span>
+          <button class="file-remove" onclick="removeFile(${i})" title="Remove">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function removeFile(index) {
+      uploadedFiles.splice(index, 1);
+      renderFiles();
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function handleDone() {
+      if (uploadedFiles.length > 0) {
+        location.href = 'mobile-requirements.html';
+      }
+    }
+  </script>
+</body>
+</html>

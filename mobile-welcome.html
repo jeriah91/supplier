@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Welcome – QuickStart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Mulish', sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+      color: #334155;
+    }
+
+    .page {
+      max-width: 375px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo img {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+    .help-link {
+      font-size: 14px;
+      font-weight: 700;
+      color: #197fe6;
+      text-decoration: none;
+      line-height: 24px;
+    }
+
+    /* ── Heading ── */
+    .greeting {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 30px;
+      color: #334155;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card-section {
+      padding: 16px 20px;
+    }
+    .card-divider { height: 1px; background: #e2e8f0; }
+
+    /* Info card */
+    .info-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+    .info-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 26px;
+      color: #334155;
+    }
+    .info-toggle {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #197fe6;
+      cursor: pointer;
+      line-height: 24px;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .info-toggle svg { width: 20px; height: 20px; }
+    .info-body {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      color: #334155;
+      margin-top: 16px;
+    }
+    .info-body p + p { margin-top: 16px; }
+
+    /* Progress card */
+    .progress-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 26px;
+      color: #334155;
+      margin-bottom: 12px;
+    }
+    .progress-bar {
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #197fe6;
+      border-radius: 4px;
+      width: 0%;
+    }
+
+    /* Status row */
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tag-caution {
+      display: inline-flex;
+      padding: 4px 8px;
+      border: 2px solid #ffeabf;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fa0;
+      line-height: 16px;
+    }
+    .status-count {
+      font-size: 14px;
+      font-weight: 400;
+      color: #334155;
+      line-height: 24px;
+    }
+
+    /* Checkbox row */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .checkbox-wrap {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      margin-top: 3px;
+    }
+    .checkbox-wrap input {
+      opacity: 0;
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .checkbox-custom {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .checkbox-custom svg { width: 12px; height: 12px; display: none; }
+    .checkbox-wrap input:checked ~ .checkbox-custom {
+      background: #197fe6;
+      border-color: #197fe6;
+    }
+    .checkbox-wrap input:checked ~ .checkbox-custom svg { display: block; }
+    .checkbox-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 26px;
+      color: #54565a;
+    }
+
+    .privacy-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 30px;
+    }
+    .privacy-link a {
+      font-size: 14px;
+      font-weight: 700;
+      color: #197fe6;
+      text-decoration: none;
+      line-height: 24px;
+    }
+
+    /* Continue button */
+    .btn-continue-wrap {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .btn-continue {
+      background: #e2e8f0;
+      color: #94a3b8;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 24px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 26px;
+      cursor: not-allowed;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-continue.active {
+      background: #197fe6;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-logo">
+        <img src="https://www.figma.com/api/mcp/asset/06e5c37c-328b-4a9e-a3bd-389711270272" alt="Silverchain" />
+      </div>
+      <a href="#" class="help-link">Help</a>
+    </div>
+
+    <!-- Greeting -->
+    <div class="greeting">Hi, Natalie 👋</div>
+
+    <!-- Info card -->
+    <div class="card">
+      <div class="card-section">
+        <div class="info-header">
+          <span class="info-title">Info</span>
+          <button class="info-toggle" onclick="toggleInfo()" id="infoToggle">
+            Hide
+            <svg id="infoChevron" viewBox="0 0 24 24" fill="none" stroke="#197fe6" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="info-body" id="infoBody">
+          <p>QuickStart is our candidate portal for compliance documentation.</p>
+          <p>Please use this portal to submit your documentation. We kindly ask you do this within two days to speed up your application.</p>
+          <p>Once submitted, your recruitment consultant will be in touch about the next steps.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress card -->
+    <div class="card">
+
+      <!-- Start adding -->
+      <div class="card-section">
+        <div class="progress-title">Start adding items</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <!-- Status row -->
+      <div class="card-section">
+        <div class="status-row">
+          <span class="tag-caution">Approval required</span>
+          <span class="status-count">9 required, 1 optional items</span>
+        </div>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <!-- T&C + privacy -->
+      <div class="card-section" style="display:flex;flex-direction:column;gap:16px;">
+        <label class="checkbox-row">
+          <div class="checkbox-wrap">
+            <input type="checkbox" id="tcCheck" onchange="handleCheck()" />
+            <div class="checkbox-custom">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </div>
+          <span class="checkbox-text">I consent to Zipline collecting and using my personal info strictly for the purposes of my application in accordance with the below policy.</span>
+        </label>
+        <div class="privacy-link">
+          <a href="#">View privacy policy</a>
+        </div>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <!-- Continue button -->
+      <div class="card-section">
+        <div class="btn-continue-wrap">
+          <button class="btn-continue" id="continueBtn" onclick="handleContinue()">Continue</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function toggleInfo() {
+      const body = document.getElementById('infoBody');
+      const toggle = document.getElementById('infoToggle');
+      const chevron = document.getElementById('infoChevron');
+      const isHidden = body.style.display === 'none';
+      body.style.display = isHidden ? '' : 'none';
+      toggle.childNodes[0].textContent = isHidden ? 'Hide' : 'Show';
+      chevron.querySelector('path').setAttribute('d', isHidden ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7');
+    }
+
+    function handleCheck() {
+      const checked = document.getElementById('tcCheck').checked;
+      const btn = document.getElementById('continueBtn');
+      btn.classList.toggle('active', checked);
+    }
+
+    function handleContinue() {
+      if (document.getElementById('tcCheck').checked) {
+        location.href = 'mobile-requirements.html';
+      }
+    }
+  </script>
+</body>
+</html>
