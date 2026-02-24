@@ -265,6 +265,25 @@
       height: 1px;
       background: #e2e8f0;
     }
+
+    /* ── Empty state ── */
+    .todo-empty {
+      display: none;
+      flex: 1; min-height: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: #64748b;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.32px;
+      line-height: 26px;
+    }
+    .todo-empty-icon {
+      width: 72px; height: 72px;
+      color: #10b981;
+    }
   </style>
 </head>
 <body>
@@ -578,11 +597,11 @@
         </div>
 
         <!-- To-do list -->
-        <div class="todo-content">
-          <div class="todo-card">
-            <div class="todo-list">
+        <div class="todo-content" id="todo-list-wrap">
+          <div class="todo-card" id="todo-card">
+            <div class="todo-list" id="todo-list">
 
-              <div class="todo-item">
+              <div class="todo-item" onclick="completeTask(this)">
                 <span class="todo-item-label">Add company details</span>
                 <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
@@ -591,7 +610,7 @@
 
               <div class="todo-divider"></div>
 
-              <div class="todo-item">
+              <div class="todo-item" onclick="completeTask(this)">
                 <span class="todo-item-label">Add employees</span>
                 <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
@@ -600,7 +619,7 @@
 
               <div class="todo-divider"></div>
 
-              <div class="todo-item">
+              <div class="todo-item" onclick="completeTask(this)">
                 <span class="todo-item-label">Add company requirements</span>
                 <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
@@ -609,7 +628,7 @@
 
               <div class="todo-divider"></div>
 
-              <div class="todo-item">
+              <div class="todo-item" onclick="completeTask(this)">
                 <span class="todo-item-label">Required: Public Liability</span>
                 <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
@@ -618,7 +637,7 @@
 
               <div class="todo-divider"></div>
 
-              <div class="todo-item">
+              <div class="todo-item" onclick="completeTask(this)">
                 <span class="todo-item-label">Add Markus Workman's requirements</span>
                 <svg class="todo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
@@ -627,6 +646,14 @@
 
             </div>
           </div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="todo-empty" id="todo-empty">
+          <svg class="todo-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+          </svg>
+          <span>No outstanding tasks for now</span>
         </div>
 
       </div>
@@ -641,6 +668,25 @@
     function closeSidebar() {
       document.getElementById('mobSidebar').classList.remove('is-open');
       document.getElementById('mobOverlay').classList.remove('is-visible');
+    }
+
+    function completeTask(item) {
+      // Remove adjacent divider (next sibling first, then previous)
+      const next = item.nextElementSibling;
+      const prev = item.previousElementSibling;
+      if (next && next.classList.contains('todo-divider')) {
+        next.remove();
+      } else if (prev && prev.classList.contains('todo-divider')) {
+        prev.remove();
+      }
+      item.remove();
+
+      // Show empty state if no items remain
+      if (document.querySelectorAll('.todo-item').length === 0) {
+        document.getElementById('todo-list-wrap').style.display = 'none';
+        const empty = document.getElementById('todo-empty');
+        empty.style.display = 'flex';
+      }
     }
 
     function toggleOrg(header) {
