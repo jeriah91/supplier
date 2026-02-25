@@ -769,6 +769,45 @@
     /* Clickable compliance rows */
     .data-table tbody tr { cursor: pointer; }
 
+    /* ── Notification banner ── */
+    .notif-banner {
+      position: fixed;
+      top: 56px; /* 40px nav + 16px gap */
+      right: 24px;
+      width: 428px;
+      max-width: calc(100vw - 32px);
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.06);
+      z-index: 500;
+      transform: translateX(calc(-100vw - 100%));
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .notif-banner.is-visible {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .notif-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .notif-icon svg { width: 20px; height: 20px; }
+    .notif-body { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+    .notif-msg {
+      font-size: 14px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.28px; line-height: 20px;
+    }
+    .notif-dismiss {
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      color: #2c66ef; padding: 0; text-align: left; width: fit-content;
+    }
+    .notif-dismiss:hover { text-decoration: underline; }
+
     /* ── Prototype Nav Bar ── */
     .proto-nav {
       position: fixed;
@@ -1627,13 +1666,13 @@
           <div class="cd-section-sub">Send a direct link to <span id="cdSendName">Marcus Workman</span> so they can complete any outstanding compliance actions.</div>
         </div>
         <div class="cd-send-btns">
-          <button class="cd-btn-secondary">
+          <button class="cd-btn-secondary" onclick="showBanner('email')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             Send Email
           </button>
-          <button class="cd-btn-secondary">
+          <button class="cd-btn-secondary" onclick="showBanner('sms')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-            Direct SMS
+            Send SMS
           </button>
         </div>
       </div>
@@ -1663,6 +1702,15 @@
 
     </div>
   </aside>
+
+  <!-- Notification banner -->
+  <div class="notif-banner" id="notifBanner">
+    <div class="notif-icon" id="notifIcon"></div>
+    <div class="notif-body">
+      <span class="notif-msg" id="notifMsg"></span>
+      <button class="notif-dismiss" onclick="dismissBanner()">Dismiss</button>
+    </div>
+  </div>
 
   <!-- Deactivate confirmation modal -->
   <div class="deact-backdrop" id="deactBackdrop">
@@ -1725,6 +1773,48 @@
     function confirmDeactivate() {
       closeDeactivateModal();
       closeCompliance();
+      showBanner('deactivated');
+    }
+
+    // Notification banner
+    var notifTimer = null;
+    var BANNER_ICONS = {
+      email: {
+        color: '#10b981',
+        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>'
+      },
+      sms: {
+        color: '#10b981',
+        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>'
+      },
+      deactivated: {
+        color: '#334155',
+        svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>'
+      }
+    };
+    var BANNER_MSGS = {
+      email: 'Email has been sent to Markus Workman.',
+      sms: 'SMS has been sent to Markus Workman.',
+      deactivated: "Markus Workman\u2019s profile has been deactivated."
+    };
+    function showBanner(type) {
+      clearTimeout(notifTimer);
+      var banner = document.getElementById('notifBanner');
+      var iconEl = document.getElementById('notifIcon');
+      var msgEl = document.getElementById('notifMsg');
+      var def = BANNER_ICONS[type];
+      iconEl.innerHTML = def.svg;
+      iconEl.style.color = def.color;
+      msgEl.textContent = BANNER_MSGS[type];
+      // Reset then trigger so it re-animates if already visible
+      banner.classList.remove('is-visible');
+      void banner.offsetWidth; // force reflow
+      banner.classList.add('is-visible');
+      notifTimer = setTimeout(dismissBanner, 5000);
+    }
+    function dismissBanner() {
+      clearTimeout(notifTimer);
+      document.getElementById('notifBanner').classList.remove('is-visible');
     }
 
     function scaleCdIframe() {
