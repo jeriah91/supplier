@@ -602,6 +602,133 @@
   </div>
   <span class="checkbox-text">Label</span>
 </label>`
+          },
+          {
+            name: 'Inline Field Edit',
+            previewCSS: `.ds-ifield { display:flex; flex-direction:column; gap:4px; font-family:Inter,sans-serif; width:260px; }
+.ds-ifield-label { font-size:16px; font-weight:600; color:#0f172a; letter-spacing:-0.32px; line-height:26px; }
+.ds-ifield-value-wrap { display:flex; align-items:center; gap:8px; width:100%; }
+.ds-ifield-value { font-size:16px; color:#0f172a; line-height:26px; flex:1; }
+.ds-ifield-edit-btn { background:none; border:none; cursor:pointer; padding:0; color:#2c66ef; display:flex; align-items:center; }
+.ds-ifield-edit-btn svg { width:20px; height:20px; }
+.ds-ifield-edit-btn:hover { opacity:0.75; }
+.ds-edit-form { display:flex; flex-direction:column; gap:8px; width:100%; }
+.ds-edit-input { width:100%; padding:10px 12px; border:1px solid #2c66ef; border-radius:8px; font-family:Inter,sans-serif; font-size:16px; color:#0f172a; outline:none; background:#fff; box-shadow:0 0 0 3px rgba(44,102,239,0.1); }
+.ds-edit-actions { display:flex; align-items:center; gap:8px; justify-content:flex-end; }
+.ds-btn-cancel-il { background:#e2e8f0; border:none; color:#0f172a; font-family:Inter,sans-serif; font-size:14px; font-weight:500; letter-spacing:-0.28px; padding:4px 12px; border-radius:8px; cursor:pointer; }
+.ds-btn-cancel-il:hover { background:#cbd5e1; }
+.ds-btn-save-il { background:#2c66ef; border:none; color:#fff; font-family:Inter,sans-serif; font-size:14px; font-weight:500; letter-spacing:-0.28px; padding:4px 12px; border-radius:8px; cursor:pointer; }`,
+            previewHTML: `<div style="display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;font-family:Inter,sans-serif">
+  <div>
+    <div style="font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:10px">Read</div>
+    <div class="ds-ifield">
+      <div class="ds-ifield-label">ABN</div>
+      <div class="ds-ifield-value-wrap">
+        <span class="ds-ifield-value">12 345 678 901</span>
+        <button class="ds-ifield-edit-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:10px">Editing</div>
+    <div class="ds-ifield">
+      <div class="ds-ifield-label">ABN</div>
+      <div class="ds-edit-form">
+        <input class="ds-edit-input" type="text" value="12 345 678 901" />
+        <div class="ds-edit-actions">
+          <button class="ds-btn-cancel-il">Cancel</button>
+          <button class="ds-btn-save-il">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`,
+            css: `.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label {
+  font-size: 16px; font-weight: 600;
+  color: #0f172a; letter-spacing: -0.32px; line-height: 26px;
+}
+/* Read state */
+.field-value-wrap {
+  display: flex; align-items: center; gap: 8px;
+}
+.field-value {
+  font-size: 16px; color: #0f172a;
+  line-height: 26px; flex: 1;
+}
+.field-edit-btn {
+  background: none; border: none; cursor: pointer;
+  padding: 0; color: #2c66ef;
+  display: flex; align-items: center;
+}
+.field-edit-btn svg { width: 20px; height: 20px; }
+.field-edit-btn:hover { opacity: 0.75; }
+/* Edit state */
+.edit-form { display: flex; flex-direction: column; gap: 8px; }
+.edit-input {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid #cbd5e1; border-radius: 8px;
+  font-size: 16px; color: #0f172a;
+  outline: none; background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.edit-input:focus {
+  border-color: #2c66ef;
+  box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+}
+.edit-actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+.btn-cancel-inline {
+  background: #e2e8f0; border: none; color: #0f172a;
+  font-size: 14px; font-weight: 500;
+  padding: 4px 12px; border-radius: 8px; cursor: pointer;
+}
+.btn-cancel-inline:hover { background: #cbd5e1; }
+.btn-save-inline {
+  background: #2c66ef; border: none; color: #fff;
+  font-size: 14px; font-weight: 500;
+  padding: 4px 12px; border-radius: 8px; cursor: pointer;
+}`,
+            html: `<!-- Read state -->
+<div class="field-row">
+  <div class="field-label">ABN</div>
+  <div class="field-value-wrap">
+    <span class="field-value">12 345 678 901</span>
+    <button class="field-edit-btn"
+            onclick="startEdit(this)">
+      <svg viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036
+                 a2.5 2.5 0 113.536 3.536L6.5 21.036H3
+                 v-3.572L16.732 3.732z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Edit state -->
+<div class="field-row">
+  <div class="field-label">ABN</div>
+  <div class="edit-form">
+    <input class="edit-input" type="text"
+           value="12 345 678 901" />
+    <div class="edit-actions">
+      <button class="btn-cancel-inline"
+              onclick="cancelEdit(this)">Cancel</button>
+      <button class="btn-save-inline"
+              onclick="saveEdit(this)">Save</button>
+    </div>
+  </div>
+</div>`
           }
         ]
       },
@@ -760,6 +887,103 @@
   <div class="card-divider"></div>
   <div class="card-section">
     <p>Another section.</p>
+  </div>
+</div>`
+          },
+          {
+            name: 'Notification Card',
+            previewCSS: `.ds-notif {
+  background: #fff; border-radius: 12px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.06);
+  width: 360px; font-family: Inter, sans-serif;
+}
+.ds-notif-icon { width: 20px; height: 20px; flex-shrink: 0; }
+.ds-notif-body { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.ds-notif-msg { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
+.ds-notif-sub { font-size: 13px; color: #64748b; letter-spacing: -0.26px; line-height: 18px; }
+.ds-notif-dismiss { background: none; border: none; cursor: pointer; font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; color: #2c66ef; padding: 0; width: fit-content; text-align: left; }
+.ds-notif-dismiss:hover { text-decoration: underline; }`,
+            previewHTML: `<div style="display:flex;flex-direction:column;gap:16px">
+  <div class="ds-notif">
+    <div class="ds-notif-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" fill="#059669"/>
+        <path d="M7 13l3 3 7-7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="ds-notif-body">
+      <span class="ds-notif-msg">Verification email sent</span>
+      <button class="ds-notif-dismiss">Dismiss</button>
+    </div>
+  </div>
+  <div class="ds-notif">
+    <div class="ds-notif-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" fill="#f59e0b"/>
+        <path d="M12 8v4M12 16h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="ds-notif-body">
+      <span class="ds-notif-msg">Action required</span>
+      <span class="ds-notif-sub">Please complete your profile.</span>
+      <button class="ds-notif-dismiss">Dismiss</button>
+    </div>
+  </div>
+</div>`,
+            css: `.notif-banner {
+  position: fixed;
+  top: 56px; right: 24px;
+  width: 428px;
+  max-width: calc(100vw - 32px);
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
+              0 4px 6px -2px rgba(0,0,0,0.06);
+  z-index: 500;
+  /* Hidden by default — slides in from right */
+  transform: translateX(calc(100% + 48px));
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+              opacity 0.3s ease;
+  pointer-events: none;
+}
+.notif-banner.is-visible {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.notif-icon { width: 20px; height: 20px; flex-shrink: 0; }
+.notif-body {
+  display: flex; flex-direction: column;
+  gap: 3px; flex: 1; min-width: 0;
+}
+.notif-msg {
+  font-size: 14px; font-weight: 600;
+  color: #0f172a; letter-spacing: -0.28px; line-height: 20px;
+}
+.notif-dismiss {
+  background: none; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  color: #2c66ef; padding: 0;
+}
+.notif-dismiss:hover { text-decoration: underline; }`,
+            html: `<div class="notif-banner is-visible" id="notifBanner">
+  <div class="notif-icon" id="notifIcon">
+    <!-- inject icon svg -->
+  </div>
+  <div class="notif-body">
+    <span class="notif-msg" id="notifMsg">
+      Verification email sent
+    </span>
+    <button class="notif-dismiss"
+            onclick="dismissBanner()">
+      Dismiss
+    </button>
   </div>
 </div>`
           }
