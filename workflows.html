@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workflows – Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #334155;
+      min-height: 100vh;
+      padding-top: 40px;
+    }
+
+    /* ── Proto nav ── */
+    .proto-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 9999; height: 40px; background: #000;
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .proto-nav-library {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: #fff; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px; white-space: nowrap; flex-shrink: 0;
+    }
+    .proto-nav-library:hover { opacity: 0.75; }
+    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .proto-nav-title { flex: 1; color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; line-height: 24px; }
+    .proto-nav-updated { flex: 1; color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; line-height: 24px; text-align: right; white-space: nowrap; }
+
+    /* ── Page ── */
+    .page {
+      max-width: 1428px;
+      margin: 0 auto;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .logo { height: 23px; display: flex; align-items: center; }
+    .logo img { width: 100px; height: 23px; object-fit: contain; }
+
+    .page-heading {
+      font-size: 36px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -1.44px;
+      line-height: 40px;
+    }
+
+    /* ── Flow section ── */
+    .flow-section {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .flow-section-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.48px;
+      line-height: 26px;
+    }
+
+    /* ── Node styles ── */
+    .node {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      line-height: 28px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .node-root {
+      background: #8b5cf6;
+      color: #fff;
+    }
+
+    .node-child {
+      background: #ede9fe;
+      color: #8b5cf6;
+      border: 1.5px solid #8b5cf6;
+    }
+
+    /* ── Tree structure ──
+       Uses border-left for the trunk, ::before for horizontal arms.
+       .tree-children margin-left positions the trunk under the root's leading edge + half node padding.
+    ── */
+    .tree {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    /* Root row has a connecting segment below */
+    .tree-root {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    /* Vertical stub from root down to first child level */
+    .tree-root::after {
+      content: '';
+      display: block;
+      width: 2px;
+      height: 16px;
+      background: #8b5cf6;
+      margin-left: 30px; /* ~half of min node width, approximates center */
+    }
+
+    /* Children list: left border = trunk */
+    .tree-children {
+      border-left: 2px solid #8b5cf6;
+      margin-left: 30px;
+      padding-top: 0;
+      padding-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Each child item */
+    .tree-item {
+      position: relative;
+      padding-left: 44px;     /* horizontal arm width */
+      padding-top: 12px;
+      padding-bottom: 0;
+    }
+
+    /* Horizontal arm */
+    .tree-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: calc(12px + 26px); /* padding-top + half node height (28px lh + 24px padding = 52px total → center at 26px) */
+      width: 44px;
+      height: 2px;
+      background: #8b5cf6;
+      transform: translateY(-50%);
+    }
+
+    /* Gap after last item in a children block */
+    .tree-children > .tree-item:last-child {
+      padding-bottom: 0;
+    }
+
+    /* ── Nested grandchildren ── */
+    .tree-item > .tree-children {
+      margin-left: 0;        /* no extra left shift — it inherits from parent tree-item's padding-left */
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    /* The sub-root connector (short vertical from node bottom to grandchildren trunk) */
+    .has-children > .node-child {
+      /* nothing extra needed */
+    }
+
+    .has-children {
+      padding-bottom: 0;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 767px) {
+      .page { padding: 24px; gap: 32px; }
+      .page-heading { font-size: 28px; letter-spacing: -1.12px; line-height: 34px; }
+      .node { font-size: 16px; padding: 10px 16px; line-height: 24px; }
+      .tree-root::after { margin-left: 22px; height: 12px; }
+      .tree-children { margin-left: 22px; }
+      .tree-item { padding-left: 32px; padding-top: 10px; }
+      .tree-item::before { width: 32px; top: calc(10px + 22px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Prototype nav bar -->
+  <nav class="proto-nav">
+    <a href="index.html" class="proto-nav-library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-title">Prototype / Workflows</span>
+    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+  </nav>
+
+  <div class="page">
+
+    <!-- Logo -->
+    <div class="logo">
+      <img src="https://www.figma.com/api/mcp/asset/73914091-8657-4909-81c6-dce51488ce2a" alt="Zipline" />
+    </div>
+
+    <!-- Heading -->
+    <h1 class="page-heading">Workflows</h1>
+
+    <!-- ── Portal flows ── -->
+    <div class="flow-section">
+      <h2 class="flow-section-title">Portal</h2>
+
+      <!-- Compliance flow -->
+      <div class="tree">
+        <div class="tree-root">
+          <div class="node node-root">Compliance</div>
+        </div>
+        <div class="tree-children">
+
+          <div class="tree-item">
+            <div class="node node-child">Overall Company Compliance</div>
+          </div>
+
+          <div class="tree-item">
+            <div class="node node-child">Table</div>
+          </div>
+
+          <!-- Add — has grandchildren -->
+          <div class="tree-item has-children">
+            <div class="node node-child">Add</div>
+            <div class="tree-children" style="margin-left: 0;">
+              <div class="tree-item">
+                <div class="node node-child">Add a single employee</div>
+              </div>
+              <div class="tree-item">
+                <div class="node node-child">Import CSV</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Company Details flows ── -->
+    <div class="flow-section">
+      <h2 class="flow-section-title">Company Details</h2>
+
+      <div class="tree">
+        <div class="tree-root">
+          <div class="node node-root">Company Details</div>
+        </div>
+        <div class="tree-children">
+          <div class="tree-item">
+            <div class="node node-child">View Details</div>
+          </div>
+          <div class="tree-item">
+            <div class="node node-child">Edit Details</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Users flows ── -->
+    <div class="flow-section">
+      <h2 class="flow-section-title">Users</h2>
+
+      <div class="tree">
+        <div class="tree-root">
+          <div class="node node-root">Users</div>
+        </div>
+        <div class="tree-children">
+          <div class="tree-item">
+            <div class="node node-child">Table</div>
+          </div>
+          <div class="tree-item has-children">
+            <div class="node node-child">Add</div>
+            <div class="tree-children" style="margin-left: 0;">
+              <div class="tree-item">
+                <div class="node node-child">Add a single user</div>
+              </div>
+            </div>
+          </div>
+          <div class="tree-item">
+            <div class="node node-child">User Detail</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /page -->
+
+  <script>
+    (function() {
+      var d = new Date(document.lastModified);
+      var pad = function(n) { return String(n).padStart(2, '0'); };
+      document.getElementById('protoLastUpdated').textContent =
+        'Last updated ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    })();
+  </script>
+  <script>if(window.self!==window.top){var n=document.querySelector(".proto-nav");if(n)n.style.display="none";document.body.style.paddingTop="0";}</script>
+</body>
+</html>
