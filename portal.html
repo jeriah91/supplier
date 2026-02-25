@@ -523,6 +523,186 @@
     }
     .ap-btn-add:hover { background: #1d56df; }
 
+    /* ── Compliance Detail Drawer ── */
+    .cd-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+    }
+    .cd-overlay.is-visible { display: block; }
+
+    .cd-drawer {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 440px; max-width: 100vw;
+      background: #fff;
+      z-index: 201;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+    }
+    .cd-drawer.is-open { transform: translateX(0); }
+    @media (max-width: 767px) { .cd-drawer { width: 100%; } }
+
+    .cd-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+    .cd-header-identity { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .cd-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #64748b; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 600;
+    }
+    .cd-header-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+    .cd-person-name {
+      font-size: 16px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 22px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cd-person-sub { font-size: 12px; color: #64748b; line-height: 17px; }
+    .cd-header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .cd-status-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 12px;
+      font-size: 12px; font-weight: 600; line-height: 16px; white-space: nowrap;
+    }
+    .cd-status-badge.non-compliant { background: #fecaca; color: #dc2626; }
+    .cd-status-badge.compliant { background: #a7f3d0; color: #059669; }
+    .cd-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .cd-close {
+      background: none; border: none; cursor: pointer;
+      color: #64748b; padding: 4px;
+      display: flex; align-items: center;
+    }
+    .cd-close:hover { color: #0f172a; }
+
+    .cd-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+    .cd-banner {
+      background: #fef3c7;
+      padding: 12px 24px;
+      display: flex; align-items: flex-start; gap: 8px;
+      border-bottom: 1px solid #fde68a;
+      flex-shrink: 0;
+    }
+    .cd-banner-icon { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: #92400e; }
+    .cd-banner-text { font-size: 13px; color: #000; letter-spacing: -0.28px; line-height: 18px; }
+
+    .cd-section {
+      padding: 20px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .cd-section:last-child { border-bottom: none; }
+    .cd-section-head { display: flex; flex-direction: column; gap: 4px; }
+    .cd-section-title { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.32px; line-height: 22px; }
+    .cd-section-sub { font-size: 13px; color: #64748b; line-height: 18px; }
+
+    /* Inline-edit fields */
+    .cd-field { display: flex; align-items: center; gap: 12px; min-height: 28px; }
+    .cd-field-label {
+      width: 130px; flex-shrink: 0;
+      font-size: 13px; font-weight: 500;
+      color: #64748b; line-height: 20px;
+    }
+    .cd-field-value-wrap { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+    .cd-field-value { font-size: 14px; font-weight: 500; color: #0f172a; line-height: 20px; flex: 1; }
+    .cd-field-input {
+      flex: 1; min-width: 0;
+      padding: 5px 10px;
+      border: 1px solid #2c66ef; border-radius: 6px;
+      font-family: inherit; font-size: 14px; color: #0f172a;
+      outline: none; box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+    .cd-edit-btn {
+      background: none; border: none; cursor: pointer;
+      color: #cbd5e1; padding: 2px; flex-shrink: 0;
+      display: flex; align-items: center;
+    }
+    .cd-edit-btn:hover { color: #2c66ef; }
+    .cd-edit-btn svg, .cd-edit-save svg, .cd-edit-cancel svg { width: 13px; height: 13px; }
+    .cd-edit-save, .cd-edit-cancel {
+      background: none; border: none; cursor: pointer;
+      padding: 3px; flex-shrink: 0;
+      display: flex; align-items: center;
+    }
+    .cd-edit-save { color: #059669; }
+    .cd-edit-save:hover { color: #065f46; }
+    .cd-edit-cancel { color: #94a3b8; }
+    .cd-edit-cancel:hover { color: #dc2626; }
+
+    /* Requirements iframe */
+    .cd-iframe-wrap {
+      width: 100%; height: 460px;
+      border-radius: 8px; border: 1px solid #e2e8f0;
+      overflow: hidden; position: relative;
+      background: #f8fafc;
+    }
+    .cd-iframe-wrap iframe {
+      position: absolute; top: 0; left: 0;
+      border: none; transform-origin: top left;
+    }
+
+    /* Send link */
+    .cd-send-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .cd-btn-secondary {
+      background: #fff; border: 1px solid #e2e8f0;
+      color: #334155; font-family: inherit;
+      font-size: 13px; font-weight: 500;
+      padding: 7px 14px; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .cd-btn-secondary:hover { background: #f1f5f9; }
+    .cd-btn-secondary svg { width: 15px; height: 15px; }
+
+    /* Direct link */
+    .cd-link-box {
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 8px; padding: 10px 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11.5px; color: #334155;
+      line-height: 17px; word-break: break-all;
+    }
+    .cd-btn-copy {
+      background: #2c66ef; color: #fff;
+      border: none; font-family: inherit;
+      font-size: 13px; font-weight: 500;
+      padding: 7px 14px; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      align-self: flex-start; transition: background 0.15s;
+    }
+    .cd-btn-copy:hover { background: #1d56df; }
+    .cd-btn-copy.copied { background: #059669; }
+    .cd-btn-copy svg { width: 14px; height: 14px; }
+
+    /* Danger zone */
+    .cd-danger-label {
+      font-size: 10px; font-weight: 700;
+      color: #dc2626; letter-spacing: 0.8px; text-transform: uppercase;
+    }
+    .cd-danger-box {
+      border: 1px solid #fecaca; border-radius: 8px;
+      padding: 16px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .cd-btn-deactivate {
+      background: #dc2626; color: #fff;
+      border: none; font-family: inherit;
+      font-size: 13px; font-weight: 500;
+      padding: 7px 14px; border-radius: 8px; cursor: pointer;
+      align-self: flex-start; transition: background 0.15s;
+    }
+    .cd-btn-deactivate:hover { background: #b91c1c; }
+
+    /* Clickable compliance rows */
+    .data-table tbody tr { cursor: pointer; }
+
     /* ── Prototype Nav Bar ── */
     .proto-nav {
       position: fixed;
@@ -1272,6 +1452,157 @@
     </div>
   </aside>
 
+  <!-- Compliance Detail overlay + drawer -->
+  <div class="cd-overlay" id="cdOverlay" onclick="closeCompliance()"></div>
+
+  <aside class="cd-drawer" id="cdDrawer">
+
+    <!-- Header -->
+    <div class="cd-header">
+      <div class="cd-header-identity">
+        <div class="cd-avatar" id="cdAvatar">MW</div>
+        <div class="cd-header-text">
+          <div class="cd-person-name" id="cdPersonName">Marcus Workman</div>
+          <div class="cd-person-sub">Platypus Plumbing</div>
+        </div>
+      </div>
+      <div class="cd-header-right">
+        <span class="cd-status-badge non-compliant" id="cdStatusBadge">
+          <span class="cd-status-dot"></span> Non-compliant
+        </span>
+        <button class="cd-close" onclick="closeCompliance()" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable body -->
+    <div class="cd-body">
+
+      <!-- Yellow info banner -->
+      <div class="cd-banner">
+        <svg class="cd-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="11" width="14" height="10" rx="2"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 018 0v4"/>
+        </svg>
+        <span class="cd-banner-text">Information you provided will only be shared with Wallaby Aged Care.</span>
+      </div>
+
+      <!-- Details section -->
+      <div class="cd-section">
+        <div class="cd-section-head">
+          <div class="cd-section-title">Details</div>
+          <div class="cd-section-sub">Your employee details. The selected role will determine what is required to keep this employee compliant.</div>
+        </div>
+        <div class="cd-field">
+          <span class="cd-field-label">Legal First Name</span>
+          <div class="cd-field-value-wrap">
+            <span class="cd-field-value">Marcus</span>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+            <input class="cd-field-input" type="text" value="Marcus" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
+            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
+            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+        <div class="cd-field">
+          <span class="cd-field-label">Legal Last Name</span>
+          <div class="cd-field-value-wrap">
+            <span class="cd-field-value">Workman</span>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+            <input class="cd-field-input" type="text" value="Workman" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
+            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
+            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+        <div class="cd-field">
+          <span class="cd-field-label">Phone</span>
+          <div class="cd-field-value-wrap">
+            <span class="cd-field-value">0411 111 111</span>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+            <input class="cd-field-input" type="tel" value="0411 111 111" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
+            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
+            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+        <div class="cd-field">
+          <span class="cd-field-label">Email</span>
+          <div class="cd-field-value-wrap">
+            <span class="cd-field-value" style="font-size:12px;">workman.marcus@platypusplumbing.com.au</span>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+            <input class="cd-field-input" type="email" value="workman.marcus@platypusplumbing.com.au" style="display:none;font-size:12px;" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
+            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
+            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+        <div class="cd-field">
+          <span class="cd-field-label">Role</span>
+          <div class="cd-field-value-wrap">
+            <span class="cd-field-value">Plumber</span>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+            <input class="cd-field-input" type="text" value="Plumber" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
+            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
+            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requirements section (worker app iframe) -->
+      <div class="cd-section">
+        <div class="cd-section-head">
+          <div class="cd-section-title">Requirements</div>
+          <div class="cd-section-sub">Add the requirements below to stay compliant.</div>
+        </div>
+        <div class="cd-iframe-wrap" id="cdIframeWrap">
+          <iframe id="cdReqIframe" src="mobile-requirements.html" title="Requirements" scrolling="yes"></iframe>
+        </div>
+      </div>
+
+      <!-- Send link section -->
+      <div class="cd-section">
+        <div class="cd-section-head">
+          <div class="cd-section-title">Send link</div>
+          <div class="cd-section-sub">Send a direct link to <span id="cdSendName">Marcus Workman</span> so they can complete any outstanding compliance actions.</div>
+        </div>
+        <div class="cd-send-btns">
+          <button class="cd-btn-secondary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Send Email
+          </button>
+          <button class="cd-btn-secondary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            Direct SMS
+          </button>
+        </div>
+      </div>
+
+      <!-- Direct Link section -->
+      <div class="cd-section">
+        <div class="cd-section-head">
+          <div class="cd-section-title">Direct Link</div>
+          <div class="cd-section-sub">Share this link through internal channels to allow <span id="cdLinkName">Marcus Workman</span> to upload their compliance requirements directly.</div>
+        </div>
+        <div class="cd-link-box" id="cdDirectLink">https://staging-demo.zipline.app/staff-member/uldcH6/JhHb/myxlhlq/62Bbt10303l3</div>
+        <button class="cd-btn-copy" id="cdCopyBtn" onclick="copyDirectLink()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy Link
+        </button>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="cd-section">
+        <div class="cd-danger-label">DANGER ZONE</div>
+        <div class="cd-danger-box">
+          <div class="cd-section-title">Deactivate profile</div>
+          <div class="cd-section-sub">Deactivating profile will prevent them to come on-site and perform jobs.</div>
+          <button class="cd-btn-deactivate">Deactivate</button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
   <script>
     function openSidebar() {
       document.getElementById('mobSidebar').classList.add('is-open');
@@ -1289,6 +1620,91 @@
     function closeAddPerson() {
       document.getElementById('apDrawer').classList.remove('is-open');
       document.getElementById('apOverlay').classList.remove('is-visible');
+    }
+
+    // ── Compliance Detail Drawer ─────────────────────────────────────────────
+    function openCompliance(rowEl) {
+      const name = rowEl.querySelector('.name-text').textContent.trim();
+      document.getElementById('cdPersonName').textContent = name;
+      document.getElementById('cdSendName').textContent = name;
+      document.getElementById('cdLinkName').textContent = name;
+      const initials = name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0, 2);
+      document.getElementById('cdAvatar').textContent = initials;
+
+      // Close add-person drawer if open
+      document.getElementById('apDrawer').classList.remove('is-open');
+      document.getElementById('apOverlay').classList.remove('is-visible');
+
+      document.getElementById('cdDrawer').classList.add('is-open');
+      document.getElementById('cdOverlay').classList.add('is-visible');
+      scaleCdIframe();
+    }
+    function closeCompliance() {
+      document.getElementById('cdDrawer').classList.remove('is-open');
+      document.getElementById('cdOverlay').classList.remove('is-visible');
+    }
+
+    function scaleCdIframe() {
+      var wrap   = document.getElementById('cdIframeWrap');
+      var iframe = document.getElementById('cdReqIframe');
+      var containerW = wrap.clientWidth;
+      var nativeW = 375;
+      var scale = containerW / nativeW;
+      iframe.style.width  = nativeW + 'px';
+      iframe.style.height = Math.ceil(460 / scale) + 'px';
+      iframe.style.transform = 'scale(' + scale + ')';
+    }
+    window.addEventListener('resize', function() {
+      if (document.getElementById('cdDrawer').classList.contains('is-open')) scaleCdIframe();
+    });
+
+    // Make compliance table rows clickable
+    document.querySelectorAll('.data-table tbody tr').forEach(function(row) {
+      row.addEventListener('click', function() { openCompliance(row); });
+    });
+
+    // Inline editing
+    function startEdit(btn) {
+      var wrap = btn.closest('.cd-field-value-wrap');
+      wrap.querySelector('.cd-field-value').style.display = 'none';
+      btn.style.display = 'none';
+      wrap.querySelector('.cd-field-input').style.display = '';
+      wrap.querySelector('.cd-edit-save').style.display = '';
+      wrap.querySelector('.cd-edit-cancel').style.display = '';
+      wrap.querySelector('.cd-field-input').focus();
+      wrap.querySelector('.cd-field-input').select();
+    }
+    function saveEdit(btn) {
+      var wrap = btn.closest('.cd-field-value-wrap');
+      var val = wrap.querySelector('.cd-field-input').value.trim();
+      if (val) wrap.querySelector('.cd-field-value').textContent = val;
+      exitEdit(wrap);
+    }
+    function cancelEdit(btn) {
+      var wrap = btn.closest('.cd-field-value-wrap');
+      wrap.querySelector('.cd-field-input').value = wrap.querySelector('.cd-field-value').textContent;
+      exitEdit(wrap);
+    }
+    function exitEdit(wrap) {
+      wrap.querySelector('.cd-field-value').style.display = '';
+      wrap.querySelector('.cd-edit-btn').style.display = '';
+      wrap.querySelector('.cd-field-input').style.display = 'none';
+      wrap.querySelector('.cd-edit-save').style.display = 'none';
+      wrap.querySelector('.cd-edit-cancel').style.display = 'none';
+    }
+
+    // Copy direct link
+    function copyDirectLink() {
+      var text = document.getElementById('cdDirectLink').textContent.trim();
+      navigator.clipboard.writeText(text).then(function() {
+        var btn = document.getElementById('cdCopyBtn');
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Copied!';
+        setTimeout(function() {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Link';
+        }, 2000);
+      });
     }
 
     function toggleOrg(header) {
