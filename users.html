@@ -385,7 +385,7 @@
       display: flex; align-items: center;
       padding: 24px;
       border-bottom: 1px solid #e2e8f0;
-      flex-shrink: 0;
+      flex-shrink: 0; background: #f1f5f9;
     }
     .drawer-title {
       flex: 1;
@@ -416,8 +416,8 @@
       padding: 16px 24px;
       border-top: 1px solid #e2e8f0;
       display: flex; align-items: center; gap: 12px;
-      justify-content: flex-end;
-      flex-shrink: 0;
+      flex-direction: column;
+      flex-shrink: 0; background: #fff;
     }
 
     /* ── Form fields ── */
@@ -487,13 +487,14 @@
       border: 1px solid #e2e8f0;
       color: #334155;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       letter-spacing: -0.28px;
       line-height: 20px;
-      padding: 9px 16px;
+      padding: 13px 16px;
       border-radius: 8px;
       cursor: pointer;
+      width: 100%;
     }
     .btn-cancel:hover { background: #f8fafc; }
 
@@ -502,13 +503,14 @@
       border: none;
       color: #fff;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       letter-spacing: -0.28px;
       line-height: 20px;
-      padding: 9px 16px;
+      padding: 13px 16px;
       border-radius: 8px;
       cursor: pointer;
+      width: 100%;
     }
     .btn-save:hover { background: #1d56df; }
 
@@ -859,15 +861,15 @@
   <!-- User detail drawer (desktop) -->
   <aside class="drawer user-drawer" id="userDetailDrawer" aria-label="User detail">
     <div class="drawer-header">
+      <button class="drawer-close" onclick="closeUserDrawer()" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
       <div class="user-drawer-identity">
         <div class="user-avatar-sq">MW</div>
         <span class="drawer-user-name">Marcus Workman</span>
       </div>
-      <button class="drawer-close" onclick="closeUserDrawer()" aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
     </div>
     <div class="ud-body">
 
@@ -962,12 +964,12 @@
   <!-- Add new user drawer (desktop only) -->
   <aside class="drawer" id="addUserDrawer" aria-label="Add new user">
     <div class="drawer-header">
-      <span class="drawer-title">Add new user</span>
       <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
       </button>
+      <span class="drawer-title">Add new user</span>
     </div>
     <div class="drawer-body">
       <div class="form-field">
@@ -993,8 +995,8 @@
       </div>
     </div>
     <div class="drawer-footer">
-      <button class="btn-cancel" onclick="closeDrawer()">Cancel</button>
       <button class="btn-save">Save</button>
+      <button class="btn-cancel" onclick="closeDrawer()">Cancel</button>
     </div>
   </aside>
 

@@ -413,15 +413,15 @@
 
     .ap-header {
       display: flex; align-items: center;
-      padding: 28px 32px;
+      padding: 16px 24px;
       border-bottom: 1px solid #e2e8f0;
-      flex-shrink: 0; background: #fff;
+      flex-shrink: 0; background: #f1f5f9;
     }
     .ap-title {
       flex: 1;
-      font-size: 28px; font-weight: 600;
-      letter-spacing: -0.56px; line-height: 34px;
-      color: #0f172a;
+      font-size: 20px; font-weight: 600;
+      letter-spacing: -0.4px; line-height: 26px;
+      color: #334155;
     }
     .ap-close {
       background: none; border: none; cursor: pointer;
@@ -433,7 +433,7 @@
     .ap-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
 
     .ap-section {
-      padding: 28px 32px;
+      padding: 24px;
       display: flex; flex-direction: column; gap: 20px;
       background: #fff;
     }
@@ -444,7 +444,7 @@
     }
     .ap-section-head { display: flex; flex-direction: column; gap: 4px; }
     .ap-section-title {
-      font-size: 20px; font-weight: 600;
+      font-size: 16px; font-weight: 600;
       letter-spacing: -0.4px; line-height: 26px; color: #0f172a;
     }
     .ap-section-sub { font-size: 14px; color: #64748b; line-height: 20px; }
@@ -495,24 +495,26 @@
     .ap-notify-desc { font-size: 13px; color: #64748b; line-height: 18px; margin-top: 3px; }
 
     .ap-footer {
-      padding: 20px 32px;
+      padding: 16px 24px;
       border-top: 1px solid #e2e8f0;
-      display: flex; justify-content: flex-end; gap: 12px;
+      display: flex; flex-direction: column; gap: 12px;
       flex-shrink: 0; background: #fff;
     }
     .ap-btn-cancel {
       background: #fff; border: 1px solid #e2e8f0;
       color: #334155; font-family: inherit;
-      font-size: 15px; font-weight: 500;
-      padding: 10px 20px; border-radius: 8px; cursor: pointer;
+      font-size: 16px; font-weight: 500;
+      padding: 13px 16px; border-radius: 8px; cursor: pointer;
+      width: 100%; justify-content: center;
     }
     .ap-btn-cancel:hover { background: #f8fafc; }
     .ap-btn-add {
       background: #2c66ef; border: none;
       color: #fff; font-family: inherit;
-      font-size: 15px; font-weight: 500;
-      padding: 10px 20px; border-radius: 8px; cursor: pointer;
+      font-size: 16px; font-weight: 500;
+      padding: 13px 16px; border-radius: 8px; cursor: pointer;
       display: flex; align-items: center; gap: 8px;
+      width: 100%; justify-content: center;
     }
     .ap-btn-add:hover { background: #1d56df; }
 
@@ -543,7 +545,7 @@
       display: flex; align-items: center; gap: 12px;
       padding: 16px 24px;
       border-bottom: 1px solid #e2e8f0;
-      flex-shrink: 0;
+      flex-shrink: 0; background: #f1f5f9;
     }
     .cd-header-identity { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
     .cd-avatar {
@@ -559,7 +561,6 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .cd-person-sub { font-size: 12px; color: #64748b; line-height: 17px; }
-    .cd-header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .cd-status-badge {
       display: inline-flex; align-items: center; gap: 4px;
       padding: 2px 8px; border-radius: 12px;
@@ -789,7 +790,7 @@
       display: flex; align-items: center; gap: 12px;
       padding: 16px 24px;
       border-bottom: 1px solid #e2e8f0;
-      flex-shrink: 0;
+      flex-shrink: 0; background: #f1f5f9;
     }
     .oc-avatar {
       width: 40px; height: 40px; border-radius: 50%;
@@ -1560,12 +1561,12 @@
 
   <aside class="ap-drawer" id="apDrawer">
     <div class="ap-header">
-      <span class="ap-title">Add person</span>
       <button class="ap-close" onclick="closeAddPerson()" aria-label="Close">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
       </button>
+      <span class="ap-title">Add person</span>
     </div>
 
     <div class="ap-body">
@@ -1619,13 +1620,13 @@
     </div>
 
     <div class="ap-footer">
-      <button class="ap-btn-cancel" onclick="closeAddPerson()">Cancel</button>
       <button class="ap-btn-add">
         Add
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
         </svg>
       </button>
+      <button class="ap-btn-cancel" onclick="closeAddPerson()">Cancel</button>
     </div>
   </aside>
 
@@ -1636,6 +1637,11 @@
 
     <!-- Header -->
     <div class="cd-header">
+      <button class="cd-close" onclick="closeCompliance()" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
       <div class="cd-header-identity">
         <div class="cd-avatar" id="cdAvatar">MW</div>
         <div class="cd-header-text">
@@ -1643,16 +1649,9 @@
           <div class="cd-person-sub">Platypus Plumbing</div>
         </div>
       </div>
-      <div class="cd-header-right">
-        <span class="cd-status-badge non-compliant" id="cdStatusBadge">
-          <span class="cd-status-dot"></span> Non-compliant
-        </span>
-        <button class="cd-close" onclick="closeCompliance()" aria-label="Close">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
+      <span class="cd-status-badge non-compliant" id="cdStatusBadge">
+        <span class="cd-status-dot"></span> Non-compliant
+      </span>
     </div>
 
     <!-- Scrollable body -->
@@ -1801,6 +1800,11 @@
 
   <aside class="oc-drawer" id="ocDrawer">
     <div class="oc-header">
+      <button class="oc-close" onclick="closeCompanyCompliance()" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
       <div class="oc-avatar">PP</div>
       <div class="oc-header-text">
         <span class="oc-company-name">Platypus Plumbing</span>
@@ -1808,11 +1812,6 @@
           <span class="cd-status-dot"></span>Non-compliant
         </div>
       </div>
-      <button class="oc-close" onclick="closeCompanyCompliance()" aria-label="Close">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
     </div>
 
     <div class="oc-body">
