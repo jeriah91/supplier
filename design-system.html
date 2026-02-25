@@ -289,6 +289,29 @@
     .spec-copy-btn:hover { background: rgba(255,255,255,0.16); color: #e2e8f0; }
     .spec-copy-btn svg { width: 14px; height: 14px; }
     .spec-copy-btn.copied { color: #4ade80; }
+
+    /* ── Used on ── */
+    .used-on-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .used-on-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #475569;
+      font-size: 13px;
+      letter-spacing: -0.26px;
+      line-height: 20px;
+      transition: background 0.12s, color 0.12s;
+    }
+    .used-on-link:hover { background: #f1f5f9; color: #2c66ef; }
+    .used-on-link svg { width: 14px; height: 14px; flex-shrink: 0; color: #94a3b8; transition: color 0.12s; }
+    .used-on-link:hover svg { color: #2c66ef; }
   </style>
 </head>
 <body>
@@ -1272,6 +1295,78 @@
       }
     ];
 
+    // ─── Used-on page map ─────────────────────────────────────────────────────
+    const USED_ON = {
+      'Primary Button':       [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' }],
+      'Secondary Button':     [{ name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' }],
+      'Outline Button':       [{ name: 'Compliance',      href: 'portal.html' }],
+      'Disabled Button':      [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' },
+                               { name: 'User Detail',     href: 'user-detail.html' }],
+      'Pill Button (Active)': [{ name: 'Mobile Welcome',  href: 'mobile-welcome.html' },
+                               { name: 'Mobile Req. Detail', href: 'mobile-requirement-detail.html' }],
+      'Text Input':           [{ name: 'Login',           href: 'login.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' },
+                               { name: 'Business Details',href: 'onboarding-business-details.html' },
+                               { name: 'Key Contact',     href: 'onboarding-key-contact.html' },
+                               { name: 'Business Address',href: 'onboarding-business-address.html' }],
+      'Select':               [{ name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' }],
+      'Checkbox':             [{ name: 'Compliance Docs', href: 'onboarding-compliance-docs.html' }],
+      'Inline Field Edit':    [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'Company Details', href: 'company-details.html' }],
+      'Tag: Caution':         [{ name: 'Mobile Welcome',  href: 'mobile-welcome.html' }],
+      'Status: Approved':     [{ name: 'Compliance',      href: 'portal.html' }],
+      'Status: In Review':    [{ name: 'Compliance',      href: 'portal.html' }],
+      'Badge: Count':         [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'To-do',           href: 'todo.html' },
+                               { name: 'Users',           href: 'users.html' }],
+      'Basic Card':           [{ name: 'To-do',           href: 'todo.html' },
+                               { name: 'Compliance',      href: 'portal.html' }],
+      'Card with Sections':   [{ name: 'Business Details',href: 'onboarding-business-details.html' }],
+      'Notification Card':    [{ name: 'Compliance',      href: 'portal.html' }],
+      'Progress Bar':         [{ name: 'Business Details',href: 'onboarding-business-details.html' },
+                               { name: 'Key Contact',     href: 'onboarding-key-contact.html' },
+                               { name: 'Business Address',href: 'onboarding-business-address.html' },
+                               { name: 'Compliance Docs', href: 'onboarding-compliance-docs.html' }],
+      'Sidebar Nav Item':     [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'To-do',           href: 'todo.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' },
+                               { name: 'User Detail',     href: 'user-detail.html' }],
+      'Avatar':               [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'To-do',           href: 'todo.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' },
+                               { name: 'User Detail',     href: 'user-detail.html' }],
+      'Heading — Page (36px)':[{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'To-do',           href: 'todo.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' },
+                               { name: 'User Detail',     href: 'user-detail.html' }],
+      'Heading — Section (20px)':[{ name: 'To-do',        href: 'todo.html' },
+                               { name: 'Company Details', href: 'company-details.html' }],
+      'Body Text (16px)':     [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'To-do',           href: 'todo.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' },
+                               { name: 'User Detail',     href: 'user-detail.html' }],
+      'Label (14px)':         [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' }],
+      'Color Palette':        [{ name: 'Compliance',      href: 'portal.html' },
+                               { name: 'To-do',           href: 'todo.html' },
+                               { name: 'Company Details', href: 'company-details.html' },
+                               { name: 'Users',           href: 'users.html' },
+                               { name: 'User Detail',     href: 'user-detail.html' },
+                               { name: 'Login',           href: 'login.html' }],
+    };
+
     // ─── Render Nav ───────────────────────────────────────────────────────────
     const navPanel = document.getElementById('navPanel');
 
@@ -1368,6 +1463,17 @@
       // Update specs panel
       const specsBody = document.getElementById('specsBody');
       specsBody.className = 'specs-body';
+
+      const pages = USED_ON[item.name] || [];
+      const pageIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`;
+      const usedOnBlock = pages.length ? `
+        <div class="spec-block">
+          <div class="spec-block-label">Used on</div>
+          <div class="used-on-list">
+            ${pages.map(p => `<a href="${p.href}" class="used-on-link" target="_blank">${pageIcon}${p.name}</a>`).join('')}
+          </div>
+        </div>` : '';
+
       specsBody.innerHTML = `
         <div class="spec-block">
           <div class="spec-block-label">CSS</div>
@@ -1387,6 +1493,7 @@
             </button>
           </div>
         </div>
+        ${usedOnBlock}
       `;
 
       // Attach copy handlers
