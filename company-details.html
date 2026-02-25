@@ -279,48 +279,53 @@
 
     /* ── Entity card ── */
     .entity-card {
-      border: 1px solid #e2e8f0;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.06), 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 640px;
+    }
+
+    .entity-rows {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .entity-row {
       display: flex;
       align-items: center;
-      padding: 14px 16px;
       gap: 16px;
-      border-bottom: 1px solid #e2e8f0;
     }
-    .entity-row:last-child { border-bottom: none; }
 
     .entity-label {
-      width: 120px;
+      width: 96px;
       flex-shrink: 0;
-      color: #64748b;
-      font-size: 14px;
+      color: #0f172a;
+      font-size: 16px;
       font-weight: 400;
-      letter-spacing: -0.28px;
-      line-height: 20px;
+      letter-spacing: -0.32px;
+      line-height: 24px;
     }
 
     .entity-value {
       color: #0f172a;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
-      letter-spacing: -0.28px;
-      line-height: 20px;
+      letter-spacing: -0.32px;
+      line-height: 24px;
     }
 
     .entity-note {
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      padding: 12px 16px;
-      color: #64748b;
-      font-size: 13px;
+      padding: 12px 20px;
+      color: #0f172a;
+      font-size: 14px;
       font-weight: 400;
-      letter-spacing: -0.26px;
+      letter-spacing: -0.28px;
       line-height: 18px;
       border-top: 1px solid #e2e8f0;
     }
@@ -891,17 +896,19 @@
             </div>
 
             <div class="entity-card">
-              <div class="entity-row">
-                <div class="entity-label">Entity Name</div>
-                <div class="entity-value">Platypus Plumbing</div>
-              </div>
-              <div class="entity-row">
-                <div class="entity-label">Entity Type</div>
-                <div class="entity-value">Australian Private Company</div>
-              </div>
-              <div class="entity-row">
-                <div class="entity-label">ABN</div>
-                <div class="entity-value">218471922828</div>
+              <div class="entity-rows">
+                <div class="entity-row">
+                  <div class="entity-label">Entity Name</div>
+                  <div class="entity-value">Platypus Plumbing</div>
+                </div>
+                <div class="entity-row">
+                  <div class="entity-label">Entity Type</div>
+                  <div class="entity-value">Australian Private Company</div>
+                </div>
+                <div class="entity-row">
+                  <div class="entity-label">ABN</div>
+                  <div class="entity-value">218471922828</div>
+                </div>
               </div>
               <div class="entity-note">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2c66ef" stroke-width="2">
