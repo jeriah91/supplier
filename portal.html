@@ -605,37 +605,52 @@
     .cd-section-sub { font-size: 13px; color: #64748b; line-height: 18px; }
 
     /* Inline-edit fields */
-    .cd-field { display: flex; align-items: center; gap: 12px; min-height: 28px; }
+    .cd-field { display: flex; align-items: flex-start; gap: 12px; }
     .cd-field-label {
       width: 130px; flex-shrink: 0;
       font-size: 13px; font-weight: 500;
       color: #64748b; line-height: 20px;
+      padding-top: 2px;
     }
     .cd-field-value-wrap { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
     .cd-field-value { font-size: 14px; font-weight: 500; color: #0f172a; line-height: 20px; flex: 1; }
-    .cd-field-input {
-      flex: 1; min-width: 0;
-      padding: 5px 10px;
-      border: 1px solid #2c66ef; border-radius: 6px;
-      font-family: inherit; font-size: 14px; color: #0f172a;
-      outline: none; box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
-    }
     .cd-edit-btn {
       background: none; border: none; cursor: pointer;
-      color: #cbd5e1; padding: 2px; flex-shrink: 0;
+      padding: 0; flex-shrink: 0;
       display: flex; align-items: center;
+      color: #2c66ef;
     }
-    .cd-edit-btn:hover { color: #2c66ef; }
-    .cd-edit-btn svg, .cd-edit-save svg, .cd-edit-cancel svg { width: 13px; height: 13px; }
-    .cd-edit-save, .cd-edit-cancel {
-      background: none; border: none; cursor: pointer;
-      padding: 3px; flex-shrink: 0;
-      display: flex; align-items: center;
+    .cd-edit-btn:hover { opacity: 0.75; }
+    .cd-edit-btn svg { width: 14px; height: 14px; }
+    /* Inline edit form (matches company-details.html) */
+    .edit-form { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    .edit-input {
+      width: 100%; padding: 8px 12px;
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      font-family: inherit; font-size: 14px; font-weight: 400;
+      color: #0f172a; letter-spacing: -0.28px; line-height: 20px;
+      outline: none; background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .cd-edit-save { color: #059669; }
-    .cd-edit-save:hover { color: #065f46; }
-    .cd-edit-cancel { color: #94a3b8; }
-    .cd-edit-cancel:hover { color: #dc2626; }
+    .edit-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+    .edit-meta { display: flex; align-items: center; justify-content: space-between; min-height: 16px; }
+    .char-count { color: #94a3b8; font-size: 12px; letter-spacing: -0.24px; line-height: 16px; margin-left: auto; }
+    .edit-actions { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+    .btn-cancel-inline {
+      background: #fff; border: 1px solid #e2e8f0; color: #334155;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 20px;
+      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+    }
+    .btn-cancel-inline:hover { background: #f8fafc; }
+    .btn-save-inline {
+      background: #2c66ef; border: none; color: #fff;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 20px;
+      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-save-inline:disabled { background: #cbd5e1; cursor: not-allowed; }
 
     /* Requirements iframe */
     .cd-iframe-wrap {
@@ -1549,52 +1564,47 @@
         </div>
         <div class="cd-field">
           <span class="cd-field-label">Legal First Name</span>
-          <div class="cd-field-value-wrap">
+          <div class="cd-field-value-wrap" data-fieldtype="text" data-fieldmaxlen="100">
             <span class="cd-field-value">Marcus</span>
-            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-            <input class="cd-field-input" type="text" value="Marcus" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
-            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
-            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </button>
           </div>
         </div>
         <div class="cd-field">
           <span class="cd-field-label">Legal Last Name</span>
-          <div class="cd-field-value-wrap">
+          <div class="cd-field-value-wrap" data-fieldtype="text" data-fieldmaxlen="100">
             <span class="cd-field-value">Workman</span>
-            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-            <input class="cd-field-input" type="text" value="Workman" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
-            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
-            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </button>
           </div>
         </div>
         <div class="cd-field">
           <span class="cd-field-label">Phone</span>
-          <div class="cd-field-value-wrap">
+          <div class="cd-field-value-wrap" data-fieldtype="tel" data-fieldmaxlen="20">
             <span class="cd-field-value">0411 111 111</span>
-            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-            <input class="cd-field-input" type="tel" value="0411 111 111" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
-            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
-            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </button>
           </div>
         </div>
         <div class="cd-field">
           <span class="cd-field-label">Email</span>
-          <div class="cd-field-value-wrap">
-            <span class="cd-field-value" style="font-size:12px;">workman.marcus@platypusplumbing.com.au</span>
-            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-            <input class="cd-field-input" type="email" value="workman.marcus@platypusplumbing.com.au" style="display:none;font-size:12px;" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
-            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
-            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+          <div class="cd-field-value-wrap" data-fieldtype="email" data-fieldmaxlen="200">
+            <span class="cd-field-value">workman.marcus@platypusplumbing.com.au</span>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </button>
           </div>
         </div>
         <div class="cd-field">
           <span class="cd-field-label">Role</span>
-          <div class="cd-field-value-wrap">
+          <div class="cd-field-value-wrap" data-fieldtype="text" data-fieldmaxlen="100">
             <span class="cd-field-value">Plumber</span>
-            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
-            <input class="cd-field-input" type="text" value="Plumber" style="display:none" onkeydown="if(event.key==='Enter')saveEdit(this.nextElementSibling)" />
-            <button class="cd-edit-save" style="display:none" onclick="saveEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
-            <button class="cd-edit-cancel" style="display:none" onclick="cancelEdit(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+            </button>
           </div>
         </div>
       </div>
@@ -1736,34 +1746,58 @@
       row.addEventListener('click', function() { openCompliance(row); });
     });
 
-    // Inline editing
+    // Inline editing (matches company-details.html pattern)
+    function cdEsc(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
     function startEdit(btn) {
       var wrap = btn.closest('.cd-field-value-wrap');
-      wrap.querySelector('.cd-field-value').style.display = 'none';
-      btn.style.display = 'none';
-      wrap.querySelector('.cd-field-input').style.display = '';
-      wrap.querySelector('.cd-edit-save').style.display = '';
-      wrap.querySelector('.cd-edit-cancel').style.display = '';
-      wrap.querySelector('.cd-field-input').focus();
-      wrap.querySelector('.cd-field-input').select();
+      if (wrap.dataset.editing) return;
+      var valueEl = wrap.querySelector('.cd-field-value');
+      var originalVal = valueEl ? valueEl.textContent.trim() : '';
+      var inputType = wrap.dataset.fieldtype || 'text';
+      var maxLen = parseInt(wrap.dataset.fieldmaxlen) || 200;
+      wrap.dataset.editing = '1';
+      wrap.dataset.original = originalVal;
+      wrap.innerHTML =
+        '<div class="edit-form">' +
+          '<input type="' + inputType + '" class="edit-input" value="' + cdEsc(originalVal) + '" maxlength="' + maxLen + '">' +
+          '<div class="edit-meta">' +
+            '<span></span>' +
+            '<span class="char-count">' + originalVal.length + '/' + maxLen + ' characters</span>' +
+          '</div>' +
+          '<div class="edit-actions">' +
+            '<button class="btn-cancel-inline" onclick="cancelCdEdit(this)">Cancel</button>' +
+            '<button class="btn-save-inline" onclick="saveCdEdit(this)">Save ' +
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' +
+            '</button>' +
+          '</div>' +
+        '</div>';
+      var input = wrap.querySelector('.edit-input');
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+      input.addEventListener('input', function() {
+        wrap.querySelector('.char-count').textContent = input.value.length + '/' + maxLen + ' characters';
+      });
     }
-    function saveEdit(btn) {
+    function saveCdEdit(btn) {
       var wrap = btn.closest('.cd-field-value-wrap');
-      var val = wrap.querySelector('.cd-field-input').value.trim();
-      if (val) wrap.querySelector('.cd-field-value').textContent = val;
-      exitEdit(wrap);
+      var input = wrap.querySelector('.edit-input');
+      var val = input.value.trim() || wrap.dataset.original;
+      delete wrap.dataset.editing;
+      renderCdView(wrap, val);
     }
-    function cancelEdit(btn) {
+    function cancelCdEdit(btn) {
       var wrap = btn.closest('.cd-field-value-wrap');
-      wrap.querySelector('.cd-field-input').value = wrap.querySelector('.cd-field-value').textContent;
-      exitEdit(wrap);
+      delete wrap.dataset.editing;
+      renderCdView(wrap, wrap.dataset.original || '');
     }
-    function exitEdit(wrap) {
-      wrap.querySelector('.cd-field-value').style.display = '';
-      wrap.querySelector('.cd-edit-btn').style.display = '';
-      wrap.querySelector('.cd-field-input').style.display = 'none';
-      wrap.querySelector('.cd-edit-save').style.display = 'none';
-      wrap.querySelector('.cd-edit-cancel').style.display = 'none';
+    function renderCdView(wrap, value) {
+      wrap.innerHTML =
+        '<span class="cd-field-value">' + cdEsc(value) + '</span>' +
+        '<button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>' +
+        '</button>';
     }
 
     // Copy direct link
