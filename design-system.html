@@ -55,13 +55,45 @@
       display: flex;
     }
 
-    /* ── Left: Nav panel ── */
-    .nav-panel {
+    /* ── Left: Nav column (search + scrollable list) ── */
+    .nav-col {
       width: 240px;
       flex-shrink: 0;
-      overflow-y: auto;
-      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
       border-right: 1px solid #e2e8f0;
+    }
+    .nav-search-wrap {
+      padding: 12px 8px 10px;
+      flex-shrink: 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .nav-search-inner {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .nav-search-inner:focus-within {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.08);
+      background: #fff;
+    }
+    .nav-search-inner svg { width: 14px; height: 14px; flex-shrink: 0; color: #94a3b8; }
+    .nav-search {
+      flex: 1; border: none; background: none; outline: none;
+      font-family: inherit; font-size: 13px; color: #334155;
+      letter-spacing: -0.26px; line-height: 20px;
+    }
+    .nav-search::placeholder { color: #94a3b8; }
+    .nav-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 8px;
     }
     .cat-group { display: flex; flex-direction: column; }
     .cat-header {
@@ -152,7 +184,7 @@
       overflow: hidden;
     }
     .preview-name {
-      padding: 16px 24px;
+      padding: 16px 40px;
       font-size: 18px;
       font-weight: 600;
       color: #334155;
@@ -187,7 +219,7 @@
       flex-direction: column;
     }
     .specs-heading {
-      padding: 16px 24px;
+      padding: 16px 24px; /* narrower panel — keep 24px */
       font-size: 18px;
       font-weight: 600;
       color: #334155;
@@ -283,7 +315,17 @@
 
   <!-- Three-column body -->
   <div class="main">
-    <nav class="nav-panel" id="navPanel"></nav>
+    <div class="nav-col">
+      <div class="nav-search-wrap">
+        <div class="nav-search-inner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input class="nav-search" id="navSearch" type="text" placeholder="Search components…" autocomplete="off" />
+        </div>
+      </div>
+      <nav class="nav-panel" id="navPanel"></nav>
+    </div>
     <div class="preview-panel">
       <div class="preview-name" id="previewName">Select a component</div>
       <div class="preview-canvas" id="previewCanvas">
@@ -1285,6 +1327,27 @@
         itemsList.classList.add('open');
       }
     }
+
+    // ─── Search filter ────────────────────────────────────────────────────────
+    document.getElementById('navSearch').addEventListener('input', function () {
+      const q = this.value.trim().toLowerCase();
+      document.querySelectorAll('.cat-group').forEach(group => {
+        const header   = group.querySelector('.cat-header');
+        const itemsList = group.querySelector('.cat-items');
+        let anyVisible = false;
+        group.querySelectorAll('.cat-item-wrap').forEach(wrap => {
+          const btn   = wrap.querySelector('.cat-item');
+          const match = !q || btn.textContent.toLowerCase().includes(q);
+          wrap.style.display = match ? '' : 'none';
+          if (match) anyVisible = true;
+        });
+        group.style.display = anyVisible ? '' : 'none';
+        if (q && anyVisible) {
+          header.classList.add('open');
+          itemsList.classList.add('open');
+        }
+      });
+    });
 
     // ─── Preview style tag ────────────────────────────────────────────────────
     const previewStyleEl = document.createElement('style');
