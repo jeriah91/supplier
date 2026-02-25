@@ -551,22 +551,20 @@
       display: flex; align-items: center; gap: 8px;
     }
 
-    .ud-rows { display: flex; flex-direction: column; gap: 16px; }
+    .ud-rows { display: flex; flex-direction: column; gap: 20px; }
 
-    .ud-row { display: flex; align-items: flex-start; }
+    .ud-row { display: flex; flex-direction: column; gap: 4px; }
 
     .ud-label {
-      width: 160px; flex-shrink: 0;
-      color: #334155; font-size: 14px; font-weight: 600;
-      letter-spacing: -0.28px; line-height: 20px;
-      padding-top: 1px;
+      font-size: 16px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 26px;
     }
-    .ud-label .req { color: #ef4444; font-weight: 600; }
+    .ud-label .req { color: #ef4444; }
 
     .ud-value {
-      flex: 1; display: flex; align-items: center; gap: 8px;
-      color: #334155; font-size: 14px; font-weight: 400;
-      letter-spacing: -0.28px; line-height: 20px;
+      display: flex; align-items: center; gap: 8px;
+      color: #0f172a; font-size: 16px; font-weight: 400;
+      line-height: 26px;
     }
 
     /* Reuse .edit-btn, .edit-input, .edit-meta, .error-msg, .char-count,
@@ -580,10 +578,10 @@
     .ud-edit-form { display: flex; flex-direction: column; gap: 6px; flex: 1; }
 
     .ud-edit-input {
-      width: 100%; padding: 8px 12px;
+      width: 100%; padding: 10px 12px;
       border: 1px solid #cbd5e1; border-radius: 8px;
-      font-family: inherit; font-size: 14px; font-weight: 400;
-      color: #0f172a; letter-spacing: -0.28px; line-height: 20px;
+      font-family: inherit; font-size: 16px; font-weight: 400;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 22px;
       outline: none; background: #fff;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
@@ -612,18 +610,18 @@
     .ud-edit-actions { display: flex; align-items: center; gap: 8px; }
 
     .ud-btn-cancel {
-      background: #fff; border: 1px solid #e2e8f0; color: #334155;
+      background: #e2e8f0; border: none; color: #0f172a;
       font-family: inherit; font-size: 14px; font-weight: 500;
       letter-spacing: -0.28px; line-height: 20px;
-      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+      padding: 4px 12px; border-radius: 8px; cursor: pointer;
     }
-    .ud-btn-cancel:hover { background: #f8fafc; }
+    .ud-btn-cancel:hover { background: #cbd5e1; }
 
     .ud-btn-save {
       background: #2c66ef; border: none; color: #fff;
       font-family: inherit; font-size: 14px; font-weight: 500;
       letter-spacing: -0.28px; line-height: 20px;
-      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+      padding: 4px 12px; border-radius: 8px; cursor: pointer;
       display: flex; align-items: center; gap: 6px;
     }
     .ud-btn-save:disabled { background: #cbd5e1; cursor: not-allowed; }
@@ -883,7 +881,7 @@
             <div class="ud-value" id="uval-first-name">
               <span class="field-text">Markus</span>
               <button class="edit-btn" onclick="startUEdit('first-name')" aria-label="Edit first name">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                 </svg>
               </button>
@@ -895,7 +893,7 @@
             <div class="ud-value" id="uval-last-name">
               <span class="field-text">Workman</span>
               <button class="edit-btn" onclick="startUEdit('last-name')" aria-label="Edit last name">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                 </svg>
               </button>
@@ -907,7 +905,7 @@
             <div class="ud-value" id="uval-email">
               <span class="field-text">workman.markus@platypusplumbing.com.au</span>
               <button class="edit-btn" onclick="startUEdit('email')" aria-label="Edit email">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                 </svg>
               </button>
@@ -922,7 +920,7 @@
         <h2 class="ud-section-title">
           User Type
           <button class="edit-btn" aria-label="Edit user type">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
             </svg>
           </button>
@@ -1398,10 +1396,6 @@
         <div class="ud-edit-form">
           <input type="text" id="uinput-${id}" class="ud-edit-input"
             value="${uEsc(stored)}" placeholder="${uEsc(cfg.placeholder)}" maxlength="${cfg.maxLen}">
-          <div class="ud-edit-meta">
-            <span class="ud-error-msg" id="uerr-${id}"></span>
-            <span class="ud-char-count" id="ucc-${id}">${stored.length}/${cfg.maxLen} characters</span>
-          </div>
           <div class="ud-edit-actions">
             <button class="ud-btn-cancel" onclick="cancelUEdit('${id}')">Cancel</button>
             <button class="ud-btn-save" id="usave-${id}" onclick="saveUEdit('${id}')">
@@ -1420,12 +1414,8 @@
     function onUInput(id) {
       const cfg = U_FIELD_CONFIG[id];
       const input = document.getElementById('uinput-' + id);
-      const val = input.value;
-      document.getElementById('ucc-' + id).textContent = val.length + '/' + cfg.maxLen + ' characters';
-      const empty = val.trim() === '';
+      const empty = cfg.required && input.value.trim() === '';
       input.classList.toggle('input-error', empty);
-      const errEl = document.getElementById('uerr-' + id);
-      if (errEl) errEl.textContent = empty ? 'Required' : '';
       document.getElementById('usave-' + id).disabled = empty;
     }
 
@@ -1450,7 +1440,7 @@
       el.innerHTML = `
         <span class="field-text">${uEsc(stored)}</span>
         <button class="edit-btn" onclick="startUEdit('${id}')" aria-label="Edit field">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
           </svg>
         </button>`;

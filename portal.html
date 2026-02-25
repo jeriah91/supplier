@@ -449,14 +449,13 @@
     }
     .ap-section-sub { font-size: 14px; color: #64748b; line-height: 20px; }
 
-    .ap-field { display: flex; align-items: center; gap: 16px; }
+    .ap-field { display: flex; flex-direction: column; gap: 6px; }
     .ap-label {
-      width: 180px; flex-shrink: 0;
       font-size: 14px; font-weight: 500;
-      color: #334155; line-height: 20px;
+      color: #334155; letter-spacing: -0.28px; line-height: 20px;
     }
     .ap-input {
-      flex: 1; padding: 10px 14px;
+      width: 100%; padding: 10px 14px;
       border: 1px solid #cbd5e1; border-radius: 8px;
       font-family: inherit; font-size: 15px;
       color: #0f172a; line-height: 22px;
@@ -468,7 +467,7 @@
       box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
     }
     .ap-select {
-      flex: 1; padding: 10px 40px 10px 14px;
+      width: 100%; padding: 10px 40px 10px 14px;
       border: 1px solid #cbd5e1; border-radius: 8px;
       font-family: inherit; font-size: 15px;
       color: #0f172a; line-height: 22px;
@@ -599,15 +598,14 @@
     .cd-section-sub { font-size: 13px; color: #64748b; line-height: 18px; }
 
     /* Inline-edit fields */
-    .cd-field { display: flex; align-items: flex-start; gap: 12px; }
+    .cd-field { display: flex; flex-direction: column; gap: 4px; }
     .cd-field-label {
-      width: 130px; flex-shrink: 0;
-      font-size: 13px; font-weight: 500;
-      color: #64748b; line-height: 20px;
-      padding-top: 2px;
+      font-size: 16px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 26px;
     }
-    .cd-field-value-wrap { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
-    .cd-field-value { font-size: 14px; font-weight: 500; color: #0f172a; line-height: 20px; flex: 1; }
+    .cd-field-label .req { color: #ef4444; }
+    .cd-field-value-wrap { display: flex; align-items: center; gap: 8px; width: 100%; }
+    .cd-field-value { font-size: 16px; font-weight: 400; color: #0f172a; line-height: 26px; flex: 1; }
     .cd-edit-btn {
       background: none; border: none; cursor: pointer;
       padding: 0; flex-shrink: 0;
@@ -615,33 +613,31 @@
       color: #2c66ef;
     }
     .cd-edit-btn:hover { opacity: 0.75; }
-    .cd-edit-btn svg { width: 14px; height: 14px; }
-    /* Inline edit form (matches company-details.html) */
-    .edit-form { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    .cd-edit-btn svg { width: 20px; height: 20px; }
+    /* Inline edit form */
+    .edit-form { display: flex; flex-direction: column; gap: 8px; width: 100%; }
     .edit-input {
-      width: 100%; padding: 8px 12px;
+      width: 100%; padding: 10px 12px;
       border: 1px solid #cbd5e1; border-radius: 8px;
-      font-family: inherit; font-size: 14px; font-weight: 400;
-      color: #0f172a; letter-spacing: -0.28px; line-height: 20px;
+      font-family: inherit; font-size: 16px; font-weight: 400;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 22px;
       outline: none; background: #fff;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
     .edit-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
-    .edit-meta { display: flex; align-items: center; justify-content: space-between; min-height: 16px; }
-    .char-count { color: #94a3b8; font-size: 12px; letter-spacing: -0.24px; line-height: 16px; margin-left: auto; }
     .edit-actions { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
     .btn-cancel-inline {
-      background: #fff; border: 1px solid #e2e8f0; color: #334155;
+      background: #e2e8f0; border: none; color: #0f172a;
       font-family: inherit; font-size: 14px; font-weight: 500;
       letter-spacing: -0.28px; line-height: 20px;
-      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+      padding: 4px 12px; border-radius: 8px; cursor: pointer;
     }
-    .btn-cancel-inline:hover { background: #f8fafc; }
+    .btn-cancel-inline:hover { background: #cbd5e1; }
     .btn-save-inline {
       background: #2c66ef; border: none; color: #fff;
       font-family: inherit; font-size: 14px; font-weight: 500;
       letter-spacing: -0.28px; line-height: 20px;
-      padding: 5px 12px; border-radius: 8px; cursor: pointer;
+      padding: 4px 12px; border-radius: 8px; cursor: pointer;
       display: flex; align-items: center; gap: 6px;
     }
     .btn-save-inline:disabled { background: #cbd5e1; cursor: not-allowed; }
@@ -1677,7 +1673,7 @@
           <div class="cd-field-value-wrap" data-fieldtype="text" data-fieldmaxlen="100">
             <span class="cd-field-value">Marcus</span>
             <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             </button>
           </div>
         </div>
@@ -1686,7 +1682,7 @@
           <div class="cd-field-value-wrap" data-fieldtype="text" data-fieldmaxlen="100">
             <span class="cd-field-value">Workman</span>
             <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             </button>
           </div>
         </div>
@@ -1695,7 +1691,7 @@
           <div class="cd-field-value-wrap" data-fieldtype="tel" data-fieldmaxlen="20">
             <span class="cd-field-value">0411 111 111</span>
             <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             </button>
           </div>
         </div>
@@ -1704,7 +1700,7 @@
           <div class="cd-field-value-wrap" data-fieldtype="email" data-fieldmaxlen="200">
             <span class="cd-field-value">workman.marcus@platypusplumbing.com.au</span>
             <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             </button>
           </div>
         </div>
@@ -1713,7 +1709,7 @@
           <div class="cd-field-value-wrap" data-fieldtype="text" data-fieldmaxlen="100">
             <span class="cd-field-value">Plumber</span>
             <button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
             </button>
           </div>
         </div>
@@ -1989,10 +1985,6 @@
       wrap.innerHTML =
         '<div class="edit-form">' +
           '<input type="' + inputType + '" class="edit-input" value="' + cdEsc(originalVal) + '" maxlength="' + maxLen + '">' +
-          '<div class="edit-meta">' +
-            '<span></span>' +
-            '<span class="char-count">' + originalVal.length + '/' + maxLen + ' characters</span>' +
-          '</div>' +
           '<div class="edit-actions">' +
             '<button class="btn-cancel-inline" onclick="cancelCdEdit(this)">Cancel</button>' +
             '<button class="btn-save-inline" onclick="saveCdEdit(this)">Save ' +
@@ -2003,9 +1995,6 @@
       var input = wrap.querySelector('.edit-input');
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
-      input.addEventListener('input', function() {
-        wrap.querySelector('.char-count').textContent = input.value.length + '/' + maxLen + ' characters';
-      });
     }
     function saveCdEdit(btn) {
       var wrap = btn.closest('.cd-field-value-wrap');
@@ -2023,7 +2012,7 @@
       wrap.innerHTML =
         '<span class="cd-field-value">' + cdEsc(value) + '</span>' +
         '<button class="cd-edit-btn" onclick="startEdit(this)" title="Edit">' +
-          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>' +
         '</button>';
     }
 
