@@ -700,6 +700,57 @@
     }
     .cd-btn-deactivate:hover { background: #b91c1c; }
 
+    /* ── Deactivate confirmation modal ── */
+    .deact-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 400;
+      align-items: center;
+      justify-content: center;
+    }
+    .deact-backdrop.is-visible { display: flex; }
+    .deact-modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      width: 320px;
+      max-width: calc(100vw - 32px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+    .deact-title {
+      font-size: 16px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 24px;
+    }
+    .deact-body {
+      font-size: 14px; font-weight: 400;
+      color: #475569; letter-spacing: -0.28px; line-height: 20px;
+    }
+    .deact-btns {
+      display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px;
+    }
+    .deact-btn-cancel {
+      background: #fff; color: #0f172a;
+      border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 6px 14px; font-family: inherit;
+      font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .deact-btn-cancel:hover { background: #f1f5f9; }
+    .deact-btn-confirm {
+      background: #dc2626; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 6px 14px; font-family: inherit;
+      font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .deact-btn-confirm:hover { background: #b91c1c; }
+
     /* Clickable compliance rows */
     .data-table tbody tr { cursor: pointer; }
 
@@ -1596,12 +1647,24 @@
         <div class="cd-danger-box">
           <div class="cd-section-title">Deactivate profile</div>
           <div class="cd-section-sub">Deactivating profile will prevent them to come on-site and perform jobs.</div>
-          <button class="cd-btn-deactivate">Deactivate</button>
+          <button class="cd-btn-deactivate" onclick="openDeactivateModal()">Deactivate</button>
         </div>
       </div>
 
     </div>
   </aside>
+
+  <!-- Deactivate confirmation modal -->
+  <div class="deact-backdrop" id="deactBackdrop">
+    <div class="deact-modal">
+      <div class="deact-title">Deactivate this profile?</div>
+      <div class="deact-body">Deactivating profile will prevent them to come on-site and perform jobs.</div>
+      <div class="deact-btns">
+        <button class="deact-btn-cancel" onclick="closeDeactivateModal()">Cancel</button>
+        <button class="deact-btn-confirm" onclick="confirmDeactivate()">Deactivate</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     function openSidebar() {
@@ -1642,6 +1705,16 @@
     function closeCompliance() {
       document.getElementById('cdDrawer').classList.remove('is-open');
       document.getElementById('cdOverlay').classList.remove('is-visible');
+    }
+    function openDeactivateModal() {
+      document.getElementById('deactBackdrop').classList.add('is-visible');
+    }
+    function closeDeactivateModal() {
+      document.getElementById('deactBackdrop').classList.remove('is-visible');
+    }
+    function confirmDeactivate() {
+      closeDeactivateModal();
+      closeCompliance();
     }
 
     function scaleCdIframe() {
