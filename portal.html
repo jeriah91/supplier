@@ -1097,26 +1097,7 @@
 
     <div class="sidebar-spacer"></div>
 
-    <div class="profile-footer">
-      <div class="sign-out-wrap">
-        <div class="sign-out-row" onclick="location.href='login.html'">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" flex-shrink="0">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-          </svg>
-          <span class="sign-out-label">Sign out</span>
-        </div>
-      </div>
-      <div class="profile-row" onclick="toggleSignOut(this)">
-        <div class="avatar">JD</div>
-        <div class="profile-info">
-          <div class="profile-name">John Doe</div>
-          <div class="profile-email">email@example.com</div>
-        </div>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-        </svg>
-      </div>
-    </div>
+    <div class="profile-footer"></div>
   </aside>
 
   <!-- Main layout -->
@@ -1241,26 +1222,7 @@
 
         <div class="sidebar-spacer"></div>
 
-        <div class="profile-footer">
-          <div class="sign-out-wrap">
-            <div class="sign-out-row" onclick="location.href='login.html'">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-              </svg>
-              <span class="sign-out-label">Sign out</span>
-            </div>
-          </div>
-          <div class="profile-row" onclick="toggleSignOut(this)">
-            <div class="avatar">JD</div>
-            <div class="profile-info">
-              <div class="profile-name">John Doe</div>
-              <div class="profile-email">email@example.com</div>
-            </div>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-            </svg>
-          </div>
-        </div>
+        <div class="profile-footer"></div>
       </nav>
     </div>
 
@@ -2108,9 +2070,10 @@
     }
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 25/02/2026 16:40:51';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 25/02/2026 22:04:58';
   </script>
   <script src="sidebar-logo.js"></script>
+  <script src="sidebar-profile.js"></script>
   <script>if(window.self!==window.top){var n=document.querySelector(".proto-nav");if(n)n.style.display="none";document.body.style.paddingTop="0";}</script>
 </body>
 </html>
