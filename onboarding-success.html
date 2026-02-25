@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding Complete – Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #0f172a;
+    }
+
+    /* ── Layout: split screen ── */
+    .layout {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Left: hero image panel ── */
+    .panel-left {
+      flex: 1;
+      min-width: 0;
+      background-image: url('https://www.figma.com/api/mcp/asset/bdc6a4f3-bddb-4b96-b219-08b4479b8028');
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* ── Right: content panel ── */
+    .panel-right {
+      width: 465px;
+      flex-shrink: 0;
+      height: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      gap: 32px;
+      background: #fff;
+    }
+
+    /* ── Logo ── */
+    .logo { flex-shrink: 0; height: 23px; display: flex; align-items: center; }
+    .logo img { width: 100px; height: 23px; object-fit: contain; }
+
+    /* ── Content: vertically centred in remaining space ── */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      justify-content: center;
+    }
+
+    /* ── Page title ── */
+    .page-title { display: flex; flex-direction: column; gap: 8px; }
+    .page-heading {
+      font-size: 36px; font-weight: 600;
+      color: #334155; letter-spacing: -1.44px; line-height: 40px;
+    }
+    .page-subheading {
+      font-size: 16px; font-weight: 400;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 18px;
+    }
+
+    /* ── Yellow banner ── */
+    .banner {
+      background: #fef3c7;
+      border-radius: 8px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .banner-icon {
+      width: 20px; height: 20px;
+      flex-shrink: 0; color: #92400e;
+    }
+    .banner-text {
+      font-size: 15px; color: #000;
+      letter-spacing: -0.352px; line-height: 20px;
+    }
+
+    /* ── Stepper: all steps done ── */
+    .stepper { display: flex; flex-direction: column; }
+    .step { display: flex; align-items: center; gap: 16px; }
+
+    .step-track {
+      display: flex; flex-direction: column; align-items: center;
+      width: 24px; height: 46px; flex-shrink: 0;
+    }
+    .step-line {
+      width: 2px; flex: 1;
+      background: #a7f3d0;
+    }
+    .step-line.hidden { background: transparent; }
+
+    .step-circle {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #a7f3d0;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; z-index: 1;
+    }
+    .step-circle svg { width: 14px; height: 14px; color: #065f46; }
+
+    .step-label {
+      font-size: 16px; font-weight: 600;
+      color: #334155; letter-spacing: -0.32px; line-height: 26px;
+      padding: 4px 12px; border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    /* ── Nav buttons ── */
+    .nav-row { display: flex; justify-content: flex-end; gap: 8px; }
+    .btn-back {
+      background: #e2e8f0; color: #0f172a;
+      border: none; border-radius: 8px;
+      padding: 4px 12px;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.56px; line-height: 24px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-back:hover { background: #cbd5e1; }
+    .btn-next {
+      background: #2c66ef; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 4px 12px;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.56px; line-height: 24px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-next:hover { background: #1d56df; }
+    .btn-next svg, .btn-back svg { width: 16px; height: 16px; }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: #e2e8f0; flex-shrink: 0; }
+
+    /* ── Footer ── */
+    .footer { display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
+    .wallaby-logo img { height: 27px; width: auto; display: block; object-fit: contain; }
+    .footer-text {
+      font-size: 16px; color: #000;
+      letter-spacing: -0.352px; line-height: 1.4;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 767px) {
+      .layout { flex-direction: column; height: auto; min-height: 100vh; overflow: visible; }
+      .panel-left { flex: none; height: 240px; }
+      .panel-right { width: 100%; height: auto; padding: 24px; gap: 24px; }
+      .content { justify-content: flex-start; }
+      .page-heading { font-size: 28px; letter-spacing: -1.12px; line-height: 34px; }
+    }
+
+    /* ── Prototype Nav Bar ── */
+    .proto-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 9999;
+      height: 40px;
+      background: #000;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .proto-nav-library {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .proto-nav-library:hover { opacity: 0.75; }
+    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .proto-nav-title {
+      flex: 1;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+    }
+    .proto-nav-updated {
+      flex: 1;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+      text-align: right;
+      white-space: nowrap;
+    }
+    body { padding-top: 40px; }
+  </style>
+</head>
+<body>
+
+  <!-- Prototype nav bar -->
+  <nav class="proto-nav">
+    <a href="index.html" class="proto-nav-library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-title">Prototype / Onboarding</span>
+    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+  </nav>
+
+  <div class="layout">
+
+    <!-- Left: hero image -->
+    <div class="panel-left"></div>
+
+    <!-- Right: content panel -->
+    <div class="panel-right">
+
+      <!-- Logo -->
+      <div class="logo">
+        <img src="https://www.figma.com/api/mcp/asset/6c155ae8-2cad-4439-89e9-98991cd36865" alt="Zipline" />
+      </div>
+
+      <!-- Main content -->
+      <div class="content">
+
+        <!-- Heading -->
+        <div class="page-title">
+          <h1 class="page-heading">Continue to your portal</h1>
+          <p class="page-subheading">You have completed the onboarding process</p>
+        </div>
+
+        <!-- Yellow info banner -->
+        <div class="banner">
+          <svg class="banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="11" width="14" height="10" rx="2"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 018 0v4"/>
+          </svg>
+          <span class="banner-text">Information you provided will only be shared with Wallaby Aged Care.</span>
+        </div>
+
+        <!-- Stepper: all 4 steps done -->
+        <div class="stepper">
+
+          <!-- Step 1: top line hidden, bottom line green -->
+          <div class="step">
+            <div class="step-track">
+              <div class="step-line hidden"></div>
+              <div class="step-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div class="step-line"></div>
+            </div>
+            <span class="step-label">Business Details</span>
+          </div>
+
+          <!-- Step 2: both lines green -->
+          <div class="step">
+            <div class="step-track">
+              <div class="step-line"></div>
+              <div class="step-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div class="step-line"></div>
+            </div>
+            <span class="step-label">Business Address</span>
+          </div>
+
+          <!-- Step 3: both lines green -->
+          <div class="step">
+            <div class="step-track">
+              <div class="step-line"></div>
+              <div class="step-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div class="step-line"></div>
+            </div>
+            <span class="step-label">Key Contact</span>
+          </div>
+
+          <!-- Step 4: top line green, bottom line hidden -->
+          <div class="step">
+            <div class="step-track">
+              <div class="step-line"></div>
+              <div class="step-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div class="step-line hidden"></div>
+            </div>
+            <span class="step-label">Business Compliance Docs</span>
+          </div>
+
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-row">
+          <a href="onboarding-compliance-docs.html" class="btn-back">
+            Back
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m7-7l-7 7 7 7"/>
+            </svg>
+          </a>
+          <a href="portal.html" class="btn-next">
+            Continue
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-7-7l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Divider -->
+      <div class="divider"></div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="wallaby-logo">
+          <img src="https://www.figma.com/api/mcp/asset/48c36b46-bca3-4302-a869-3dc5341f8b90" alt="Wallaby" />
+        </div>
+        <p class="footer-text">Wallaby has partnered with Zipline.io to ensure safety &amp; compliance.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var d = new Date(document.lastModified);
+      var pad = function(n) { return String(n).padStart(2, '0'); };
+      document.getElementById('protoLastUpdated').textContent =
+        'Last updated ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    })();
+  </script>
+</body>
+</html>
