@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in – Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      min-height: 100vh;
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Proto nav ── */
+    .proto-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 9999; height: 40px; background: #000;
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .proto-nav-library {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: #fff; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px; white-space: nowrap; flex-shrink: 0;
+    }
+    .proto-nav-library:hover { opacity: 0.75; }
+    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .proto-nav-title { flex: 1; color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; line-height: 24px; }
+    .proto-nav-updated { flex: 1; color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; line-height: 24px; text-align: right; white-space: nowrap; }
+
+    /* ── Page centering ── */
+    .login-page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    /* ── Card ── */
+    .login-card {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 40px;
+      width: 100%;
+      max-width: 413px;
+      display: none;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .login-card.is-active { display: flex; }
+
+    /* ── Logo icon ── */
+    .card-logo { flex-shrink: 0; }
+    .card-logo svg { display: block; }
+
+    /* ── Headings ── */
+    .card-heading {
+      font-size: 36px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -1.44px;
+      line-height: 40px;
+    }
+
+    .card-body {
+      font-size: 16px;
+      font-weight: 400;
+      color: #0f172a;
+      letter-spacing: -0.32px;
+      line-height: 18px;
+    }
+
+    /* ── Tab switcher ── */
+    .tab-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .tab-label {
+      font-size: 12px;
+      font-weight: 400;
+      color: #54565a;
+      line-height: 14px;
+    }
+    .tab-switcher {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #94a3b8;
+      border-radius: 10px;
+      padding: 4px;
+      gap: 0;
+    }
+    .tab {
+      padding: 4px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: #2c66ef;
+      letter-spacing: -0.56px;
+      line-height: 24px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .tab.is-active {
+      background: #475569;
+      color: #fff;
+    }
+
+    /* ── Email input ── */
+    .email-input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      color: #0f172a;
+      letter-spacing: -0.32px;
+      line-height: 22px;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .email-input::placeholder { color: #808080; }
+    .email-input:focus {
+      border-color: #2c66ef;
+      box-shadow: 0 0 0 3px rgba(44,102,239,0.1);
+    }
+
+    /* ── Action group ── */
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 4px 12px;
+      height: 32px;
+      background: #2c66ef;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.56px;
+      line-height: 24px;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: #1d56df; }
+    .btn-primary svg { flex-shrink: 0; }
+
+    .btn-outline {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 4px 12px;
+      height: 32px;
+      background: transparent;
+      color: #2c66ef;
+      border: 1px solid #2c66ef;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.56px;
+      line-height: 24px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-outline:hover { background: rgba(44,102,239,0.06); }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 14px;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+    }
+
+    /* ── Magic-sent card (clickable) ── */
+    #panel-magic-sent {
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.15s;
+    }
+    #panel-magic-sent:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      transform: translateY(-2px);
+    }
+    #panel-magic-sent:active { transform: translateY(0); }
+
+    /* ── OTP digit row ── */
+    .otp-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .otp-digit-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 26px;
+    }
+    .otp-digit {
+      width: 26px;
+      background: transparent;
+      border: none;
+      outline: none;
+      border-bottom: 2px solid #94a3b8;
+      border-radius: 0 0 1px 1px;
+      font-family: inherit;
+      font-size: 24px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.48px;
+      line-height: 26px;
+      text-align: center;
+      padding: 0;
+      height: 30px;
+      transition: border-color 0.15s;
+      caret-color: #2c66ef;
+    }
+    .otp-digit:focus { border-bottom-color: #2c66ef; }
+
+    /* ── OTP Sign in button ── */
+    .btn-signin {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 4px 12px;
+      height: 32px;
+      background: #cbd5e1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.56px;
+      line-height: 24px;
+      cursor: default;
+      transition: background 0.2s;
+    }
+    .btn-signin.is-active {
+      background: #2c66ef;
+      cursor: pointer;
+    }
+    .btn-signin.is-active:hover { background: #1d56df; }
+    .btn-signin svg { flex-shrink: 0; }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .login-page { padding: 24px 16px; align-items: flex-start; padding-top: 40px; }
+      .login-card { padding: 32px 24px; }
+      .card-heading { font-size: 30px; letter-spacing: -1.2px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Prototype nav bar -->
+  <nav class="proto-nav">
+    <a href="index.html" class="proto-nav-library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-title">Prototype / Portal</span>
+    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+  </nav>
+
+  <div class="login-page">
+
+    <!-- ── Panel 1: Email form (Magic Link + OTP shared) ── -->
+    <div class="login-card is-active" id="panel-email">
+
+      <!-- Logo icon -->
+      <div class="card-logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="4" fill="#2c66ef"/>
+          <path d="M5 8L12 5L19 8L12 11L5 8Z" fill="white" opacity="0.9"/>
+          <path d="M5 12L12 9L19 12L12 15L5 12Z" fill="white" opacity="0.7"/>
+          <path d="M5 16L12 13L19 16L12 19L5 16Z" fill="white" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="card-heading">Sign in</h1>
+
+      <!-- Tab switcher -->
+      <div class="tab-group">
+        <span class="tab-label">Sign in using</span>
+        <div class="tab-switcher">
+          <button class="tab is-active" id="tab-magic" onclick="switchTab('magic')">Magic Link</button>
+          <button class="tab" id="tab-otp" onclick="switchTab('otp')">One-time passcode</button>
+        </div>
+      </div>
+
+      <!-- Email input -->
+      <input class="email-input" id="email-input" type="email" placeholder="Your email" />
+
+      <!-- Actions -->
+      <div class="card-actions">
+        <button class="btn-primary" onclick="submitEmailForm()">
+          <span id="submit-label">Send Magic Link</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </button>
+        <div class="divider">Sign in with Password</div>
+        <button class="btn-outline">Enter password</button>
+      </div>
+
+    </div>
+
+    <!-- ── Panel 2: Magic Link sent (click whole card → portal) ── -->
+    <div class="login-card" id="panel-magic-sent" onclick="window.location.href='portal.html'" title="Click to continue to portal">
+
+      <!-- Logo icon -->
+      <div class="card-logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="4" fill="#2c66ef"/>
+          <path d="M5 8L12 5L19 8L12 11L5 8Z" fill="white" opacity="0.9"/>
+          <path d="M5 12L12 9L19 12L12 15L5 12Z" fill="white" opacity="0.7"/>
+          <path d="M5 16L12 13L19 16L12 19L5 16Z" fill="white" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="card-heading">A Magic Link<br>has been sent</h1>
+
+      <!-- Body -->
+      <p class="card-body">Check your inbox hello@platypusplumbing.com.au for a secure login link.</p>
+
+    </div>
+
+    <!-- ── Panel 3: OTP code entry ── -->
+    <div class="login-card" id="panel-otp-entry">
+
+      <!-- Logo icon -->
+      <div class="card-logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="4" fill="#2c66ef"/>
+          <path d="M5 8L12 5L19 8L12 11L5 8Z" fill="white" opacity="0.9"/>
+          <path d="M5 12L12 9L19 12L12 15L5 12Z" fill="white" opacity="0.7"/>
+          <path d="M5 16L12 13L19 16L12 19L5 16Z" fill="white" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="card-heading">A one-time passcode<br>has been sent</h1>
+
+      <!-- Body -->
+      <p class="card-body">Check your inbox to find your one-time passcode and enter the code below:</p>
+
+      <!-- 6-digit OTP inputs -->
+      <div class="otp-row">
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" />
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+      </div>
+
+      <!-- Sign in button -->
+      <button class="btn-signin" id="otp-signin" onclick="otpSignIn()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+        </svg>
+        Sign in
+      </button>
+
+    </div>
+
+  </div><!-- /login-page -->
+
+  <script>
+    var currentTab = 'magic';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-magic').classList.toggle('is-active', tab === 'magic');
+      document.getElementById('tab-otp').classList.toggle('is-active', tab === 'otp');
+      document.getElementById('submit-label').textContent =
+        tab === 'magic' ? 'Send Magic Link' : 'Send one-time passcode';
+    }
+
+    function showPanel(id) {
+      ['panel-email', 'panel-magic-sent', 'panel-otp-entry'].forEach(function(pid) {
+        var el = document.getElementById(pid);
+        el.classList.toggle('is-active', pid === id);
+      });
+    }
+
+    function submitEmailForm() {
+      if (currentTab === 'magic') {
+        showPanel('panel-magic-sent');
+      } else {
+        showPanel('panel-otp-entry');
+        document.querySelectorAll('.otp-digit')[0].focus();
+      }
+    }
+
+    function otpSignIn() {
+      var btn = document.getElementById('otp-signin');
+      if (btn.classList.contains('is-active')) {
+        window.location.href = 'portal.html';
+      }
+    }
+
+    // OTP digit input behaviour
+    var digits = document.querySelectorAll('.otp-digit');
+
+    digits.forEach(function(input, i) {
+      input.addEventListener('input', function() {
+        // Strip non-digits, keep only last character
+        this.value = this.value.replace(/\D/g, '').slice(-1);
+        // Advance to next
+        if (this.value && i < digits.length - 1) {
+          digits[i + 1].focus();
+        }
+        checkOtp();
+      });
+
+      input.addEventListener('keydown', function(e) {
+        // Backspace on empty → go back
+        if (e.key === 'Backspace' && !this.value && i > 0) {
+          digits[i - 1].focus();
+        }
+        // Left/right arrow navigation
+        if (e.key === 'ArrowLeft' && i > 0) { e.preventDefault(); digits[i - 1].focus(); }
+        if (e.key === 'ArrowRight' && i < digits.length - 1) { e.preventDefault(); digits[i + 1].focus(); }
+      });
+
+      // Allow clicking any field directly
+      input.addEventListener('focus', function() {
+        this.select();
+      });
+    });
+
+    function checkOtp() {
+      var allFilled = Array.from(digits).every(function(d) { return d.value.length === 1; });
+      var btn = document.getElementById('otp-signin');
+      btn.classList.toggle('is-active', allFilled);
+    }
+
+    // Last-updated timestamp
+    (function() {
+      var d = new Date(document.lastModified);
+      var pad = function(n) { return String(n).padStart(2, '0'); };
+      document.getElementById('protoLastUpdated').textContent =
+        'Last updated ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    })();
+  </script>
+  <script>if(window.self!==window.top){var n=document.querySelector(".proto-nav");if(n)n.style.display="none";document.body.style.paddingTop="0";}</script>
+</body>
+</html>
