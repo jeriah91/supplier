@@ -769,6 +769,85 @@
     /* Clickable compliance rows */
     .data-table tbody tr { cursor: pointer; }
 
+    /* ── Overall Company Compliance drawer ── */
+    .oc-overlay {
+      display: none;
+      position: fixed; inset: 0; top: 40px;
+      background: rgba(0,0,0,0.4);
+      z-index: 200;
+    }
+    .oc-overlay.is-visible { display: block; }
+
+    .oc-drawer {
+      position: fixed;
+      top: 40px; right: 0; bottom: 0;
+      width: 440px; max-width: 100vw;
+      background: #fff;
+      z-index: 201;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+    }
+    .oc-drawer.is-open { transform: translateX(0); }
+    @media (max-width: 767px) { .oc-drawer { width: 100%; } }
+
+    .oc-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+    .oc-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #2c66ef; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 600;
+    }
+    .oc-header-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+    .oc-company-name {
+      font-size: 16px; font-weight: 600;
+      color: #0f172a; letter-spacing: -0.32px; line-height: 22px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .oc-close {
+      background: none; border: none; cursor: pointer;
+      color: #64748b; padding: 4px; flex-shrink: 0;
+      display: flex; align-items: center;
+    }
+    .oc-close:hover { color: #0f172a; }
+
+    .oc-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+    .oc-banner {
+      background: #fef3c7;
+      padding: 12px 24px;
+      display: flex; align-items: flex-start; gap: 8px;
+      border-bottom: 1px solid #fde68a;
+      flex-shrink: 0;
+    }
+    .oc-banner-icon { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: #92400e; }
+    .oc-banner-text { font-size: 13px; color: #000; letter-spacing: -0.28px; line-height: 18px; }
+
+    .oc-section {
+      padding: 20px 24px;
+      display: flex; flex-direction: column; gap: 14px;
+      flex: 1;
+    }
+    .oc-section-title { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.32px; line-height: 22px; }
+    .oc-section-sub { font-size: 13px; color: #64748b; line-height: 18px; }
+
+    .oc-iframe-wrap {
+      width: 100%; height: 460px;
+      border-radius: 8px; border: 1px solid #e2e8f0;
+      overflow: hidden; position: relative;
+      background: #f8fafc;
+    }
+    .oc-iframe-wrap iframe {
+      position: absolute; top: 0; left: 0;
+      border: none; transform-origin: top left;
+    }
+
     /* ── Notification banner ── */
     .notif-banner {
       position: fixed;
@@ -1188,7 +1267,7 @@
                 Approved
               </div>
             </div>
-            <button class="btn-outline">View</button>
+            <button class="btn-outline" onclick="openCompanyCompliance()">View</button>
           </div>
         </div>
 
@@ -1724,6 +1803,48 @@
     </div>
   </div>
 
+  <!-- Overall Company Compliance overlay + drawer -->
+  <div class="oc-overlay" id="ocOverlay" onclick="closeCompanyCompliance()"></div>
+
+  <aside class="oc-drawer" id="ocDrawer">
+    <div class="oc-header">
+      <div class="oc-avatar">PP</div>
+      <div class="oc-header-text">
+        <span class="oc-company-name">Platypus Plumbing</span>
+        <div class="cd-status-badge non-compliant" style="margin-top:2px; width:fit-content;">
+          <span class="cd-status-dot"></span>Non-compliant
+        </div>
+      </div>
+      <button class="oc-close" onclick="closeCompanyCompliance()" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="oc-body">
+      <!-- Info banner -->
+      <div class="oc-banner">
+        <svg class="oc-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+        <span class="oc-banner-text">Information you provided will only be shared with Wallaby Aged Care.</span>
+      </div>
+
+      <!-- Requirements section -->
+      <div class="oc-section">
+        <div>
+          <div class="oc-section-title">Requirements</div>
+          <div class="oc-section-sub" style="margin-top:4px;">Add the requirements below to stay compliant.</div>
+        </div>
+        <div class="oc-iframe-wrap" id="ocIframeWrap">
+          <iframe id="ocReqIframe" src="mobile-requirements.html" title="Requirements" scrolling="yes"></iframe>
+        </div>
+      </div>
+    </div>
+  </aside>
+
   <script>
     function openSidebar() {
       document.getElementById('mobSidebar').classList.add('is-open');
@@ -1816,6 +1937,30 @@
       clearTimeout(notifTimer);
       document.getElementById('notifBanner').classList.remove('is-visible');
     }
+
+    // ── Overall Company Compliance Drawer ────────────────────────────────────
+    function openCompanyCompliance() {
+      document.getElementById('ocDrawer').classList.add('is-open');
+      document.getElementById('ocOverlay').classList.add('is-visible');
+      scaleOcIframe();
+    }
+    function closeCompanyCompliance() {
+      document.getElementById('ocDrawer').classList.remove('is-open');
+      document.getElementById('ocOverlay').classList.remove('is-visible');
+    }
+    function scaleOcIframe() {
+      var wrap   = document.getElementById('ocIframeWrap');
+      var iframe = document.getElementById('ocReqIframe');
+      var containerW = wrap.clientWidth;
+      var nativeW = 375;
+      var scale = containerW / nativeW;
+      iframe.style.width  = nativeW + 'px';
+      iframe.style.height = Math.ceil(460 / scale) + 'px';
+      iframe.style.transform = 'scale(' + scale + ')';
+    }
+    window.addEventListener('resize', function() {
+      if (document.getElementById('ocDrawer').classList.contains('is-open')) scaleOcIframe();
+    });
 
     function scaleCdIframe() {
       var wrap   = document.getElementById('cdIframeWrap');
