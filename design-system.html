@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design System – Zipline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Azeret+Mono:wght@500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -219,12 +219,12 @@
       flex-direction: column;
     }
     .specs-heading {
-      padding: 16px 24px; /* narrower panel — keep 24px */
-      font-size: 18px;
+      padding: 16px 24px;
+      font-size: 24px;
       font-weight: 600;
       color: #334155;
-      letter-spacing: -0.36px;
-      line-height: 26px;
+      letter-spacing: -0.48px;
+      line-height: 32px;
       flex-shrink: 0;
       border-bottom: 1px solid #e2e8f0;
     }
@@ -245,72 +245,85 @@
       text-align: center;
       line-height: 24px;
     }
-    .spec-block { display: flex; flex-direction: column; gap: 8px; }
-    .spec-block-label {
-      font-size: 11px;
-      font-weight: 600;
-      color: #64748b;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-    }
-    .spec-code-wrap {
-      position: relative;
-      background: #1e293b;
+    .spec-block { display: flex; flex-direction: column; }
+    .spec-card {
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
       overflow: hidden;
     }
+    .spec-card-header {
+      background: #cbd5e1;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .spec-card-label {
+      flex: 1;
+      font-size: 16px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.32px;
+      line-height: 26px;
+    }
+    .spec-card-divider {
+      height: 1px;
+      background: #cbd5e1;
+    }
     .spec-code {
       display: block;
-      padding: 14px 44px 14px 16px;
-      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 11.5px;
-      line-height: 1.65;
-      color: #cbd5e1;
+      padding: 16px;
+      font-family: 'Azeret Mono', 'SF Mono', 'Fira Code', monospace;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 26px;
+      color: #0f172a;
+      background: #f8fafc;
       white-space: pre;
       overflow-x: auto;
-      max-height: 220px;
+      max-height: 280px;
       overflow-y: auto;
     }
     .spec-copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255,255,255,0.08);
+      background: none;
       border: none;
-      border-radius: 6px;
-      padding: 6px;
+      padding: 2px;
       cursor: pointer;
-      color: #64748b;
+      color: #334155;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 4px;
+      flex-shrink: 0;
       transition: background 0.15s, color 0.15s;
     }
-    .spec-copy-btn:hover { background: rgba(255,255,255,0.16); color: #e2e8f0; }
-    .spec-copy-btn svg { width: 14px; height: 14px; }
-    .spec-copy-btn.copied { color: #4ade80; }
+    .spec-copy-btn:hover { background: rgba(0,0,0,0.08); }
+    .spec-copy-btn svg { width: 20px; height: 20px; }
+    .spec-copy-btn.copied { color: #059669; }
 
     /* ── Used on ── */
     .used-on-list {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      background: #f8fafc;
+      padding: 8px;
     }
     .used-on-link {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 10px;
+      padding: 8px;
       border-radius: 6px;
       text-decoration: none;
-      color: #475569;
-      font-size: 13px;
-      letter-spacing: -0.26px;
-      line-height: 20px;
+      color: #334155;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.32px;
+      line-height: 26px;
       transition: background 0.12s, color 0.12s;
     }
-    .used-on-link:hover { background: #f1f5f9; color: #2c66ef; }
-    .used-on-link svg { width: 14px; height: 14px; flex-shrink: 0; color: #94a3b8; transition: color 0.12s; }
+    .used-on-link:hover { background: #e2e8f0; color: #2c66ef; }
+    .used-on-link svg { width: 24px; height: 24px; flex-shrink: 0; color: #64748b; transition: color 0.12s; }
     .used-on-link:hover svg { color: #2c66ef; }
   </style>
 </head>
@@ -1468,29 +1481,40 @@
       const pageIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`;
       const usedOnBlock = pages.length ? `
         <div class="spec-block">
-          <div class="spec-block-label">Used on</div>
-          <div class="used-on-list">
-            ${pages.map(p => `<a href="${p.href}" class="used-on-link" target="_blank">${pageIcon}${p.name}</a>`).join('')}
+          <div class="spec-card">
+            <div class="spec-card-header">
+              <span class="spec-card-label">Used on</span>
+            </div>
+            <div class="spec-card-divider"></div>
+            <div class="used-on-list">
+              ${pages.map(p => `<a href="${p.href}" class="used-on-link" target="_blank">${pageIcon}${p.name}</a>`).join('')}
+            </div>
           </div>
         </div>` : '';
 
       specsBody.innerHTML = `
         <div class="spec-block">
-          <div class="spec-block-label">CSS</div>
-          <div class="spec-code-wrap">
+          <div class="spec-card">
+            <div class="spec-card-header">
+              <span class="spec-card-label">CSS</span>
+              <button class="spec-copy-btn" data-copy="css" title="Copy CSS">
+                ${copyIcon()}
+              </button>
+            </div>
+            <div class="spec-card-divider"></div>
             <pre class="spec-code">${escHtml(item.css)}</pre>
-            <button class="spec-copy-btn" data-copy="css" title="Copy CSS">
-              ${copyIcon()}
-            </button>
           </div>
         </div>
         <div class="spec-block">
-          <div class="spec-block-label">HTML</div>
-          <div class="spec-code-wrap">
+          <div class="spec-card">
+            <div class="spec-card-header">
+              <span class="spec-card-label">HTML</span>
+              <button class="spec-copy-btn" data-copy="html" title="Copy HTML">
+                ${copyIcon()}
+              </button>
+            </div>
+            <div class="spec-card-divider"></div>
             <pre class="spec-code">${escHtml(item.html)}</pre>
-            <button class="spec-copy-btn" data-copy="html" title="Copy HTML">
-              ${copyIcon()}
-            </button>
           </div>
         </div>
         ${usedOnBlock}
