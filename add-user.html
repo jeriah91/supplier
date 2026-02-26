@@ -162,6 +162,39 @@
     }
     .btn-cancel:hover { background: #f8fafc; }
 
+    /* ── User type cards ── */
+    .user-type-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .user-type-card {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .user-type-card:hover { border-color: #94a3b8; }
+    .user-type-card.selected { border-color: #0f172a; border-width: 2px; }
+    .user-type-card-header { display: flex; align-items: center; gap: 8px; }
+    .user-type-card-name {
+      font-size: 15px; font-weight: 600;
+      letter-spacing: -0.3px; line-height: 20px; color: #64748b;
+      flex: 1;
+    }
+    .user-type-card.selected .user-type-card-name { color: #0f172a; }
+    .user-type-check { display: none; flex-shrink: 0; }
+    .user-type-card.selected .user-type-check { display: flex; }
+    .user-type-card-desc {
+      font-size: 14px; font-weight: 400;
+      letter-spacing: -0.28px; line-height: 20px; color: #94a3b8;
+    }
+    .user-type-card.selected .user-type-card-desc { color: #64748b; }
+
     /* Desktop redirect — this page is meant for mobile */
     @media (min-width: 768px) {
       body { align-items: center; justify-content: center; background: #cbd5e1; }
@@ -268,13 +301,33 @@
         <input class="form-input" id="email" type="email" placeholder="Enter email address" />
       </div>
       <div class="form-field">
-        <label class="form-label" for="role">Role <span class="req">*</span></label>
-        <select class="form-select" id="role">
-          <option value="" disabled selected>Select a role</option>
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-          <option value="user">User</option>
-        </select>
+        <div class="form-label">User Type <span class="req">*</span></div>
+        <div class="user-type-cards" id="userTypeCards">
+          <div class="user-type-card" onclick="selectUserType(this)">
+            <div class="user-type-card-header">
+              <span class="user-type-card-name">Account Owner</span>
+              <span class="user-type-check">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            <div class="user-type-card-desc">This user owns the account and is a primary contact.</div>
+          </div>
+          <div class="user-type-card" onclick="selectUserType(this)">
+            <div class="user-type-card-header">
+              <span class="user-type-card-name">Compliance Manager</span>
+              <span class="user-type-check">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            <div class="user-type-card-desc">Manages all compliance documents on behalf of their contractors.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -286,6 +339,12 @@
 
   </div>
 
+  <script>
+    function selectUserType(card) {
+      document.querySelectorAll('#userTypeCards .user-type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    }
+  </script>
   <script>
     (function() {
       var d = new Date(document.lastModified);

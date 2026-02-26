@@ -260,14 +260,16 @@
       flex: 1;
     }
     .filter-select {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 12px;
+      padding: 8px 36px 8px 12px;
       border: 1px solid #cbd5e1; border-radius: 8px;
       background: #fff; cursor: pointer;
-    }
-    .filter-label {
       color: #334155; font-size: 16px; font-weight: 400;
-      line-height: 20px; white-space: nowrap;
+      font-family: inherit; line-height: 20px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      outline: none;
     }
     .table-inner {
       padding: 24px;
@@ -967,13 +969,33 @@
         <input class="form-input" id="d-email" type="email" placeholder="Enter email address" />
       </div>
       <div class="form-field">
-        <label class="form-label" for="d-role">Role <span class="req">*</span></label>
-        <select class="form-select" id="d-role">
-          <option value="" disabled selected>Select a role</option>
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-          <option value="user">User</option>
-        </select>
+        <div class="form-label">User Type <span class="req">*</span></div>
+        <div class="ud-type-cards" id="addUserTypeCards">
+          <div class="ud-type-card" onclick="selectNewUserType(this)">
+            <div class="ud-type-card-header">
+              <span class="ud-type-card-name">Account Owner</span>
+              <span class="ud-type-check">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            <div class="ud-type-card-desc">This user owns the account and is a primary contact.</div>
+          </div>
+          <div class="ud-type-card" onclick="selectNewUserType(this)">
+            <div class="ud-type-card-header">
+              <span class="ud-type-card-name">Compliance Manager</span>
+              <span class="ud-type-check">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" fill="#2c66ef"/>
+                  <path d="M7 12l3.5 3.5L17 8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+            <div class="ud-type-card-desc">Manages all compliance documents on behalf of their contractors.</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="drawer-footer">
@@ -1145,12 +1167,11 @@
           <div class="table-wrap">
             <div class="table-toolbar">
               <div class="table-toolbar-title">All users</div>
-              <div class="filter-select">
-                <span class="filter-label">Show all</span>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#334155" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                </svg>
-              </div>
+              <select class="filter-select" id="filterSelect" onchange="filterTable(this.value)">
+                <option value="all">Show all</option>
+                <option value="account-owner">Account Owner</option>
+                <option value="compliance-manager">Compliance Manager</option>
+              </select>
             </div>
             <div class="table-inner">
               <div class="table-scroll-wrap">
@@ -1158,20 +1179,20 @@
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Role</th>
+                      <th>User Type</th>
                       <th>Status</th>
                       <th>Last activity</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr onclick="openUserRow()">
+                  <tbody id="userTableBody">
+                    <tr onclick="openUserRow()" data-user-type="account-owner">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#6366f1;">JS</div>
                           <span class="user-name">John Smith</span>
                         </div>
                       </td>
-                      <td><span class="role-text">Admin</span></td>
+                      <td><span class="role-text">Account Owner</span></td>
                       <td>
                         <div class="status-pill status-active">
                           <span class="dot"></span>Active
@@ -1179,14 +1200,14 @@
                       </td>
                       <td><span class="activity-text">20 Feb, 9:00AM</span></td>
                     </tr>
-                    <tr onclick="openUserRow()">
+                    <tr onclick="openUserRow()" data-user-type="compliance-manager">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#0ea5e9;">SJ</div>
                           <span class="user-name">Sarah Johnson</span>
                         </div>
                       </td>
-                      <td><span class="role-text">Manager</span></td>
+                      <td><span class="role-text">Compliance Manager</span></td>
                       <td>
                         <div class="status-pill status-active">
                           <span class="dot"></span>Active
@@ -1194,14 +1215,14 @@
                       </td>
                       <td><span class="activity-text">19 Feb, 3:00PM</span></td>
                     </tr>
-                    <tr onclick="openUserRow()">
+                    <tr onclick="openUserRow()" data-user-type="account-owner">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#f59e0b;">MD</div>
                           <span class="user-name">Mike Davis</span>
                         </div>
                       </td>
-                      <td><span class="role-text">User</span></td>
+                      <td><span class="role-text">Account Owner</span></td>
                       <td>
                         <div class="status-pill status-inactive">
                           <span class="dot"></span>Inactive
@@ -1209,14 +1230,14 @@
                       </td>
                       <td><span class="activity-text">10 Feb, 9:00AM</span></td>
                     </tr>
-                    <tr onclick="openUserRow()">
+                    <tr onclick="openUserRow()" data-user-type="compliance-manager">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#10b981;">EC</div>
                           <span class="user-name">Emily Chen</span>
                         </div>
                       </td>
-                      <td><span class="role-text">Manager</span></td>
+                      <td><span class="role-text">Compliance Manager</span></td>
                       <td>
                         <div class="status-pill status-active">
                           <span class="dot"></span>Active
@@ -1224,14 +1245,14 @@
                       </td>
                       <td><span class="activity-text">18 Feb, 2:00PM</span></td>
                     </tr>
-                    <tr onclick="openUserRow()">
+                    <tr onclick="openUserRow()" data-user-type="account-owner">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#ef4444;">TW</div>
                           <span class="user-name">Tom Wilson</span>
                         </div>
                       </td>
-                      <td><span class="role-text">User</span></td>
+                      <td><span class="role-text">Account Owner</span></td>
                       <td>
                         <div class="status-pill status-active">
                           <span class="dot"></span>Active
@@ -1239,14 +1260,14 @@
                       </td>
                       <td><span class="activity-text">15 Feb, 5:00PM</span></td>
                     </tr>
-                    <tr onclick="openUserRow()">
+                    <tr onclick="openUserRow()" data-user-type="compliance-manager">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#8b5cf6;">LC</div>
                           <span class="user-name">Laura Campbell</span>
                         </div>
                       </td>
-                      <td><span class="role-text">User</span></td>
+                      <td><span class="role-text">Compliance Manager</span></td>
                       <td>
                         <div class="status-pill status-inactive">
                           <span class="dot"></span>Inactive
@@ -1254,14 +1275,14 @@
                       </td>
                       <td><span class="activity-dash">-</span></td>
                     </tr>
-                    <tr onclick="openUserRow()">
+                    <tr onclick="openUserRow()" data-user-type="account-owner">
                       <td>
                         <div class="user-cell">
                           <div class="user-avatar" style="background:#14b8a6;">RK</div>
                           <span class="user-name">Ryan Kim</span>
                         </div>
                       </td>
-                      <td><span class="role-text">Manager</span></td>
+                      <td><span class="role-text">Account Owner</span></td>
                       <td>
                         <div class="status-pill status-active">
                           <span class="dot"></span>Active
@@ -1416,6 +1437,19 @@
 
     function uEsc(s) {
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    /* ── Filter table by user type ── */
+    function filterTable(type) {
+      document.querySelectorAll('#userTableBody tr').forEach(tr => {
+        tr.style.display = (type === 'all' || tr.dataset.userType === type) ? '' : 'none';
+      });
+    }
+
+    /* ── User type selection in Add drawer ── */
+    function selectNewUserType(card) {
+      document.querySelectorAll('#addUserTypeCards .ud-type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
     }
 
     function addNewUser() {
