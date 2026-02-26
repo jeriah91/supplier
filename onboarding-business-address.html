@@ -612,6 +612,129 @@
           </div>
         </label>
 
+        <!-- Mailing address form (revealed when "same as" is unchecked) -->
+        <div id="mailingForm" style="display:none; flex-direction:column; gap:32px; width:100%;">
+
+          <!-- Address type toggle -->
+          <div class="seg-control" id="segControlMailing">
+            <button class="seg-btn active" id="segMailingResidential" onclick="switchMailingSeg('residential')">
+              Residential / Office
+            </button>
+            <button class="seg-btn" id="segMailingPoBox" onclick="switchMailingSeg('pobox')">
+              PO Box
+            </button>
+          </div>
+
+          <!-- Residential / Office fields -->
+          <div class="form-fields" id="mailingResidentialFields">
+
+            <!-- Address -->
+            <div class="field-row">
+              <div class="field-label">Address<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <input
+                  class="field-input"
+                  id="mailingAddressInput"
+                  type="text"
+                  placeholder="e.g. 8 Park Street"
+                  autocomplete="off"
+                  oninput="handleMailingAddressInput(this)"
+                  onblur="scheduleCloseMailingDropdown()"
+                  onfocus="handleMailingAddressInput(this)"
+                />
+                <div class="address-dropdown" id="mailingAddressDropdown">
+                  <div class="dropdown-hint" id="mailingDropdownHint">Keep typing address to display results</div>
+                  <div id="mailingDropdownSuggestions"></div>
+                  <div class="dropdown-manual" onclick="enterMailingManually()">Enter address manually</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- City/Suburb -->
+            <div class="field-row">
+              <div class="field-label">City / Suburb<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <input class="field-input" id="mailingCityInput" type="text" placeholder="e.g. Sydney" />
+              </div>
+            </div>
+
+            <!-- Postcode -->
+            <div class="field-row">
+              <div class="field-label">Postcode<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <input class="field-input" id="mailingPostcodeInput" type="text" placeholder="e.g. 2000" maxlength="4" />
+              </div>
+            </div>
+
+            <!-- State -->
+            <div class="field-row">
+              <div class="field-label">State<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <select class="field-select" id="mailingStateSelect" onchange="this.classList.toggle('has-value', this.value !== '')">
+                  <option value="">Select</option>
+                  <option>NSW</option>
+                  <option>VIC</option>
+                  <option>QLD</option>
+                  <option>WA</option>
+                  <option>SA</option>
+                  <option>TAS</option>
+                  <option>ACT</option>
+                  <option>NT</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- PO Box fields -->
+          <div class="form-fields" id="mailingPoBoxFields" style="display:none">
+
+            <!-- PO Box number -->
+            <div class="field-row">
+              <div class="field-label">PO Box<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <input class="field-input" type="text" placeholder="e.g. 1234" />
+              </div>
+            </div>
+
+            <!-- City/Suburb -->
+            <div class="field-row">
+              <div class="field-label">City / Suburb<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <input class="field-input" type="text" placeholder="e.g. Sydney" />
+              </div>
+            </div>
+
+            <!-- Postcode -->
+            <div class="field-row">
+              <div class="field-label">Postcode<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <input class="field-input" type="text" placeholder="e.g. 2000" maxlength="4" />
+              </div>
+            </div>
+
+            <!-- State -->
+            <div class="field-row">
+              <div class="field-label">State<span class="star">*</span></div>
+              <div class="field-input-wrap">
+                <select class="field-select" onchange="this.classList.toggle('has-value', this.value !== '')">
+                  <option value="">Select</option>
+                  <option>NSW</option>
+                  <option>VIC</option>
+                  <option>QLD</option>
+                  <option>WA</option>
+                  <option>SA</option>
+                  <option>TAS</option>
+                  <option>ACT</option>
+                  <option>NT</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
         <!-- Desktop nav -->
         <div class="nav-row">
           <button class="btn-back" onclick="location.href='onboarding-business-details.html'">
@@ -752,6 +875,81 @@
     function scheduleCloseDropdown() {
       closeTimer = setTimeout(() => {
         document.getElementById('addressDropdown').classList.remove('open');
+      }, 150);
+    }
+
+    // ── Mailing address toggle ──
+    document.getElementById('sameAddress').addEventListener('change', function () {
+      const form = document.getElementById('mailingForm');
+      form.style.display = this.checked ? 'none' : 'flex';
+    });
+
+    // ── Mailing segmented control ──
+    function switchMailingSeg(mode) {
+      const res      = document.getElementById('segMailingResidential');
+      const po       = document.getElementById('segMailingPoBox');
+      const resFields = document.getElementById('mailingResidentialFields');
+      const poFields  = document.getElementById('mailingPoBoxFields');
+      if (mode === 'residential') {
+        res.classList.add('active');    po.classList.remove('active');
+        resFields.style.display = '';   poFields.style.display = 'none';
+      } else {
+        po.classList.add('active');     res.classList.remove('active');
+        poFields.style.display = '';    resFields.style.display = 'none';
+      }
+    }
+
+    // ── Mailing address autocomplete ──
+    let mailingCloseTimer = null;
+
+    function handleMailingAddressInput(input) {
+      const val = input.value.trim();
+      const dropdown    = document.getElementById('mailingAddressDropdown');
+      const hint        = document.getElementById('mailingDropdownHint');
+      const suggestions = document.getElementById('mailingDropdownSuggestions');
+      if (val.length === 0) { dropdown.classList.remove('open'); return; }
+      dropdown.classList.add('open');
+      if (val.length < 3) { hint.style.display = ''; suggestions.innerHTML = ''; return; }
+      hint.style.display = 'none';
+      const filtered = SUGGESTIONS.filter(s =>
+        (s.line1 + ' ' + s.line2).toLowerCase().includes(val.toLowerCase())
+      );
+      if (filtered.length === 0) {
+        hint.style.display = ''; hint.textContent = 'No results found'; suggestions.innerHTML = '';
+      } else {
+        hint.style.display = 'none';
+        suggestions.innerHTML = filtered.map(s =>
+          `<div class="dropdown-suggestion" onmousedown="selectMailingAddress('${s.line1}, ${s.line2}')">${s.line1}, ${s.line2}</div>`
+        ).join('');
+      }
+    }
+
+    function selectMailingAddress(fullAddress) {
+      document.getElementById('mailingAddressInput').value = fullAddress;
+      document.getElementById('mailingAddressDropdown').classList.remove('open');
+      const parts = fullAddress.split(', ');
+      if (parts.length >= 2) {
+        const tokens = parts[parts.length - 1].split(' ');
+        if (tokens.length >= 3) {
+          document.getElementById('mailingCityInput').value = tokens[0];
+          document.getElementById('mailingPostcodeInput').value = tokens[tokens.length - 1];
+          const sel = document.getElementById('mailingStateSelect');
+          const state = tokens[tokens.length - 2];
+          for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].text === state) { sel.selectedIndex = i; sel.classList.add('has-value'); break; }
+          }
+        }
+      }
+    }
+
+    function enterMailingManually() {
+      document.getElementById('mailingAddressDropdown').classList.remove('open');
+      document.getElementById('mailingAddressInput').focus();
+    }
+
+    function scheduleCloseMailingDropdown() {
+      mailingCloseTimer = setTimeout(() => {
+        document.getElementById('mailingAddressDropdown').classList.remove('open');
       }, 150);
     }
   </script>
