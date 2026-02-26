@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design System – Zipline</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Azeret+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -247,41 +247,37 @@
     }
     .spec-block { display: flex; flex-direction: column; }
     .spec-card {
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     .spec-card-header {
-      background: #cbd5e1;
-      padding: 8px 16px;
+      padding: 8px 0;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .spec-card-label {
       flex: 1;
-      font-size: 16px;
+      font-size: 12px;
       font-weight: 600;
       color: #334155;
-      letter-spacing: -0.32px;
-      line-height: 26px;
+      letter-spacing: -0.24px;
+      line-height: 16px;
     }
-    .spec-card-divider {
-      height: 1px;
-      background: #cbd5e1;
-    }
+    .spec-card-divider { display: none; }
     .spec-code {
       display: block;
       padding: 16px;
       font-family: 'Azeret Mono', 'SF Mono', 'Fira Code', monospace;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 26px;
-      color: #0f172a;
-      background: #f8fafc;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 20px;
+      color: #f8fafc;
+      background: #0f172a;
+      border-radius: 8px;
       white-space: pre;
       overflow-x: auto;
-      max-height: 280px;
+      max-height: 300px;
       overflow-y: auto;
     }
     .spec-copy-btn {
@@ -305,14 +301,13 @@
     .used-on-list {
       display: flex;
       flex-direction: column;
-      background: #f8fafc;
-      padding: 8px;
+      gap: 4px;
     }
     .used-on-link {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px;
+      padding: 4px 0;
       border-radius: 6px;
       text-decoration: none;
       color: #334155;
@@ -320,9 +315,9 @@
       font-weight: 600;
       letter-spacing: -0.32px;
       line-height: 26px;
-      transition: background 0.12s, color 0.12s;
+      transition: color 0.12s;
     }
-    .used-on-link:hover { background: #e2e8f0; color: #2c66ef; }
+    .used-on-link:hover { color: #2c66ef; }
     .used-on-link svg { width: 24px; height: 24px; flex-shrink: 0; color: #64748b; transition: color 0.12s; }
     .used-on-link:hover svg { color: #2c66ef; }
   </style>
@@ -1483,9 +1478,8 @@
         <div class="spec-block">
           <div class="spec-card">
             <div class="spec-card-header">
-              <span class="spec-card-label">Used on</span>
+              <span class="spec-card-label">USED ON</span>
             </div>
-            <div class="spec-card-divider"></div>
             <div class="used-on-list">
               ${pages.map(p => `<a href="${p.href}" class="used-on-link" target="_blank">${pageIcon}${p.name}</a>`).join('')}
             </div>
@@ -1501,8 +1495,7 @@
                 ${copyIcon()}
               </button>
             </div>
-            <div class="spec-card-divider"></div>
-            <pre class="spec-code">${escHtml(item.css)}</pre>
+            <pre class="spec-code">${highlightCSS(item.css)}</pre>
           </div>
         </div>
         <div class="spec-block">
@@ -1513,8 +1506,7 @@
                 ${copyIcon()}
               </button>
             </div>
-            <div class="spec-card-divider"></div>
-            <pre class="spec-code">${escHtml(item.html)}</pre>
+            <pre class="spec-code">${highlightHTML(item.html)}</pre>
           </div>
         </div>
         ${usedOnBlock}
@@ -1539,6 +1531,136 @@
 
     function escHtml(str) {
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ── CSS syntax highlighter ────────────────────────────────────────────────
+    function highlightCSS(raw) {
+      function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      function sp(col, txt) { return '<span style="color:' + col + '">' + txt + '</span>'; }
+
+      function colorVal(val) {
+        val = val.trim();
+        if (/^#[0-9a-fA-F]{3,8}$/.test(val)) return sp('#86efac', esc(val));
+        if (/^-?\d+(\.\d+)?(px|em|rem|%|vh|vw|s|ms|deg|turn)?$/.test(val)) return sp('#fbbf24', esc(val));
+        if (/^rgba?\(|^hsla?\(/.test(val)) return sp('#86efac', esc(val));
+        // Try to highlight hex colors within complex values
+        const hParts = val.split(/(#[0-9a-fA-F]{3,8})/g);
+        if (hParts.length > 1) {
+          return hParts.map((p, i) => (i % 2 === 1) ? sp('#86efac', esc(p)) : sp('#94a3b8', esc(p))).join('');
+        }
+        return sp('#94a3b8', esc(val));
+      }
+
+      return raw.split('\n').map(line => {
+        const t = line.trim();
+        if (!t) return '';
+
+        // Comment
+        if (t.startsWith('/*') || t.startsWith('//')) return sp('#6a9955', esc(line));
+
+        // Standalone closing brace
+        if (t === '}') return sp('#94a3b8', esc(line));
+
+        // Inline rule: selector { prop: val; } or selector { prop: val; prop: val; }
+        const m1 = line.match(/^(\s*)(.*?)\s*\{\s*(.+?)\s*\}\s*$/);
+        if (m1 && !m1[2].includes('{') && !m1[3].includes('{')) {
+          const [, indent, sel, body] = m1;
+          const pm = body.match(/^(--?[\w-]+)\s*:\s*(.+?)\s*;?$/);
+          let bodyHtml = esc(body);
+          if (pm) {
+            bodyHtml = sp('#9cdcfe', esc(pm[1])) + sp('#94a3b8', ': ') + colorVal(pm[2]) + sp('#94a3b8', ';');
+          }
+          return esc(indent) + sp('#4ec9b0', esc(sel.trim())) + sp('#94a3b8', ' { ') + bodyHtml + sp('#94a3b8', ' }');
+        }
+
+        // Selector line ending with {
+        if (t.endsWith('{')) {
+          const m2 = line.match(/^(\s*)(.*?)\s*\{\s*$/);
+          if (m2) return esc(m2[1]) + sp('#4ec9b0', esc(m2[2].trim())) + ' ' + sp('#94a3b8', '{');
+        }
+
+        // Property/variable line
+        const m3 = line.match(/^(\s*)(--?[\w-]+)\s*:\s*(.+?)\s*(;?)\s*$/);
+        if (m3) {
+          const [, indent, prop, val, semi] = m3;
+          const pCol = prop.startsWith('--') ? '#4ec9b0' : '#9cdcfe';
+          return esc(indent) + sp(pCol, esc(prop)) + sp('#94a3b8', ': ') + colorVal(val) + (semi ? sp('#94a3b8', ';') : '');
+        }
+
+        return esc(line);
+      }).join('\n');
+    }
+
+    // ── HTML syntax highlighter ───────────────────────────────────────────────
+    function highlightHTML(raw) {
+      function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      function sp(col, txt) { return '<span style="color:' + col + '">' + txt + '</span>'; }
+
+      let result = '';
+      let i = 0;
+      while (i < raw.length) {
+        if (raw[i] !== '<') {
+          let j = i;
+          while (j < raw.length && raw[j] !== '<') j++;
+          result += esc(raw.slice(i, j));
+          i = j;
+          continue;
+        }
+
+        // HTML comment
+        if (raw.substr(i, 4) === '<!--') {
+          const ce = raw.indexOf('-->', i);
+          const end = ce !== -1 ? ce + 3 : raw.length;
+          result += sp('#6a9955', esc(raw.slice(i, end)));
+          i = end;
+          continue;
+        }
+
+        // Find end of tag (skip over quoted attr values)
+        let j = i + 1;
+        let inQ = false, qC = '';
+        while (j < raw.length) {
+          if (inQ) { if (raw[j] === qC) inQ = false; }
+          else if (raw[j] === '"' || raw[j] === "'") { inQ = true; qC = raw[j]; }
+          else if (raw[j] === '>') break;
+          j++;
+        }
+        const inner = raw.slice(i + 1, j);
+        i = j + 1;
+
+        // Closing tag
+        if (inner.startsWith('/')) {
+          result += sp('#94a3b8', '&lt;/') + sp('#4ec9b0', esc(inner.slice(1).trim())) + sp('#94a3b8', '&gt;');
+          continue;
+        }
+
+        // Self-closing or opening tag
+        const selfClose = inner.endsWith('/');
+        const tagStr = selfClose ? inner.slice(0, -1).trim() : inner;
+        const nMatch = tagStr.match(/^([\w:-]+)([\s\S]*)$/);
+        if (!nMatch) {
+          result += sp('#94a3b8', '&lt;') + esc(inner) + sp('#94a3b8', '&gt;');
+          continue;
+        }
+        const [, tagName, attrsRaw] = nMatch;
+
+        // Process attributes
+        let attrHtml = '';
+        let lastIdx = 0;
+        const attrRe = /(\s+)([\w:-]+)(?:(\s*=\s*)(["'])([\s\S]*?)\4)?/g;
+        let am;
+        while ((am = attrRe.exec(attrsRaw)) !== null) {
+          if (am.index > lastIdx) attrHtml += esc(attrsRaw.slice(lastIdx, am.index));
+          attrHtml += esc(am[1]) + sp('#9cdcfe', esc(am[2]));
+          if (am[3] && am[4]) attrHtml += sp('#94a3b8', esc(am[3])) + sp('#ce9178', esc(am[4] + am[5] + am[4]));
+          lastIdx = am.index + am[0].length;
+        }
+        if (lastIdx < attrsRaw.length) attrHtml += esc(attrsRaw.slice(lastIdx));
+
+        result += sp('#94a3b8', '&lt;') + sp('#4ec9b0', esc(tagName)) + attrHtml
+                + (selfClose ? sp('#94a3b8', ' /&gt;') : sp('#94a3b8', '&gt;'));
+      }
+      return result;
     }
     function copyIcon() {
       return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
