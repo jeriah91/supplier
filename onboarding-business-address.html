@@ -111,12 +111,10 @@
       color: #334155; letter-spacing: -0.48px; line-height: 26px;
     }
 
-    /* ── Segmented control ── */
+    /* ── Address type buttons ── */
     .seg-control {
-      display: inline-flex;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      overflow: hidden;
+      display: flex;
+      gap: 8px;
       width: fit-content;
     }
     .seg-btn {
@@ -124,20 +122,18 @@
       font-family: inherit;
       font-size: 14px; font-weight: 500;
       color: #64748b;
-      background: #f8fafc;
-      border: none;
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.12s, color 0.12s, box-shadow 0.12s;
+      transition: color 0.12s, border-color 0.12s;
       line-height: 20px;
       letter-spacing: -0.28px;
     }
-    .seg-btn:first-child { border-radius: 7px 0 0 7px; }
-    .seg-btn:last-child  { border-radius: 0 7px 7px 0; }
     .seg-btn.active {
-      background: #fff;
       color: #0f172a;
       font-weight: 600;
-      box-shadow: 0 0 0 1.5px #334155 inset;
+      border: 2px solid #334155;
     }
 
     /* ── Required note ── */

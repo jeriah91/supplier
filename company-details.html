@@ -523,28 +523,25 @@
       cursor: not-allowed;
     }
 
-    /* ── Address inline edit form ── */
+    /* ── Address type buttons ── */
     .addr-seg-control {
-      display: inline-flex;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      overflow: hidden;
-      max-width: 380px;
+      display: flex;
+      gap: 8px;
     }
     .addr-seg-btn {
       padding: 6px 20px;
       font-family: inherit;
       font-size: 14px; font-weight: 500;
-      color: #64748b; background: #f8fafc;
-      border: none; cursor: pointer;
-      transition: background 0.12s, color 0.12s, box-shadow 0.12s;
+      color: #64748b; background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: color 0.12s, border-color 0.12s;
       line-height: 20px; letter-spacing: -0.28px;
     }
-    .addr-seg-btn:first-child { border-radius: 7px 0 0 7px; }
-    .addr-seg-btn:last-child  { border-radius: 0 7px 7px 0; }
     .addr-seg-btn.active {
-      background: #fff; color: #0f172a; font-weight: 600;
-      box-shadow: 0 0 0 1.5px #334155 inset;
+      color: #0f172a; font-weight: 600;
+      border: 2px solid #334155;
     }
     .addr-form-fields { display: flex; flex-direction: column; gap: 12px; max-width: 640px; }
     .addr-field-row { display: flex; gap: 4px; align-items: center; }
@@ -620,8 +617,7 @@
       .edit-form { max-width: 100%; }
 
       /* Address edit form — stacked field rows */
-      .addr-seg-control { max-width: 100%; display: flex; }
-      .addr-seg-btn { flex: 1; text-align: center; padding: 6px 12px; }
+      .addr-seg-btn { padding: 6px 12px; }
       .addr-form-fields { max-width: 100%; }
       .addr-field-row { flex-direction: column; align-items: flex-start; gap: 6px; }
       .addr-field-label { width: auto; font-size: 13px; font-weight: 500; color: #64748b; letter-spacing: -0.26px; line-height: 18px; }
