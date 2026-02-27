@@ -1174,7 +1174,7 @@
     }
     .share-modal-sub {
       font-size: 16px; color: #0f172a; letter-spacing: -0.32px;
-      line-height: 18px; margin-top: 16px; margin-bottom: 32px;
+      line-height: 18px; margin-top: 16px; margin-bottom: 24px;
     }
     .share-form { display: flex; flex-direction: column; gap: 16px; }
     .share-field { display: flex; flex-direction: column; gap: 4px; }
@@ -1232,6 +1232,36 @@
       transition: background 0.15s;
     }
     .btn-share-action:hover { background: #1d56df; }
+    .share-creds-section { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .share-creds-label { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.32px; line-height: 26px; }
+    .share-creds-box {
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      padding: 12px 8px 16px 16px; display: flex; gap: 8px; align-items: flex-start;
+    }
+    .share-creds-inner { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .share-creds-actions { display: flex; gap: 16px; }
+    .share-creds-action {
+      background: none; border: none; padding: 0; cursor: pointer;
+      font-family: inherit; font-size: 16px; color: #2c66ef;
+      letter-spacing: -0.32px; line-height: 26px;
+    }
+    .share-creds-action:hover { text-decoration: underline; }
+    .share-cred-item { display: flex; align-items: center; gap: 16px; cursor: pointer; }
+    .share-cred-item input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none; flex-shrink: 0;
+      width: 20px; height: 20px; border: 1.5px solid #2c66ef;
+      border-radius: 4px; cursor: pointer; position: relative;
+      transition: background 0.15s;
+    }
+    .share-cred-item input[type="checkbox"]:checked { background: #2c66ef; border-color: #2c66ef; }
+    .share-cred-item input[type="checkbox"]:checked::after {
+      content: ''; position: absolute;
+      left: 5px; top: 2px; width: 7px; height: 11px;
+      border: 2px solid #fff; border-top: none; border-left: none;
+      transform: rotate(45deg);
+    }
+    .share-cred-label { font-size: 16px; font-weight: 500; color: #0f172a; letter-spacing: -0.32px; line-height: 20px; }
+    .share-creds-scrollbar { width: 4px; background: #cbd5e1; border-radius: 2px; height: 62px; flex-shrink: 0; margin-top: 42px; }
     .btn-share-action svg { width: 16px; height: 16px; }
     /* Share modal shared view */
     .share-secure-box {
@@ -2170,9 +2200,37 @@
       <div id="shareFormView">
         <div class="share-modal-title">Share Compliance Profile</div>
         <div class="share-modal-sub">Share a link to this profile with external providers.</div>
+        <div class="share-creds-section">
+          <div class="share-creds-label">Share Credentials</div>
+          <div class="share-creds-box">
+            <div class="share-creds-inner">
+              <div class="share-creds-actions">
+                <button class="share-creds-action" onclick="selectAllCreds(true)">Select all</button>
+                <button class="share-creds-action" onclick="selectAllCreds(false)">Deselect all</button>
+              </div>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span class="share-cred-label">Nationally Coordinated Criminal History Check</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span class="share-cred-label">Plumbing License</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span class="share-cred-label">Australian Working Rights</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred">
+                <span class="share-cred-label">Working With Children Check</span>
+              </label>
+            </div>
+            <div class="share-creds-scrollbar"></div>
+          </div>
+        </div>
         <div class="share-form">
           <div class="share-field">
-            <label class="share-label" for="shareDuration">Keep link accessible for</label>
+            <label class="share-label" for="shareDuration">Link valid for</label>
             <select class="share-select" id="shareDuration">
               <option value="1week">1 week</option>
               <option value="2weeks">2 weeks</option>
@@ -2521,6 +2579,12 @@
       document.getElementById('shareBackdrop').classList.add('is-visible');
     }
 
+    function selectAllCreds(checked) {
+      document.querySelectorAll('#shareFormView input[name="cred"]').forEach(function(cb) {
+        cb.checked = checked;
+      });
+    }
+
     function closeShareModal() {
       document.getElementById('shareBackdrop').classList.remove('is-visible');
     }
@@ -2707,7 +2771,7 @@
     })();
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 16:54:00';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 16:58:47';
   </script>
   <script src="sidebar-logo.js"></script>
   <script src="sidebar-profile.js"></script>
