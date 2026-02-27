@@ -2730,6 +2730,7 @@
 
       function setCollapsed(collapsed) {
         wrap.classList.toggle('is-collapsed', collapsed);
+        localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
       }
 
       // Click handle to toggle
@@ -2768,10 +2769,11 @@
         document.body.style.cursor = 'col-resize';
         e.preventDefault();
       });
+      if (localStorage.getItem('sidebarCollapsed') === '1') setCollapsed(true);
     })();
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 16:58:47';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 22:59:49';
   </script>
   <script src="sidebar-logo.js"></script>
   <script src="sidebar-profile.js"></script>

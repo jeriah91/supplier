@@ -917,6 +917,7 @@
       var startCollapsed = false;
       function setCollapsed(collapsed) {
         wrap.classList.toggle('is-collapsed', collapsed);
+        localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
       }
       handle.addEventListener('click', function() {
         if (isDragging) return;
@@ -948,6 +949,7 @@
         document.body.style.cursor = 'col-resize';
         e.preventDefault();
       });
+      if (localStorage.getItem('sidebarCollapsed') === '1') setCollapsed(true);
     })();
 
     /* ── User type card selection ── */
