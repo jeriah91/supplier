@@ -1079,6 +1079,136 @@
       white-space: nowrap; letter-spacing: -0.24px; line-height: 17px; flex-shrink: 0;
     }
     .cd-btn-renew:hover { background: #eff6ff; border-color: #bfdbfe; }
+
+    /* ── Global context menu (right-click + ... button) ── */
+    .ctx-menu-global {
+      display: none; position: fixed;
+      background: #fff; border: 1px solid #e2e8f0;
+      border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      min-width: 164px; z-index: 1000; padding: 4px;
+    }
+    .ctx-menu-global.is-visible { display: block; }
+    .ctx-menu-global .ctx-menu-item {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; background: none; border: none;
+      padding: 8px 12px; text-align: left; font-family: inherit;
+      font-size: 14px; font-weight: 400; color: #334155;
+      cursor: pointer; border-radius: 6px;
+      letter-spacing: -0.28px; line-height: 20px;
+    }
+    .ctx-menu-global .ctx-menu-item:hover { background: #f8fafc; }
+    .ctx-menu-global .ctx-menu-item svg { width: 16px; height: 16px; flex-shrink: 0; color: #64748b; }
+
+    /* ── Share Modal ── */
+    .share-backdrop {
+      display: none; position: fixed; inset: 0; top: 40px;
+      background: rgba(0,0,0,0.45); z-index: 600;
+      align-items: center; justify-content: center;
+    }
+    .share-backdrop.is-visible { display: flex; }
+    .share-modal {
+      background: #fff; border-radius: 12px; padding: 24px;
+      width: 464px; max-width: calc(100vw - 32px); position: relative;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      max-height: calc(100vh - 80px); overflow-y: auto;
+    }
+    .share-modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; cursor: pointer;
+      color: #64748b; padding: 4px; border-radius: 4px;
+      display: flex; align-items: center;
+    }
+    .share-modal-close:hover { color: #0f172a; }
+    .share-modal-title {
+      font-size: 24px; font-weight: 600; color: #334155;
+      letter-spacing: -0.48px; line-height: 26px; padding-right: 32px;
+    }
+    .share-modal-sub {
+      font-size: 16px; color: #0f172a; letter-spacing: -0.32px;
+      line-height: 18px; margin-top: 16px; margin-bottom: 32px;
+    }
+    .share-form { display: flex; flex-direction: column; gap: 16px; }
+    .share-field { display: flex; flex-direction: column; gap: 4px; }
+    .share-label { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.32px; line-height: 26px; }
+    .share-select {
+      width: 100%; padding: 9px 36px 9px 12px;
+      border: 2px solid #cbd5e1; border-radius: 8px;
+      font-family: inherit; font-size: 16px; color: #0f172a;
+      letter-spacing: -0.32px; line-height: 22px;
+      outline: none; background: #fff; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      transition: border-color 0.15s;
+    }
+    .share-select:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+    .email-tags-wrap {
+      border: 2px solid #cbd5e1; border-radius: 8px;
+      padding: 8px; background: #fff;
+      display: flex; flex-wrap: wrap; gap: 6px;
+      min-height: 108px; align-content: flex-start;
+    }
+    .email-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px;
+      padding: 3px 8px; font-size: 13px; color: #334155;
+      letter-spacing: -0.26px; line-height: 20px;
+    }
+    .email-tag-x {
+      background: none; border: none; cursor: pointer; padding: 0;
+      color: #94a3b8; display: flex; align-items: center; font-size: 14px; line-height: 1;
+    }
+    .email-tag-x:hover { color: #334155; }
+    .btn-share-action {
+      width: 100%; margin-top: 16px; padding: 8px 12px;
+      background: #2c66ef; border: none; color: #fff;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.15s;
+    }
+    .btn-share-action:hover { background: #1d56df; }
+    .btn-share-action svg { width: 16px; height: 16px; }
+    /* Share modal shared view */
+    .share-secure-box {
+      border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;
+    }
+    .share-secure-top { display: flex; align-items: center; justify-content: space-between; }
+    .share-secure-label { font-size: 14px; font-weight: 600; color: #334155; letter-spacing: -0.28px; }
+    .share-secure-status { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: #16a34a; }
+    .share-secure-dot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; }
+    .share-secure-url { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #334155; line-height: 16px; word-break: break-all; }
+    .share-secure-btns { display: flex; gap: 8px; }
+    .btn-sec-copy, .btn-sec-revoke {
+      flex: 1; padding: 7px 12px; border: 1px solid #e2e8f0; background: #fff;
+      border-radius: 6px; cursor: pointer; font-family: inherit;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      letter-spacing: -0.26px; line-height: 20px; transition: background 0.15s;
+    }
+    .btn-sec-copy { color: #334155; }
+    .btn-sec-copy:hover { background: #f8fafc; }
+    .btn-sec-revoke { color: #64748b; }
+    .btn-sec-revoke:hover { background: #f8fafc; }
+    .btn-sec-copy svg, .btn-sec-revoke svg { width: 14px; height: 14px; }
+    .share-shared-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .share-shared-label { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px; text-transform: uppercase; white-space: nowrap; }
+    .share-shared-line { flex: 1; height: 1px; background: #e2e8f0; }
+    .share-shared-org-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+    .share-shared-org-row + .share-shared-org-row { border-top: 1px solid #f1f5f9; }
+    .share-org-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .share-org-name { flex: 1; font-size: 14px; font-weight: 500; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; min-width: 0; }
+    .share-org-remaining { font-size: 13px; color: #64748b; letter-spacing: -0.26px; white-space: nowrap; }
+    .share-org-revoke-btn {
+      display: none; background: #fff; border: 1px solid #e2e8f0; color: #64748b;
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      padding: 5px 10px; border-radius: 6px; cursor: pointer;
+      align-items: center; gap: 6px; letter-spacing: -0.26px; line-height: 18px; white-space: nowrap;
+    }
+    .share-org-revoke-btn svg { width: 14px; height: 14px; }
+    .share-shared-org-row:hover .share-org-remaining { display: none; }
+    .share-shared-org-row:hover .share-org-revoke-btn { display: inline-flex; }
+    .share-org-revoke-btn:hover { background: #f8fafc; }
   </style>
 </head>
 <body>
@@ -1444,15 +1574,11 @@
                       </td>
                       <td><span class="activity-dash">-</span></td>
                       <td><div class="shared-avatars"></div></td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1479,15 +1605,11 @@
                       </td>
                       <td><span class="activity-dash">-</span></td>
                       <td><div class="shared-avatars"></div></td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1515,15 +1637,11 @@
                           <span class="sa sa-purple" title="Wallaby Health">WH</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1551,15 +1669,11 @@
                           <span class="sa sa-teal" title="Catholic Healthcare">CH</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1587,15 +1701,11 @@
                           <span class="sa sa-teal" title="Catholic Healthcare">CH</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1624,15 +1734,11 @@
                           <span class="sa sa-orange" title="Bolton Clarke">BC</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1661,15 +1767,11 @@
                           <span class="sa sa-orange" title="Bolton Clarke">BC</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1697,15 +1799,11 @@
                           <span class="sa sa-orange" title="Bolton Clarke">BC</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1733,15 +1831,11 @@
                           <span class="sa sa-orange" title="Bolton Clarke">BC</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1770,15 +1864,11 @@
                           <span class="sa sa-orange" title="Bolton Clarke">BC</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1806,15 +1896,11 @@
                           <span class="sa sa-orange" title="Bolton Clarke">BC</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1841,15 +1927,11 @@
                           <span class="sa sa-teal" title="Catholic Healthcare">CH</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1877,15 +1959,11 @@
                           <span class="sa sa-teal" title="Catholic Healthcare">CH</span>
                         </div>
                       </td>
-                      <td class="row-action-cell">
-                        <div class="row-ctx" onclick="event.stopPropagation()">
-                          <button class="row-ctx-btn" onclick="toggleCtxMenu(this)" aria-label="More options">
+                      <td class="row-action-cell" onclick="event.stopPropagation()">
+                        <div class="row-ctx">
+                          <button class="row-ctx-btn" onclick="openRowCtxMenu(this)" aria-label="More options">
                             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                           </button>
-                          <div class="ctx-menu">
-                            <button class="ctx-menu-item" onclick="openCompliance(this.closest('tr'))">View profile</button>
-                            <button class="ctx-menu-item" onclick="showBanner('email')">Send reminder</button>
-                          </div>
                         </div>
                       </td>
                     </tr>
@@ -1898,6 +1976,18 @@
 
       </div>
     </div>
+  </div>
+
+  <!-- Global context menu -->
+  <div id="globalCtxMenu" class="ctx-menu-global">
+    <button class="ctx-menu-item" onclick="ctxViewDetails()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+      View details
+    </button>
+    <button class="ctx-menu-item" onclick="ctxShare()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      Share
+    </button>
   </div>
 
   <!-- Add Person overlay + drawer -->
@@ -2160,6 +2250,112 @@
     </div>
   </aside>
 
+  <!-- Share Modal -->
+  <div class="share-backdrop" id="shareBackdrop" onclick="closeShareModal()">
+    <div class="share-modal" onclick="event.stopPropagation()">
+      <button class="share-modal-close" onclick="closeShareModal()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <!-- Form view -->
+      <div id="shareFormView">
+        <div class="share-modal-title">Share Compliance Profile</div>
+        <div class="share-modal-sub">Share a link to this profile with external providers.</div>
+        <div class="share-form">
+          <div class="share-field">
+            <label class="share-label" for="shareDuration">Keep link accessible for</label>
+            <select class="share-select" id="shareDuration">
+              <option value="1week">1 week</option>
+              <option value="2weeks">2 weeks</option>
+              <option value="1month">1 month</option>
+              <option value="3months">3 months</option>
+            </select>
+          </div>
+          <div class="share-field">
+            <label class="share-label" for="shareWith">Share with</label>
+            <select class="share-select" id="shareWith" onchange="toggleShareWith(this.value)">
+              <option value="anyone">Anyone with a link</option>
+              <option value="specific">Specific people</option>
+            </select>
+          </div>
+          <div class="share-field" id="emailInviteField" style="display:none">
+            <label class="share-label">Invite via email</label>
+            <div class="email-tags-wrap" id="emailTagsWrap">
+              <span class="email-tag">email@email.com <button class="email-tag-x" onclick="removeEmailTag(this)">&#x2715;</button></span>
+              <span class="email-tag">email@email.com <button class="email-tag-x" onclick="removeEmailTag(this)">&#x2715;</button></span>
+              <span class="email-tag">email@email.com <button class="email-tag-x" onclick="removeEmailTag(this)">&#x2715;</button></span>
+              <span class="email-tag">email@email.com <button class="email-tag-x" onclick="removeEmailTag(this)">&#x2715;</button></span>
+              <span class="email-tag">email@email.com <button class="email-tag-x" onclick="removeEmailTag(this)">&#x2715;</button></span>
+            </div>
+          </div>
+        </div>
+        <button class="btn-share-action" id="shareBtn" onclick="submitShare()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+      </div>
+
+      <!-- Shared view (shown after sharing) -->
+      <div id="shareSharedView" style="display:none">
+        <div class="share-modal-title">Share Compliance Profile</div>
+        <div class="share-modal-sub">Share a link to this profile with external providers.</div>
+        <div class="share-secure-box">
+          <div class="share-secure-top">
+            <span class="share-secure-label">Secure Link</span>
+            <span class="share-secure-status"><span class="share-secure-dot"></span>Active</span>
+          </div>
+          <div class="share-secure-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61333123123</div>
+          <div class="share-secure-btns">
+            <button class="btn-sec-copy" onclick="copyModalLink(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Link
+            </button>
+            <button class="btn-sec-revoke">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+              Revoke all access
+            </button>
+          </div>
+        </div>
+        <div class="share-shared-header">
+          <span class="share-shared-label">Shared with</span>
+          <span class="share-shared-line"></span>
+        </div>
+        <div>
+          <div class="share-shared-org-row">
+            <div class="share-org-avatar" style="background:#16a34a">WH</div>
+            <span class="share-org-name">Wallaby Health</span>
+            <span class="share-org-remaining">2 days remaining</span>
+            <button class="share-org-revoke-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+              Revoke access
+            </button>
+          </div>
+          <div class="share-shared-org-row">
+            <div class="share-org-avatar" style="background:#dc2626">CH</div>
+            <span class="share-org-name">Catholic Healthcare</span>
+            <span class="share-org-remaining">3 days remaining</span>
+            <button class="share-org-revoke-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+              Revoke access
+            </button>
+          </div>
+          <div class="share-shared-org-row">
+            <div class="share-org-avatar" style="background:#7c3aed">BC</div>
+            <span class="share-org-name">Bolton Clarke</span>
+            <span class="share-org-remaining">4 days remaining</span>
+            <button class="share-org-revoke-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+              Revoke access
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Notification banner -->
   <div class="notif-banner" id="notifBanner">
     <div class="notif-icon" id="notifIcon"></div>
@@ -2359,20 +2555,103 @@
       row.addEventListener('click', function() { openCompliance(row); });
     });
 
-    // Row context menu
-    function toggleCtxMenu(btn) {
-      var menu = btn.nextElementSibling;
-      var isOpen = menu.classList.contains('is-open');
-      document.querySelectorAll('.ctx-menu.is-open').forEach(function(m) { m.classList.remove('is-open'); });
-      if (!isOpen) menu.classList.add('is-open');
+    // ── Global context menu (right-click + ... button) ─────────────────────
+    var _ctxTargetRow = null;
+
+    function showGlobalCtxMenu(x, y, row) {
+      _ctxTargetRow = row;
+      var menu = document.getElementById('globalCtxMenu');
+      menu.classList.remove('is-visible');
+      menu.style.left = x + 'px';
+      menu.style.top = y + 'px';
+      menu.classList.add('is-visible');
+      // Adjust if clipped by viewport edges
+      var rect = menu.getBoundingClientRect();
+      if (rect.right > window.innerWidth - 8) menu.style.left = (x - rect.width) + 'px';
+      if (rect.bottom > window.innerHeight - 8) menu.style.top = (y - rect.height) + 'px';
     }
+
+    function openRowCtxMenu(btn) {
+      var row = btn.closest('tr');
+      var rect = btn.getBoundingClientRect();
+      showGlobalCtxMenu(rect.right, rect.bottom + 4, row);
+    }
+
+    function closeCtxMenu() {
+      document.getElementById('globalCtxMenu').classList.remove('is-visible');
+    }
+
+    // Right-click on table rows
+    document.querySelector('.data-table tbody').addEventListener('contextmenu', function(e) {
+      var row = e.target.closest('tr');
+      if (!row) return;
+      e.preventDefault();
+      showGlobalCtxMenu(e.clientX, e.clientY, row);
+    });
+
     document.addEventListener('click', function(e) {
-      if (!e.target.closest('.row-ctx')) {
-        document.querySelectorAll('.ctx-menu.is-open').forEach(function(m) { m.classList.remove('is-open'); });
+      if (!e.target.closest('#globalCtxMenu') && !e.target.closest('.row-ctx-btn')) {
+        closeCtxMenu();
       }
     });
 
-    // Copy secure share link
+    function ctxViewDetails() {
+      closeCtxMenu();
+      if (_ctxTargetRow) openCompliance(_ctxTargetRow);
+    }
+
+    function ctxShare() {
+      closeCtxMenu();
+      openShareModal();
+    }
+
+    // ── Share Modal ──────────────────────────────────────────────────────────
+    function openShareModal() {
+      document.getElementById('shareFormView').style.display = '';
+      document.getElementById('shareSharedView').style.display = 'none';
+      document.getElementById('shareWith').value = 'anyone';
+      document.getElementById('emailInviteField').style.display = 'none';
+      document.getElementById('shareBtn').textContent = '';
+      document.getElementById('shareBtn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share';
+      document.getElementById('shareBackdrop').classList.add('is-visible');
+    }
+
+    function closeShareModal() {
+      document.getElementById('shareBackdrop').classList.remove('is-visible');
+    }
+
+    function toggleShareWith(val) {
+      document.getElementById('emailInviteField').style.display = val === 'specific' ? '' : 'none';
+      var btn = document.getElementById('shareBtn');
+      if (val === 'specific') {
+        var count = document.querySelectorAll('#emailTagsWrap .email-tag').length;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share with ' + count + ' ' + (count === 1 ? 'person' : 'people');
+      } else {
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share';
+      }
+    }
+
+    function removeEmailTag(xBtn) {
+      xBtn.closest('.email-tag').remove();
+      if (document.getElementById('shareWith').value === 'specific') {
+        toggleShareWith('specific');
+      }
+    }
+
+    function submitShare() {
+      document.getElementById('shareFormView').style.display = 'none';
+      document.getElementById('shareSharedView').style.display = '';
+    }
+
+    function copyModalLink(btn) {
+      navigator.clipboard.writeText('https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61333123123').then(function() {
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Copied!';
+        setTimeout(function() { btn.innerHTML = orig; }, 2000);
+      });
+    }
+
+    // Copy secure share link (from drawer)
     function copyShareLink(btn) {
       navigator.clipboard.writeText('https://staging-demo.zipline.app/profile/share/xK9mP2qR7vN5tL8wA3').then(function() {
         var orig = btn.innerHTML;
@@ -2459,7 +2738,7 @@
     }
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 15:44:38';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 15:59:07';
   </script>
   <script src="sidebar-logo.js"></script>
   <script src="sidebar-profile.js"></script>
