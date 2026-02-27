@@ -147,7 +147,6 @@
       padding: 8px 16px; border-radius: 8px;
       cursor: pointer; width: 100%; text-align: left;
       background: none; border: none; font-family: inherit;
-      transition: padding 0.25s ease, gap 0.25s ease;
     }
     .nav-item:hover { background: rgba(255,255,255,0.06); }
     .sidebar-wrap.is-collapsed .nav-item {
@@ -213,12 +212,15 @@
     /* Chevron flips when open */
     .profile-footer.is-open .profile-row .chevron { transform: rotate(180deg); }
 
-    /* Collapsed profile row — icon only */
+    /* Collapsed profile row — avatar only */
     .sidebar-wrap.is-collapsed .profile-row {
       justify-content: center;
       padding: 8px;
       gap: 0;
     }
+    .sidebar-wrap.is-collapsed .profile-info,
+    .sidebar-wrap.is-collapsed .profile-row .chevron { display: none; }
+    .sidebar-wrap.is-collapsed .sign-out-wrap { display: none !important; }
 
     .avatar {
       border-radius: 50%; background: #64748b; flex-shrink: 0;
@@ -1218,6 +1220,9 @@
       color: #94a3b8; display: flex; align-items: center; font-size: 14px; line-height: 1;
     }
     .email-tag-x:hover { color: #334155; }
+    .share-field-hint {
+      font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; line-height: 16px;
+    }
     .btn-share-action {
       width: 100%; margin-top: 16px; padding: 8px 12px;
       background: #2c66ef; border: none; color: #fff;
@@ -2187,6 +2192,7 @@
             <div class="email-tags-wrap" id="emailTagsWrap" onclick="document.getElementById('emailInput').focus()">
               <input class="email-input-field" id="emailInput" type="text" placeholder="e.g. email@gmail.com" onkeydown="handleEmailKeydown(event)" />
             </div>
+            <p class="share-field-hint">Press Enter or comma after each email address to add it.</p>
           </div>
         </div>
         <button class="btn-share-action" id="shareBtn" onclick="submitShare()">
@@ -2701,7 +2707,7 @@
     })();
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 16:17:19';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 16:22:50';
   </script>
   <script src="sidebar-logo.js"></script>
   <script src="sidebar-profile.js"></script>
