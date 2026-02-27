@@ -58,7 +58,11 @@
     }
 
     /* ── Desktop sidebar ── */
-    .sidebar-wrap { flex-shrink: 0; padding-right: 4px; }
+    .sidebar-wrap {
+      flex-shrink: 0;
+      display: flex;
+      align-items: stretch;
+    }
     @media (max-width: 767px) { .sidebar-wrap { display: none; } }
 
     .sidebar {
@@ -70,6 +74,47 @@
       flex-direction: column;
       padding: 32px 16px 24px;
       gap: 24px;
+      overflow: hidden;
+      transition: width 0.25s ease, padding 0.25s ease;
+      flex-shrink: 0;
+    }
+    .sidebar-wrap.is-collapsed .sidebar {
+      width: 64px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+    /* ── Sidebar handle ── */
+    .sidebar-handle {
+      width: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: col-resize;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .sidebar-handle-pill {
+      width: 4px;
+      height: 54px;
+      background: #0f172a;
+      border-radius: 2px;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .sidebar-handle:hover .sidebar-handle-pill { background: #334155; }
+
+    /* ── Sidebar text (fades when collapsed) ── */
+    .sidebar-text {
+      overflow: hidden;
+      white-space: nowrap;
+      transition: opacity 0.2s ease, max-width 0.25s ease;
+      max-width: 200px;
+    }
+    .sidebar-wrap.is-collapsed .sidebar-text {
+      opacity: 0;
+      max-width: 0;
+      pointer-events: none;
     }
 
     /* ── Shared sidebar styles ── */
@@ -78,6 +123,12 @@
       align-items: center;
       gap: 16px;
       padding: 0 16px;
+      transition: padding 0.25s ease, gap 0.25s ease;
+    }
+    .sidebar-wrap.is-collapsed .sidebar-logo {
+      justify-content: center;
+      padding: 0 8px;
+      gap: 0;
     }
     .logo-icon { width: 24px; height: 24px; flex-shrink: 0; }
     .logo-text { color: #fff; font-weight: 600; }
@@ -98,7 +149,11 @@
       background: none; border: none; font-family: inherit;
     }
     .nav-item:hover { background: rgba(255,255,255,0.06); }
-    .nav-item.active { background: rgba(44,102,239,0.12); }
+    .sidebar-wrap.is-collapsed .nav-item {
+      justify-content: center;
+      padding: 8px;
+      gap: 0;
+    }
 
     .nav-icon { width: 24px; height: 24px; flex-shrink: 0; color: #fff; }
 
@@ -117,31 +172,56 @@
 
     .nav-group { display: flex; flex-direction: column; }
 
-    .section-header {
-      display: flex; align-items: center; gap: 16px;
-      padding: 8px 16px; border-radius: 8px;
-      cursor: pointer; width: 100%;
-    }
-    .section-header:hover { background: rgba(255,255,255,0.06); }
-
-    .section-label { flex: 1; color: #fff; font-weight: 500; white-space: nowrap; }
-    .sidebar .section-label { font-size: 14px; letter-spacing: -0.28px; line-height: 18px; }
-    .mob-sidebar .section-label { font-size: 20px; letter-spacing: -0.4px; line-height: 24px; }
-
-    .chevron { width: 24px; height: 24px; flex-shrink: 0; color: #fff; }
-    .section-header .chevron { transition: transform 0.2s ease; }
-    .section-header.is-open .chevron { transform: rotate(180deg); }
-    .section-header.is-open > .badge { display: none; }
-
-    .org-content { display: none; flex-direction: column; }
-    .org-content.org-open { display: flex; }
+    .chevron { width: 24px; height: 24px; flex-shrink: 0; color: #fff; transition: transform 0.2s ease; }
 
     .sidebar-spacer { flex: 1; min-height: 0; }
+
+    /* ── Profile footer (sign-out + user row) ── */
+    .profile-footer { display: flex; flex-direction: column; flex-shrink: 0; }
+
+    /* Sign-out row: hidden by default, animates up on click */
+    .sign-out-wrap {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .profile-footer.is-open .sign-out-wrap { max-height: 60px; }
+
+    .sign-out-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 16px; border-radius: 8px; cursor: pointer;
+      color: #fff;
+      transform: translateY(100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sign-out-row:hover { background: rgba(255,255,255,0.08); }
+    .profile-footer.is-open .sign-out-row { transform: translateY(0); }
+    .sign-out-label {
+      color: #fff; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px; flex: 1;
+    }
+    .mob-sidebar .sign-out-label { font-size: 16px; letter-spacing: -0.32px; line-height: 24px; }
 
     .profile-row {
       display: flex; align-items: center; gap: 12px;
       padding: 8px 16px; border-radius: 8px;
+      cursor: pointer;
     }
+    .profile-row:hover { background: rgba(255,255,255,0.05); }
+
+    /* Chevron flips when open */
+    .profile-footer.is-open .profile-row .chevron { transform: rotate(180deg); }
+
+    /* Collapsed profile row — avatar only */
+    .sidebar-wrap.is-collapsed .profile-row {
+      justify-content: center;
+      padding: 8px;
+      gap: 0;
+    }
+    .sidebar-wrap.is-collapsed .profile-info,
+    .sidebar-wrap.is-collapsed .profile-row .chevron { display: none; }
+    .sidebar-wrap.is-collapsed .sign-out-wrap { display: none !important; }
+
     .avatar {
       border-radius: 50%; background: #64748b; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
@@ -736,102 +816,26 @@
       </button>
     </div>
 
-    <!-- Bolton Clarke (expanded) -->
     <div class="nav-group">
-      <div class="section-header is-open" onclick="toggleOrg(this)">
-        <span class="section-label">Bolton Clarke</span>
+      <button class="nav-item" onclick="location.href='company-details.html'">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+        </svg>
+        <span class="nav-label">Profile</span>
+      </button>
+      <button class="nav-item" onclick="location.href='portal.html'">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span class="nav-label">Compliance</span>
         <span class="badge">4</span>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+      </button>
+      <button class="nav-item" style="background: rgba(44,102,239,0.12);">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-      </div>
-      <div class="org-content org-open">
-        <button class="nav-item" onclick="location.href='company-details.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-          </svg>
-          <span class="nav-label">Company Details</span>
-        </button>
-        <button class="nav-item" onclick="location.href='portal.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-          </svg>
-          <span class="nav-label">Compliance</span>
-          <span class="badge">4</span>
-        </button>
-        <button class="nav-item active" onclick="location.href='users.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <span class="nav-label">Users</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="nav-divider"></div>
-
-    <div class="nav-group">
-      <div class="section-header" onclick="toggleOrg(this)">
-        <span class="section-label">Catholic Health</span>
-        <span class="badge">2</span>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-        </svg>
-      </div>
-      <div class="org-content">
-        <button class="nav-item" onclick="location.href='company-details.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-          </svg>
-          <span class="nav-label">Company Details</span>
-        </button>
-        <button class="nav-item" onclick="location.href='portal.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-          </svg>
-          <span class="nav-label">Compliance</span>
-          <span class="badge">2</span>
-        </button>
-        <button class="nav-item" onclick="location.href='users.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <span class="nav-label">Users</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="nav-divider"></div>
-
-    <div class="nav-group">
-      <div class="section-header" onclick="toggleOrg(this)">
-        <span class="section-label">Wallaby Aged Care</span>
-        <span class="badge">1</span>
-        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-        </svg>
-      </div>
-      <div class="org-content">
-        <button class="nav-item" onclick="location.href='company-details.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-          </svg>
-          <span class="nav-label">Company Details</span>
-        </button>
-        <button class="nav-item" onclick="location.href='portal.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-          </svg>
-          <span class="nav-label">Compliance</span>
-          <span class="badge">1</span>
-        </button>
-        <button class="nav-item" onclick="location.href='users.html'">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <span class="nav-label">Users</span>
-        </button>
-      </div>
+        <span class="nav-label">Users</span>
+      </button>
     </div>
 
     <div class="sidebar-spacer"></div>
@@ -1008,126 +1012,44 @@
   <div class="layout">
 
     <!-- Desktop sidebar -->
-    <div class="sidebar-wrap">
+    <div class="sidebar-wrap" id="sidebarWrap">
       <nav class="sidebar">
         <div class="sidebar-logo">
           <div class="logo-icon"></div>
-          <span class="logo-text">Platypus Plumbing</span>
+          <span class="sidebar-text logo-text">Platypus Plumbing</span>
         </div>
 
         <div class="nav-group">
-          <button class="nav-item" onclick="location.href='todo.html'">
+          <button class="nav-item" onclick="location.href='company-details.html'">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
             </svg>
-            <span class="nav-label">To-do</span>
-            <span class="badge">6</span>
+            <span class="sidebar-text nav-label">Profile</span>
           </button>
-        </div>
-
-        <div class="nav-divider"></div>
-
-        <div class="nav-group">
-          <div class="section-header is-open" onclick="toggleOrg(this)">
-            <span class="section-label">Bolton Clarke</span>
-            <span class="badge">4</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          <button class="nav-item" onclick="location.href='portal.html'">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
-          </div>
-          <div class="org-content org-open">
-            <button class="nav-item" onclick="location.href='company-details.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-              </svg>
-              <span class="nav-label">Company Details</span>
-            </button>
-            <button class="nav-item" onclick="location.href='portal.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-              <span class="nav-label">Compliance</span>
-              <span class="badge">4</span>
-            </button>
-            <button class="nav-item active" onclick="location.href='users.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <span class="nav-label">Users</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="nav-divider"></div>
-
-        <div class="nav-group">
-          <div class="section-header" onclick="toggleOrg(this)">
-            <span class="section-label">Catholic Health</span>
-            <span class="badge">2</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            <span class="sidebar-text nav-label">Compliance</span>
+            <span class="sidebar-text badge">4</span>
+          </button>
+          <button class="nav-item" style="background: rgba(44,102,239,0.12);">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-          </div>
-          <div class="org-content">
-            <button class="nav-item" onclick="location.href='company-details.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-              </svg>
-              <span class="nav-label">Company Details</span>
-            </button>
-            <button class="nav-item" onclick="location.href='portal.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-              <span class="nav-label">Compliance</span>
-              <span class="badge">2</span>
-            </button>
-            <button class="nav-item" onclick="location.href='users.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <span class="nav-label">Users</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="nav-divider"></div>
-
-        <div class="nav-group">
-          <div class="section-header" onclick="toggleOrg(this)">
-            <span class="section-label">Wallaby Aged Care</span>
-            <span class="badge">1</span>
-            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </div>
-          <div class="org-content">
-            <button class="nav-item" onclick="location.href='company-details.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-              </svg>
-              <span class="nav-label">Company Details</span>
-            </button>
-            <button class="nav-item" onclick="location.href='portal.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-              <span class="nav-label">Compliance</span>
-              <span class="badge">1</span>
-            </button>
-            <button class="nav-item" onclick="location.href='users.html'">
-              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <span class="nav-label">Users</span>
-            </button>
-          </div>
+            <span class="sidebar-text nav-label">Users</span>
+          </button>
         </div>
 
         <div class="sidebar-spacer"></div>
 
         <div class="profile-footer"></div>
       </nav>
+
+      <!-- Collapse / expand handle -->
+      <div class="sidebar-handle" id="sidebarHandle">
+        <div class="sidebar-handle-pill"></div>
+      </div>
     </div>
 
     <!-- Main content -->
@@ -1311,16 +1233,57 @@
       document.getElementById('mobOverlay').classList.remove('is-visible');
     }
 
-    function toggleOrg(header) {
-      const navGroup = header.parentElement;
-      const content = navGroup.querySelector('.org-content');
-      if (!content) return;
-      const sidebar = header.closest('.sidebar, .mob-sidebar');
-      sidebar.querySelectorAll('.org-content').forEach(c => { if (c !== content) c.classList.remove('org-open'); });
-      sidebar.querySelectorAll('.section-header').forEach(h => { if (h !== header) h.classList.remove('is-open'); });
-      const opening = content.classList.toggle('org-open');
-      header.classList.toggle('is-open', opening);
-    }
+    // ── Sidebar collapse / expand ──
+    (function() {
+      var wrap = document.getElementById('sidebarWrap');
+      var handle = document.getElementById('sidebarHandle');
+      if (!wrap || !handle) return;
+
+      var EXPANDED_W = 280;
+      var COLLAPSED_W = 64;
+      var isDragging = false;
+      var dragStartX = 0;
+      var startCollapsed = false;
+
+      function setCollapsed(collapsed) {
+        wrap.classList.toggle('is-collapsed', collapsed);
+      }
+
+      handle.addEventListener('click', function() {
+        if (isDragging) return;
+        setCollapsed(!wrap.classList.contains('is-collapsed'));
+      });
+
+      handle.addEventListener('mousedown', function(e) {
+        isDragging = false;
+        dragStartX = e.clientX;
+        startCollapsed = wrap.classList.contains('is-collapsed');
+
+        function onMove(ev) {
+          var dx = ev.clientX - dragStartX;
+          if (Math.abs(dx) > 4) isDragging = true;
+          if (!isDragging) return;
+          var currentW = startCollapsed ? COLLAPSED_W : EXPANDED_W;
+          var newW = currentW + dx;
+          var mid = (EXPANDED_W + COLLAPSED_W) / 2;
+          setCollapsed(newW < mid);
+        }
+
+        function onUp() {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+          document.body.style.userSelect = '';
+          document.body.style.cursor = '';
+          setTimeout(function() { isDragging = false; }, 0);
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        document.body.style.userSelect = 'none';
+        document.body.style.cursor = 'col-resize';
+        e.preventDefault();
+      });
+    })();
 
     /* ── User row click ── */
     function openUserRow() {
