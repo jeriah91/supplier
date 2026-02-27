@@ -2442,7 +2442,6 @@
     function openCompliance(rowEl) {
       const name = rowEl.querySelector('.name-text').textContent.trim();
       document.getElementById('cdPersonName').textContent = name;
-      document.getElementById('cdSendName').textContent = name;
       document.getElementById('cdLinkName').textContent = name;
       const initials = name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0, 2);
       document.getElementById('cdAvatar').textContent = initials;
@@ -2738,7 +2737,7 @@
     }
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 15:59:07';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 27/02/2026 16:02:26';
   </script>
   <script src="sidebar-logo.js"></script>
   <script src="sidebar-profile.js"></script>
