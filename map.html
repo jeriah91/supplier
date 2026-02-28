@@ -68,7 +68,7 @@
     .map-canvas {
       position: absolute;
       left: 0; top: 0;
-      width: 2100px;
+      width: 2400px;
       height: 850px;
       transform-origin: 0 0;
     }
@@ -76,7 +76,7 @@
     .map-svg {
       position: absolute;
       inset: 0;
-      width: 2100px;
+      width: 2400px;
       height: 850px;
       pointer-events: none;
       overflow: visible;
@@ -126,6 +126,10 @@
     .map-node.signout {
       background: #f1f5f9;
       border: 1px solid #94a3b8;
+    }
+    .map-node.modal {
+      background: #fef3c7;
+      border: 1.5px dashed #f59e0b;
     }
 
     /* ── Zoom controls ── */
@@ -231,6 +235,9 @@
       // User sub-pages (blue, no border)
       { id: 'userdetail',      label: 'User Detail',       x: 1720, y: 310, href: 'user-detail.html',                 color: 'portal-sub',    key: 'userdetail'      },
       { id: 'adduser',         label: 'Add User',          x: 1720, y: 420, href: 'add-user.html',                    color: 'portal-sub',    key: 'adduser'         },
+      // Modals (amber, dashed border)
+      { id: 'deactivate',      label: 'Deactivate Profile',      x: 1960, y: 60,  href: 'portal.html',               color: 'modal',         key: ''                },
+      { id: 'shareprofile',    label: 'Share Compliance Profile', x: 1960, y: 170, href: 'portal.html',               color: 'modal',         key: ''                },
       // Onboarding flow (green)
       { id: 'onboarding',      label: 'Onboarding',        x: 0,    y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'onboarding'      },
       { id: 'welcome',         label: 'Welcome Page',      x: 161,  y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'welcome'         },
@@ -262,6 +269,9 @@
       { from: 'compliance',      to: 'companycomp'     },
       { from: 'users',           to: 'userdetail'      },
       { from: 'users',           to: 'adduser'         },
+      { from: 'compliancedetail',to: 'deactivate'      },
+      { from: 'compliancedetail',to: 'shareprofile'    },
+      { from: 'success',         to: 'portal',         type: 'up' },
       { from: 'onboarding',      to: 'welcome'         },
       { from: 'welcome',         to: 'business'        },
       { from: 'business',        to: 'address'         },
@@ -316,6 +326,19 @@
               ' C ' + x1 + ' ' + (y1 + dy) + ',' +
                       x2 + ' ' + (y2 - dy) + ',' +
                       x2 + ' ' + y2;
+
+        } else if (type === 'up') {
+          // Top-center of src → bottom-center of tgt (for success → portal)
+          x1 = src.offsetLeft + Math.round(src.offsetWidth / 2);
+          y1 = src.offsetTop;
+          x2 = tgt.offsetLeft + Math.round(tgt.offsetWidth / 2);
+          y2 = tgt.offsetTop + tgt.offsetHeight;
+          var dy = Math.max(Math.abs(y1 - y2) * 0.45, 20);
+          d = 'M ' + x1 + ' ' + y1 +
+              ' C ' + x1 + ' ' + (y1 - dy) + ',' +
+                      x2 + ' ' + (y2 + dy) + ',' +
+                      x2 + ' ' + y2;
+          stroke = '#34d399';  // green to match onboarding
 
         } else if (type === 'return') {
           // Bottom-center of src → arc through midY → bottom-center of tgt
@@ -374,7 +397,7 @@
     function fitView() {
       var vw = viewport.clientWidth;
       var vh = viewport.clientHeight;
-      var CONTENT_W = 1960; // approximate content x-extent
+      var CONTENT_W = 2200; // approximate content x-extent
       var CONTENT_H = 790;  // approximate content y-extent
       var zoomW = (vw / CONTENT_W) * 0.95;
       var zoomH = (vh / CONTENT_H) * 0.90;
