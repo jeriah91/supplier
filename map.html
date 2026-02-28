@@ -407,11 +407,10 @@
 
     function applyTransform() {
       canvas.style.transform = 'translate(' + panX + 'px,' + panY + 'px) scale(' + scale + ')';
-      // Keep dot grid in sync with pan/zoom
-      var spacing = 24 * scale;
+      // Dots pan with the canvas but stay fixed size (spacing never scales)
+      var spacing = 24;
       var ox = ((panX % spacing) + spacing) % spacing;
       var oy = ((panY % spacing) + spacing) % spacing;
-      grid.style.backgroundSize = spacing + 'px ' + spacing + 'px';
       grid.style.backgroundPosition = ox + 'px ' + oy + 'px';
     }
 
