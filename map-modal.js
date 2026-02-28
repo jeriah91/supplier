@@ -95,21 +95,21 @@
     var btn = e.target.closest('.proto-nav-map');
     if (!btn) return;
     var key = btn.getAttribute('data-map-key') || '';
-    window.openMapModal(key);
+    openMapModal(key);
   });
 
   // Close on backdrop click
   backdrop.addEventListener('click', function (e) {
-    if (e.target === backdrop) window.closeMapModal();
+    if (e.target === backdrop) closeMapModal();
   });
 
   // Close button
-  closeBtn.addEventListener('click', window.closeMapModal);
+  closeBtn.addEventListener('click', closeMapModal);
 
   // Escape key
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && backdrop.classList.contains('is-open')) {
-      window.closeMapModal();
+      closeMapModal();
     }
   });
 })();
