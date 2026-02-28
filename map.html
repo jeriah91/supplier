@@ -62,8 +62,18 @@
       overflow: hidden;
       cursor: grab;
       position: relative;
+      background: #f8fafc;
     }
     .map-viewport.is-dragging { cursor: grabbing; }
+
+    /* Dot grid — repositioned via JS to follow pan/zoom */
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle, #cbd5e1 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
 
     .map-canvas {
       position: absolute;
@@ -71,7 +81,10 @@
       width: 2400px;
       height: 850px;
       transform-origin: 0 0;
+      transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
+    /* Disable transition during scroll-zoom and pan so they feel direct */
+    .map-canvas.no-transition { transition: none; }
 
     .map-svg {
       position: absolute;
@@ -187,6 +200,7 @@
       <h1 class="map-title">Map</h1>
     </div>
     <div class="map-viewport" id="mapViewport">
+      <div class="map-grid" id="mapGrid"></div>
       <div class="map-canvas" id="mapCanvas">
         <svg class="map-svg" id="mapSvg"></svg>
         <!-- Nodes injected by JS -->
@@ -386,11 +400,19 @@
 
     // ── Pan & Zoom state ──────────────────────────────────────────────────────
     var viewport = document.getElementById('mapViewport');
+    var grid = document.getElementById('mapGrid');
     var panX = 0, panY = 0, scale = 1;
     var isDragging = false, startMouseX = 0, startMouseY = 0, startPanX = 0, startPanY = 0;
+    var wheelTimer;
 
     function applyTransform() {
       canvas.style.transform = 'translate(' + panX + 'px,' + panY + 'px) scale(' + scale + ')';
+      // Keep dot grid in sync with pan/zoom
+      var spacing = 24 * scale;
+      var ox = ((panX % spacing) + spacing) % spacing;
+      var oy = ((panY % spacing) + spacing) % spacing;
+      grid.style.backgroundSize = spacing + 'px ' + spacing + 'px';
+      grid.style.backgroundPosition = ox + 'px ' + oy + 'px';
     }
 
     // Fit all content into the viewport on load
@@ -417,6 +439,7 @@
     viewport.addEventListener('mousedown', function(e) {
       if (e.button !== 0) return;
       if (e.target.closest('.map-node')) return; // let node clicks through
+      canvas.classList.add('no-transition'); // pan must be instant
       isDragging = true;
       startMouseX = e.clientX;
       startMouseY = e.clientY;
@@ -437,11 +460,13 @@
       if (!isDragging) return;
       isDragging = false;
       viewport.classList.remove('is-dragging');
+      canvas.classList.remove('no-transition');
     });
 
     // ── Scroll-wheel zoom (zoom to cursor position) ───────────────────────────
     viewport.addEventListener('wheel', function(e) {
       e.preventDefault();
+      canvas.classList.add('no-transition'); // scroll zoom must be instant
       var rect = viewport.getBoundingClientRect();
       var mx = e.clientX - rect.left;
       var my = e.clientY - rect.top;
@@ -454,10 +479,16 @@
       panX = mx - cx * scale;
       panY = my - cy * scale;
       applyTransform();
+      // Re-enable transition shortly after wheel stops
+      clearTimeout(wheelTimer);
+      wheelTimer = setTimeout(function() {
+        canvas.classList.remove('no-transition');
+      }, 150);
     }, { passive: false });
 
-    // ── Zoom buttons (zoom to viewport centre) ────────────────────────────────
+    // ── Zoom buttons (zoom to viewport centre, animated) ─────────────────────
     function zoomBy(factor) {
+      canvas.classList.remove('no-transition'); // ensure transition is active
       var vw = viewport.clientWidth;
       var vh = viewport.clientHeight;
       var cx = (vw / 2 - panX) / scale;
