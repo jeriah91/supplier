@@ -29,7 +29,7 @@
     .logo { height: 23px; display: flex; align-items: center; }
     .logo img { width: 100px; height: 23px; object-fit: contain; }
 
-    /* ── Heading ── */
+    /* ── Heading row ── */
     .page-heading-row {
       display: flex;
       align-items: center;
@@ -42,62 +42,6 @@
       letter-spacing: -1.44px;
       line-height: 40px;
     }
-
-    /* ── Grid ── */
-    .grid {
-      display: flex;
-      gap: 32px;
-      align-items: flex-start;
-    }
-
-    /* ── Card ── */
-    .card {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-    }
-    .card:hover .thumbnail-wrap {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      transform: translateY(-2px);
-    }
-    .thumbnail-wrap {
-      position: relative;
-      overflow: hidden;
-      height: 201px;
-      border-radius: 8px;
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      transition: box-shadow 0.2s ease, transform 0.2s ease;
-    }
-    .thumbnail-wrap iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      border: none;
-      pointer-events: none;
-      transform-origin: top left;
-    }
-    /* Transparent click-capture overlay so the <a> link works */
-    .thumbnail-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 10;
-    }
-
-    .card-label {
-      font-size: 16px;
-      font-weight: 600;
-      color: #334155;
-      letter-spacing: -0.32px;
-      line-height: 26px;
-      text-align: center;
-    }
-
-    /* ── Design System link ── */
     .design-system-link {
       display: inline-flex;
       align-items: center;
@@ -112,10 +56,245 @@
     .design-system-link:hover { opacity: 0.7; }
     .design-system-link svg { width: 20px; height: 20px; flex-shrink: 0; }
 
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 0;
+      overflow: hidden;
+    }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      flex: 1;
+      border-right: 1px solid #e2e8f0;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-icon svg { width: 16px; height: 16px; }
+    .stat-icon.blue  { background: #eff6ff; color: #2c66ef; }
+    .stat-icon.green { background: #f0fdf4; color: #059669; }
+    .stat-icon.amber { background: #fffbeb; color: #d97706; }
+    .stat-icon.slate { background: #f1f5f9; color: #64748b; }
+    .stat-text { display: flex; flex-direction: column; gap: 1px; }
+    .stat-value {
+      font-size: 20px; font-weight: 700;
+      color: #0f172a; letter-spacing: -0.4px; line-height: 26px;
+    }
+    .stat-label {
+      font-size: 12px; font-weight: 400;
+      color: #94a3b8; letter-spacing: -0.24px; line-height: 16px;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    /* ── Card ── */
+    .card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+      transform: translateY(-2px);
+    }
+    .thumbnail-wrap {
+      position: relative;
+      overflow: hidden;
+      height: 201px;
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .thumbnail-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      border: none;
+      pointer-events: none;
+      transform-origin: top left;
+    }
+    .thumbnail-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+    }
+
+    /* ── Platform tag (top-left of thumbnail) ── */
+    .platform-tag {
+      position: absolute;
+      top: 10px; left: 10px;
+      z-index: 11;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(15,23,42,0.62);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.22px;
+      line-height: 16px;
+      pointer-events: none;
+    }
+    .platform-tag svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    /* ── Card meta (bottom section) ── */
+    .card-meta {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #fff;
+    }
+    .card-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      line-height: 22px;
+    }
+    .card-desc {
+      font-size: 13px;
+      font-weight: 400;
+      color: #64748b;
+      letter-spacing: -0.26px;
+      line-height: 19px;
+    }
+    .screen-count {
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      letter-spacing: -0.24px;
+      line-height: 16px;
+      white-space: nowrap;
+    }
+
+    /* ── Status chip ── */
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: -0.22px;
+      line-height: 18px;
+      flex-shrink: 0;
+    }
+    .status-chip .chip-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-chip.ready   { background: #dcfce7; color: #166534; }
+    .status-chip.ready .chip-dot { background: #16a34a; }
+    .status-chip.review  { background: #fef9c3; color: #854d0e; }
+    .status-chip.review .chip-dot { background: #ca8a04; }
+    .status-chip.progress { background: #dbeafe; color: #1e40af; }
+    .status-chip.progress .chip-dot { background: #2563eb; }
+
+    /* ── Changelog ── */
+    .section-heading {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.4px;
+      line-height: 16px;
+      text-transform: uppercase;
+    }
+    .changelog {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .changelog-row {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      background: #fff;
+      transition: background 0.12s;
+    }
+    .changelog-row:last-child { border-bottom: none; }
+    .changelog-row:hover { background: #f8fafc; }
+    .changelog-date {
+      font-size: 12px;
+      font-weight: 500;
+      color: #94a3b8;
+      letter-spacing: -0.24px;
+      line-height: 20px;
+      white-space: nowrap;
+      width: 76px;
+      flex-shrink: 0;
+    }
+    .changelog-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: -0.22px;
+      line-height: 18px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .changelog-tag.ds     { background: #eff6ff; color: #2c66ef; }
+    .changelog-tag.proto  { background: #f0fdf4; color: #166534; }
+    .changelog-tag.map    { background: #faf5ff; color: #7c3aed; }
+    .changelog-tag.fix    { background: #fff7ed; color: #c2410c; }
+    .changelog-msg {
+      font-size: 14px;
+      font-weight: 400;
+      color: #334155;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      flex: 1;
+    }
+
     /* ── Mobile ── */
     @media (max-width: 767px) {
       .page { padding: 24px; gap: 24px; }
       .page-heading { font-size: 28px; letter-spacing: -1.12px; line-height: 34px; }
+      .stats-bar { flex-wrap: wrap; }
+      .stat-item { flex: 1 1 calc(50% - 1px); border-right: none; border-bottom: 1px solid #e2e8f0; }
+      .stat-item:nth-child(odd) { border-right: 1px solid #e2e8f0; }
+      .stat-item:nth-last-child(-n+2) { border-bottom: none; }
       .grid { flex-direction: column; }
       .card { flex: none; width: 100%; }
       .thumbnail-wrap { height: 180px; }
@@ -141,6 +320,46 @@
       </a>
     </div>
 
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+        </div>
+        <div class="stat-text">
+          <span class="stat-value">3</span>
+          <span class="stat-label">Flows</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div class="stat-text">
+          <span class="stat-value">16</span>
+          <span class="stat-label">Screens</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="stat-text">
+          <span class="stat-value">31</span>
+          <span class="stat-label">DS Components</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon slate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path stroke-linecap="round" d="M12 18h.01"/></svg>
+        </div>
+        <div class="stat-text">
+          <span class="stat-value">Web + iOS</span>
+          <span class="stat-label">Platforms</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Cards grid -->
     <div class="grid">
 
@@ -148,31 +367,101 @@
       <a class="card" href="onboarding-welcome.html">
         <div class="thumbnail-wrap" data-native-width="1440">
           <iframe src="onboarding-welcome.html" title="Onboarding" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="platform-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M8 21h8M12 17v4"/></svg>
+            Web · 1440px
+          </div>
           <div class="thumbnail-overlay"></div>
         </div>
-        <span class="card-label">Onboarding</span>
+        <div class="card-meta">
+          <div class="card-meta-row">
+            <span class="card-label">Onboarding</span>
+            <span class="status-chip ready"><span class="chip-dot"></span>Ready for dev</span>
+          </div>
+          <div class="card-meta-row">
+            <span class="card-desc">Supplier registration & account setup</span>
+            <span class="screen-count">7 screens</span>
+          </div>
+        </div>
       </a>
 
       <!-- Portal -->
       <a class="card" href="portal.html">
         <div class="thumbnail-wrap" data-native-width="1440">
           <iframe src="portal.html" title="Portal" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="platform-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M8 21h8M12 17v4"/></svg>
+            Web · 1440px
+          </div>
           <div class="thumbnail-overlay"></div>
         </div>
-        <span class="card-label">Portal</span>
+        <div class="card-meta">
+          <div class="card-meta-row">
+            <span class="card-label">Portal</span>
+            <span class="status-chip ready"><span class="chip-dot"></span>Ready for dev</span>
+          </div>
+          <div class="card-meta-row">
+            <span class="card-desc">Compliance & account management</span>
+            <span class="screen-count">6 screens</span>
+          </div>
+        </div>
       </a>
 
       <!-- Worker App -->
       <a class="card" href="mobile-welcome.html">
         <div class="thumbnail-wrap" data-native-width="375">
           <iframe src="mobile-welcome.html" title="Worker App" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="platform-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path stroke-linecap="round" d="M12 18h.01"/></svg>
+            iOS · 375px
+          </div>
           <div class="thumbnail-overlay"></div>
         </div>
-        <span class="card-label">Worker App</span>
+        <div class="card-meta">
+          <div class="card-meta-row">
+            <span class="card-label">Worker App</span>
+            <span class="status-chip review"><span class="chip-dot"></span>In review</span>
+          </div>
+          <div class="card-meta-row">
+            <span class="card-desc">Field worker task management</span>
+            <span class="screen-count">3 screens</span>
+          </div>
+        </div>
       </a>
 
     </div>
 
+    <!-- What's new -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <span class="section-heading">What's new</span>
+      <div class="changelog">
+        <div class="changelog-row">
+          <span class="changelog-date">28 Feb</span>
+          <span class="changelog-tag ds">Design System</span>
+          <span class="changelog-msg">Added 7 new components: Data Table, Right Drawer, Modal Dialog, Toast, Empty State, Status Badge (Dot), Tab Switcher</span>
+        </div>
+        <div class="changelog-row">
+          <span class="changelog-date">27 Feb</span>
+          <span class="changelog-tag map">Map</span>
+          <span class="changelog-msg">Flow map converted to in-prototype modal overlay with active/inactive button states</span>
+        </div>
+        <div class="changelog-row">
+          <span class="changelog-date">26 Feb</span>
+          <span class="changelog-tag proto">Portal</span>
+          <span class="changelog-msg">Added User Detail and Add User screens; added outline styles to key navigation nodes</span>
+        </div>
+        <div class="changelog-row">
+          <span class="changelog-date">25 Feb</span>
+          <span class="changelog-tag map">Map</span>
+          <span class="changelog-msg">Dot grid background, smooth zoom animation, and modal/drawer nodes added to flow map</span>
+        </div>
+        <div class="changelog-row">
+          <span class="changelog-date">24 Feb</span>
+          <span class="changelog-tag ds">Design System</span>
+          <span class="changelog-msg">Specs panel redesigned; "Used on" section added to all components</span>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -190,15 +479,11 @@
 
     const wraps = document.querySelectorAll('.thumbnail-wrap');
 
-    // Scale on load and resize
     function scaleAll() { wraps.forEach(scaleThumbnail); }
     scaleAll();
     window.addEventListener('resize', scaleAll);
-
-    // Re-scale after fonts/images settle
     window.addEventListener('load', scaleAll);
 
-    // Use ResizeObserver for accuracy if available
     if (window.ResizeObserver) {
       const ro = new ResizeObserver(() => scaleAll());
       wraps.forEach(w => ro.observe(w));
@@ -206,4 +491,3 @@
   </script>
 </body>
 </html>
-
