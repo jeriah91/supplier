@@ -30,6 +30,11 @@
     .logo img { width: 100px; height: 23px; object-fit: contain; }
 
     /* ── Heading ── */
+    .page-heading-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
     .page-heading {
       font-size: 36px;
       font-weight: 600;
@@ -125,8 +130,16 @@
       <img src="https://www.figma.com/api/mcp/asset/73914091-8657-4909-81c6-dce51488ce2a" alt="Zipline" />
     </div>
 
-    <!-- Heading -->
-    <h1 class="page-heading">Prototypes</h1>
+    <!-- Heading row -->
+    <div class="page-heading-row">
+      <h1 class="page-heading">Prototypes</h1>
+      <a class="design-system-link" href="design-system.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+        Design System
+      </a>
+    </div>
 
     <!-- Cards grid -->
     <div class="grid">
@@ -159,14 +172,6 @@
       </a>
 
     </div>
-
-    <!-- Design System link -->
-    <a class="design-system-link" href="design-system.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-      </svg>
-      Design System
-    </a>
 
 
   </div>
