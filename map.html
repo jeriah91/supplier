@@ -40,12 +40,13 @@
       top: 40px; left: 0; right: 0; bottom: 0;
       display: flex;
       flex-direction: column;
-      background: #fff;
     }
 
     .map-header {
+      position: relative;
+      z-index: 10;
       padding: 24px 40px 16px;
-      flex-shrink: 0;
+      pointer-events: none;
     }
     .map-title {
       font-size: 36px;
@@ -57,11 +58,10 @@
 
     /* ── Map viewport (pannable area) ── */
     .map-viewport {
-      flex: 1;
-      min-height: 0;
+      position: absolute;
+      inset: 0;
       overflow: hidden;
       cursor: grab;
-      position: relative;
       background: #f8fafc;
     }
     .map-viewport.is-dragging { cursor: grabbing; }
