@@ -68,16 +68,16 @@
     .map-canvas {
       position: absolute;
       left: 0; top: 0;
-      width: 1800px;
-      height: 660px;
+      width: 2100px;
+      height: 850px;
       transform-origin: 0 0;
     }
 
     .map-svg {
       position: absolute;
       inset: 0;
-      width: 1800px;
-      height: 660px;
+      width: 2100px;
+      height: 850px;
       pointer-events: none;
       overflow: visible;
     }
@@ -118,6 +118,14 @@
     .map-node.onboarding {
       background: #d1fae5;
       border: 1px solid #34d399;
+    }
+    .map-node.portal-drawer {
+      background: #ccdafb;
+      border: 1.5px dashed #5483f2;
+    }
+    .map-node.signout {
+      background: #f1f5f9;
+      border: 1px solid #94a3b8;
     }
 
     /* ── Zoom controls ── */
@@ -201,47 +209,65 @@
     // Positions match the Figma design layout (x, y = top-left of node box)
     var NODES = [
       // Auth flow (purple)
-      { id: 'signin',       label: 'Sign in',          x: 574,  y: 147, href: 'login.html',                       color: 'auth',       key: 'signin'       },
-      { id: 'otp',          label: 'OTP',              x: 766,  y: 100, href: 'login.html',                       color: 'auth',       key: 'otp'          },
-      { id: 'magiclink',    label: 'Magic Link',       x: 766,  y: 205, href: 'login.html',                       color: 'auth',       key: 'magiclink'    },
-      { id: 'password',     label: 'Password',         x: 766,  y: 310, href: 'login.html',                       color: 'auth',       key: 'password'     },
-      { id: 'sixdigit',     label: '6-digit code',     x: 983,  y: 100, href: 'login.html',                       color: 'auth',       key: 'sixdigit'     },
+      { id: 'signin',          label: 'Sign in',           x: 574,  y: 147, href: 'login.html',                       color: 'auth',          key: 'signin'          },
+      { id: 'otp',             label: 'OTP',               x: 766,  y: 100, href: 'login.html',                       color: 'auth',          key: 'otp'             },
+      { id: 'magiclink',       label: 'Magic Link',        x: 766,  y: 205, href: 'login.html',                       color: 'auth',          key: 'magiclink'       },
+      { id: 'password',        label: 'Password',          x: 766,  y: 310, href: 'login.html',                       color: 'auth',          key: 'password'        },
+      { id: 'sixdigit',        label: '6-digit code',      x: 983,  y: 100, href: 'login.html',                       color: 'auth',          key: 'sixdigit'        },
+      { id: 'magiclinksent',   label: 'Magic Link Sent',   x: 983,  y: 205, href: 'login.html',                       color: 'auth',          key: 'magiclinksent'   },
       // Portal entry (blue, bordered)
-      { id: 'portal',       label: 'Portal',           x: 1248, y: 205, href: 'portal.html',                      color: 'portal-main', key: 'portal'      },
+      { id: 'portal',          label: 'Portal',            x: 1248, y: 205, href: 'portal.html',                      color: 'portal-main',   key: 'portal'          },
+      // Sign out (gray)
+      { id: 'signout',         label: 'Sign out',          x: 1248, y: 400, href: 'login.html',                       color: 'signout',       key: 'signout'         },
       // Portal sub-pages (blue, no border)
-      { id: 'todo',         label: 'To-do',            x: 1476, y: 0,   href: 'todo.html',                        color: 'portal-sub', key: 'todo'         },
-      { id: 'company',      label: 'Company Profile',  x: 1476, y: 100, href: 'company-details.html',             color: 'portal-sub', key: 'company'      },
-      { id: 'compliance',   label: 'Compliance',       x: 1476, y: 205, href: 'portal.html',                      color: 'portal-sub', key: 'compliance'   },
-      { id: 'users',        label: 'Users',            x: 1476, y: 310, href: 'users.html',                       color: 'portal-sub', key: 'users'        },
+      { id: 'todo',            label: 'To-do',             x: 1476, y: 0,   href: 'todo.html',                        color: 'portal-sub',    key: 'todo'            },
+      { id: 'company',         label: 'Company Profile',   x: 1476, y: 100, href: 'company-details.html',             color: 'portal-sub',    key: 'company'         },
+      { id: 'compliance',      label: 'Compliance',        x: 1476, y: 205, href: 'portal.html',                      color: 'portal-sub',    key: 'compliance'      },
+      { id: 'users',           label: 'Users',             x: 1476, y: 310, href: 'users.html',                       color: 'portal-sub',    key: 'users'           },
+      // Portal drawers (blue, dashed border)
+      { id: 'addperson',       label: 'Add Person',        x: 1720, y: 0,   href: 'portal.html',                      color: 'portal-drawer', key: ''                },
+      { id: 'compliancedetail',label: 'Compliance Detail', x: 1720, y: 100, href: 'portal.html',                      color: 'portal-drawer', key: ''                },
+      { id: 'companycomp',     label: 'Company Compliance',x: 1720, y: 205, href: 'portal.html',                      color: 'portal-drawer', key: ''                },
+      // User sub-pages (blue, no border)
+      { id: 'userdetail',      label: 'User Detail',       x: 1720, y: 310, href: 'user-detail.html',                 color: 'portal-sub',    key: 'userdetail'      },
+      { id: 'adduser',         label: 'Add User',          x: 1720, y: 420, href: 'add-user.html',                    color: 'portal-sub',    key: 'adduser'         },
       // Onboarding flow (green)
-      { id: 'onboarding',   label: 'Onboarding',       x: 0,    y: 487, href: 'onboarding-welcome.html',          color: 'onboarding', key: 'onboarding'   },
-      { id: 'welcome',      label: 'Welcome Page',     x: 161,  y: 487, href: 'onboarding-welcome.html',          color: 'onboarding', key: 'welcome'      },
-      { id: 'business',     label: 'Business Details', x: 344,  y: 487, href: 'onboarding-business-details.html', color: 'onboarding', key: 'business'     },
-      { id: 'address',      label: 'Address',          x: 539,  y: 487, href: 'onboarding-business-address.html', color: 'onboarding', key: 'address'      },
-      { id: 'requirements', label: 'Requirements',     x: 674,  y: 487, href: 'onboarding-compliance-docs.html',  color: 'onboarding', key: 'requirements' },
-      { id: 'keycontact',   label: 'Key contact',      x: 850,  y: 487, href: 'onboarding-key-contact.html',      color: 'onboarding', key: 'keycontact'   },
-      { id: 'success',      label: 'Success',          x: 1011, y: 487, href: 'onboarding-success.html',          color: 'onboarding', key: 'success'      },
+      { id: 'onboarding',      label: 'Onboarding',        x: 0,    y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'onboarding'      },
+      { id: 'welcome',         label: 'Welcome Page',      x: 161,  y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'welcome'         },
+      { id: 'business',        label: 'Business Details',  x: 344,  y: 660, href: 'onboarding-business-details.html', color: 'onboarding',    key: 'business'        },
+      { id: 'address',         label: 'Address',           x: 539,  y: 660, href: 'onboarding-business-address.html', color: 'onboarding',    key: 'address'         },
+      { id: 'requirements',    label: 'Requirements',      x: 674,  y: 660, href: 'onboarding-compliance-docs.html',  color: 'onboarding',    key: 'requirements'    },
+      { id: 'keycontact',      label: 'Key contact',       x: 850,  y: 660, href: 'onboarding-key-contact.html',      color: 'onboarding',    key: 'keycontact'      },
+      { id: 'success',         label: 'Success',           x: 1011, y: 660, href: 'onboarding-success.html',          color: 'onboarding',    key: 'success'         },
     ];
 
-    // Each edge: [sourceId, targetId]
+    // Each edge: { from, to, type? }  type: 'normal'(default) | 'vertical' | 'return'
     var EDGES = [
-      ['signin',       'otp'],
-      ['signin',       'magiclink'],
-      ['signin',       'password'],
-      ['otp',          'sixdigit'],
-      ['sixdigit',     'portal'],
-      ['magiclink',    'portal'],
-      ['password',     'portal'],
-      ['portal',       'todo'],
-      ['portal',       'company'],
-      ['portal',       'compliance'],
-      ['portal',       'users'],
-      ['onboarding',   'welcome'],
-      ['welcome',      'business'],
-      ['business',     'address'],
-      ['address',      'requirements'],
-      ['requirements', 'keycontact'],
-      ['keycontact',   'success'],
+      { from: 'signin',          to: 'otp'             },
+      { from: 'signin',          to: 'magiclink'       },
+      { from: 'signin',          to: 'password'        },
+      { from: 'otp',             to: 'sixdigit'        },
+      { from: 'magiclink',       to: 'magiclinksent'   },
+      { from: 'magiclinksent',   to: 'portal'          },
+      { from: 'sixdigit',        to: 'portal'          },
+      { from: 'password',        to: 'portal'          },
+      { from: 'portal',          to: 'todo'            },
+      { from: 'portal',          to: 'company'         },
+      { from: 'portal',          to: 'compliance'      },
+      { from: 'portal',          to: 'users'           },
+      { from: 'portal',          to: 'signout',        type: 'vertical' },
+      { from: 'signout',         to: 'signin',         type: 'return'   },
+      { from: 'compliance',      to: 'addperson'       },
+      { from: 'compliance',      to: 'compliancedetail'},
+      { from: 'compliance',      to: 'companycomp'     },
+      { from: 'users',           to: 'userdetail'      },
+      { from: 'users',           to: 'adduser'         },
+      { from: 'onboarding',      to: 'welcome'         },
+      { from: 'welcome',         to: 'business'        },
+      { from: 'business',        to: 'address'         },
+      { from: 'address',         to: 'requirements'    },
+      { from: 'requirements',    to: 'keycontact'      },
+      { from: 'keycontact',      to: 'success'         },
     ];
 
     // ── Read current page key from URL (?current=pagekey) ─────────────────────
@@ -252,7 +278,7 @@
     NODES.forEach(function(node) {
       var el = document.createElement('a');
       el.id = 'node-' + node.id;
-      el.className = 'map-node ' + node.color + (node.key === currentKey ? ' is-current' : '');
+      el.className = 'map-node ' + node.color + (node.key && node.key === currentKey ? ' is-current' : '');
       el.href = node.href;
       el.style.left = node.x + 'px';
       el.style.top  = node.y + 'px';
@@ -266,29 +292,70 @@
       var paths = '';
 
       EDGES.forEach(function(edge) {
-        var src = document.getElementById('node-' + edge[0]);
-        var tgt = document.getElementById('node-' + edge[1]);
+        var fromId = edge.from;
+        var toId   = edge.to;
+        var type   = edge.type || 'normal';
+
+        var src = document.getElementById('node-' + fromId);
+        var tgt = document.getElementById('node-' + toId);
         if (!src || !tgt) return;
 
-        // Source: right-center; Target: left-center
-        var x1 = src.offsetLeft + src.offsetWidth;
-        var y1 = src.offsetTop  + Math.round(src.offsetHeight / 2);
-        var x2 = tgt.offsetLeft;
-        var y2 = tgt.offsetTop  + Math.round(tgt.offsetHeight / 2);
+        var x1, y1, x2, y2, d, stroke, marker, extra;
+        stroke = '#94a3b8';
+        marker = 'url(#arrowhead)';
+        extra  = '';
 
-        // Cubic bezier with horizontal tangents
-        var dx = Math.max(Math.abs(x2 - x1) * 0.45, 40);
-        var d = 'M ' + x1 + ' ' + y1 +
-                ' C ' + (x1 + dx) + ' ' + y1 + ',' +
-                        (x2 - dx) + ' ' + y2 + ',' +
-                        x2 + ' ' + y2;
-        paths += '<path d="' + d + '" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>';
+        if (type === 'vertical') {
+          // Bottom-center of src → top-center of tgt (for portal → signout)
+          x1 = src.offsetLeft + Math.round(src.offsetWidth / 2);
+          y1 = src.offsetTop  + src.offsetHeight;
+          x2 = tgt.offsetLeft + Math.round(tgt.offsetWidth / 2);
+          y2 = tgt.offsetTop;
+          var dy = Math.max(Math.abs(y2 - y1) * 0.45, 20);
+          d = 'M ' + x1 + ' ' + y1 +
+              ' C ' + x1 + ' ' + (y1 + dy) + ',' +
+                      x2 + ' ' + (y2 - dy) + ',' +
+                      x2 + ' ' + y2;
+
+        } else if (type === 'return') {
+          // Bottom-center of src → arc through midY → bottom-center of tgt
+          // Used for signout → signin (sweep below portal, re-enter signin from below)
+          x1 = src.offsetLeft + Math.round(src.offsetWidth / 2);
+          y1 = src.offsetTop  + src.offsetHeight;
+          x2 = tgt.offsetLeft + Math.round(tgt.offsetWidth / 2);
+          y2 = tgt.offsetTop  + tgt.offsetHeight;
+          var midY = 580;
+          d = 'M ' + x1 + ' ' + y1 +
+              ' C ' + x1 + ' ' + midY + ',' +
+                      x2 + ' ' + midY + ',' +
+                      x2 + ' ' + y2;
+          stroke = '#cbd5e1';
+          extra  = ' stroke-dasharray="6,4"';
+          marker = 'url(#arrowhead-light)';
+
+        } else {
+          // Normal: right-center of src → left-center of tgt
+          x1 = src.offsetLeft + src.offsetWidth;
+          y1 = src.offsetTop  + Math.round(src.offsetHeight / 2);
+          x2 = tgt.offsetLeft;
+          y2 = tgt.offsetTop  + Math.round(tgt.offsetHeight / 2);
+          var dx = Math.max(Math.abs(x2 - x1) * 0.45, 40);
+          d = 'M ' + x1 + ' ' + y1 +
+              ' C ' + (x1 + dx) + ' ' + y1 + ',' +
+                      (x2 - dx) + ' ' + y2 + ',' +
+                      x2 + ' ' + y2;
+        }
+
+        paths += '<path d="' + d + '" stroke="' + stroke + '" stroke-width="1.5" fill="none"' + extra + ' marker-end="' + marker + '"/>';
       });
 
       svg.innerHTML =
         '<defs>' +
           '<marker id="arrowhead" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse">' +
             '<path d="M0,0 L6,3 L0,6 z" fill="#94a3b8"/>' +
+          '</marker>' +
+          '<marker id="arrowhead-light" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto" markerUnits="userSpaceOnUse">' +
+            '<path d="M0,0 L6,3 L0,6 z" fill="#cbd5e1"/>' +
           '</marker>' +
         '</defs>' +
         paths;
@@ -307,8 +374,8 @@
     function fitView() {
       var vw = viewport.clientWidth;
       var vh = viewport.clientHeight;
-      var CONTENT_W = 1720; // approximate content x-extent
-      var CONTENT_H = 600;  // approximate content y-extent
+      var CONTENT_W = 1960; // approximate content x-extent
+      var CONTENT_H = 790;  // approximate content y-extent
       var zoomW = (vw / CONTENT_W) * 0.95;
       var zoomH = (vh / CONTENT_H) * 0.90;
       scale = Math.max(0.35, Math.min(1, Math.min(zoomW, zoomH)));
