@@ -510,6 +510,15 @@
       document.body.style.paddingTop = '0';
       var layout = document.querySelector('.map-layout');
       if (layout) layout.style.top = '0';
+
+      // When inside the map modal, intercept node clicks and ask the
+      // parent window to close the modal and navigate instead.
+      document.addEventListener('click', function(e) {
+        var node = e.target.closest('.map-node');
+        if (!node || !node.href) return;
+        e.preventDefault();
+        window.parent.postMessage({ type: 'map-navigate', href: node.href }, '*');
+      });
     }
   </script>
 </body>

@@ -112,4 +112,12 @@
       closeMapModal();
     }
   });
+
+  // Node click inside the map iframe — close modal and navigate parent window
+  window.addEventListener('message', function (e) {
+    if (!e.data || e.data.type !== 'map-navigate') return;
+    closeMapModal();
+    // Small delay so the close animation starts before the page unloads
+    setTimeout(function () { window.location.href = e.data.href; }, 120);
+  });
 })();
