@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carter Peters — Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #cbd5e1;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Proto nav ── */
+    .proto-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      height: 40px; background: #000;
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .proto-nav-library {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: #fff;
+      font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px;
+      white-space: nowrap; flex-shrink: 0;
+      background: none; border: none; cursor: pointer; padding: 0;
+    }
+    .proto-nav-library:hover { opacity: 0.75; }
+    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .proto-nav-title { flex: 1; color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; }
+    .proto-nav-updated { flex: 1; color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; text-align: right; white-space: nowrap; }
+    body { padding-top: 40px; }
+
+    /* ── Layout ── */
+    .layout { display: flex; width: 100%; height: 100%; padding: 8px; }
+    .main-wrap { flex: 1; min-width: 0; min-height: 0; padding-left: 4px; display: flex; flex-direction: column; }
+    .main { background: #f1f5f9; border-radius: 8px; flex: 1; min-height: 0; overflow-y: auto; }
+
+    /* ── Content ── */
+    .content-inner { max-width: 860px; margin: 0 auto; padding: 24px 24px 56px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Back button ── */
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      color: #64748b; letter-spacing: -0.28px; line-height: 20px;
+      text-decoration: none;
+    }
+    .back-btn:hover { color: #334155; }
+    .back-btn svg { width: 16px; height: 16px; }
+
+    /* ── Profile header card ── */
+    .profile-header-card {
+      background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 24px;
+    }
+    .profile-header-top { display: flex; align-items: flex-start; gap: 16px; }
+    .profile-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: #7c3aed;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0; letter-spacing: -0.5px;
+    }
+    .profile-identity { flex: 1; min-width: 0; }
+    .profile-name { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.6px; line-height: 26px; }
+    .profile-sub { font-size: 13px; color: #64748b; letter-spacing: -0.26px; margin-top: 2px; }
+    .profile-header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .profile-divider { height: 1px; background: #f1f5f9; margin: 20px 0; }
+    .profile-stats { display: flex; gap: 32px; }
+    .profile-stat { display: flex; flex-direction: column; gap: 1px; }
+    .profile-stat-value { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.6px; }
+    .profile-stat-value.amber { color: #b45309; }
+    .profile-stat-label { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; line-height: 16px; }
+
+    /* ── Status pills ── */
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 12px;
+      font-size: 12px; font-weight: 600; letter-spacing: -0.24px;
+      width: fit-content; white-space: nowrap; flex-shrink: 0;
+    }
+    .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .status-compliant { background: #a7f3d0; color: #059669; }
+    .status-compliant .dot { background: #059669; }
+    .status-expiring { background: #fef3c7; color: #b45309; }
+    .status-expiring .dot { background: #b45309; }
+    .status-noncompliant { background: #fecaca; color: #dc2626; }
+    .status-noncompliant .dot { background: #dc2626; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      background: #2c66ef; color: #fff; font-family: inherit;
+      font-size: 14px; font-weight: 500; letter-spacing: -0.28px; line-height: 24px;
+      padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+    }
+    .btn-primary:hover { background: #1d56df; }
+    .btn-primary svg { width: 16px; height: 16px; }
+    .btn-ghost {
+      background: none; border: 1px solid #e2e8f0; color: #64748b; font-family: inherit;
+      font-size: 14px; font-weight: 500; letter-spacing: -0.28px;
+      padding: 6px 12px; border-radius: 8px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    }
+    .btn-ghost:hover { background: #f8fafc; color: #334155; }
+    .btn-ghost svg { width: 16px; height: 16px; }
+    .btn-ghost.danger:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+    .btn-sm {
+      background: #fff; border: 1px solid #e2e8f0; color: #334155; font-family: inherit;
+      font-size: 12px; font-weight: 500; letter-spacing: -0.24px;
+      padding: 4px 10px; border-radius: 6px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .btn-sm:hover { background: #f8fafc; }
+    .btn-sm svg { width: 13px; height: 13px; }
+    .btn-sm.revoke { color: #64748b; }
+    .btn-sm.revoke:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+    .btn-renew {
+      background: #eff6ff; border: none; color: #2c66ef; font-family: inherit;
+      font-size: 12px; font-weight: 500; letter-spacing: -0.24px;
+      padding: 4px 10px; border-radius: 6px; cursor: pointer; white-space: nowrap;
+    }
+    .btn-renew:hover { background: #dbeafe; }
+
+    /* ── Profile sections ── */
+    .profile-section { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .section-header {
+      padding: 16px 24px; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title { font-size: 15px; font-weight: 600; color: #0f172a; letter-spacing: -0.3px; flex: 1; }
+    .section-count {
+      background: #f1f5f9; color: #64748b;
+      font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
+      padding: 1px 7px; border-radius: 10px;
+    }
+
+    /* ── Credential rows ── */
+    .cred-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 24px; border-bottom: 1px solid #f8fafc;
+    }
+    .cred-row:last-child { border-bottom: none; }
+    .cred-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: #f1f5f9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .cred-icon svg { width: 17px; height: 17px; color: #64748b; }
+    .cred-info { flex: 1; min-width: 0; }
+    .cred-name { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
+    .cred-dates { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; line-height: 18px; margin-top: 2px; }
+    .cred-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 5px;
+      padding: 2px 7px; font-size: 11px; font-weight: 600; color: #15803d;
+      letter-spacing: -0.22px; white-space: nowrap;
+    }
+    .verified-badge svg { width: 11px; height: 11px; }
+    .unverified-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px;
+      padding: 2px 7px; font-size: 11px; font-weight: 600; color: #94a3b8;
+      letter-spacing: -0.22px; white-space: nowrap;
+    }
+    .cred-row.is-missing .cred-name { color: #94a3b8; }
+    .cred-row.is-missing .cred-icon { background: #f8fafc; }
+    .cred-row.is-missing .cred-icon svg { color: #cbd5e1; }
+
+    /* ── Share rows ── */
+    .share-row { border-bottom: 1px solid #f8fafc; }
+    .share-row:last-child { border-bottom: none; }
+    .share-row-main {
+      display: flex; align-items: center; gap: 14px; padding: 14px 24px;
+    }
+    .share-org-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .share-org-info { flex: 1; min-width: 0; }
+    .share-org-name-row { display: flex; align-items: center; gap: 7px; }
+    .share-org-name { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
+    .share-type-tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase;
+      padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+    }
+    .share-type-zipline { background: #eff6ff; color: #2563eb; }
+    .share-type-link { background: #f8fafc; color: #64748b; }
+    .share-org-sub { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; margin-top: 1px; }
+    .share-meta-cols { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    .share-meta-col { display: flex; flex-direction: column; gap: 1px; min-width: 80px; }
+    .share-meta-label {
+      font-size: 10px; color: #94a3b8; letter-spacing: 0.4px; text-transform: uppercase;
+      font-weight: 700; line-height: 14px;
+    }
+    .share-meta-value { font-size: 13px; font-weight: 500; color: #334155; letter-spacing: -0.26px; line-height: 18px; }
+    .share-meta-value.amber { color: #b45309; }
+    .share-meta-value.muted { color: #94a3b8; }
+    .share-meta-value.red { color: #dc2626; }
+    .share-row-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .share-expand-btn {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: #94a3b8; display: flex; align-items: center; transition: color 0.15s;
+      border-radius: 4px;
+    }
+    .share-expand-btn:hover { background: #f1f5f9; color: #334155; }
+    .share-expand-btn svg { width: 16px; height: 16px; transition: transform 0.2s; }
+    .share-expand-btn.is-open svg { transform: rotate(180deg); }
+    .share-row.is-expired .share-org-name { color: #94a3b8; }
+
+    /* ── Per-document log ── */
+    .share-log {
+      display: none; border-top: 1px solid #f1f5f9;
+      background: #fafcff; padding: 10px 24px 14px 74px;
+    }
+    .share-log.is-open { display: block; }
+    .share-log-title {
+      font-size: 10px; font-weight: 700; color: #94a3b8;
+      letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .share-log-row {
+      display: flex; align-items: center; gap: 8px; padding: 5px 0;
+    }
+    .share-log-row + .share-log-row { border-top: 1px solid #f1f5f9; }
+    .share-log-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .share-log-dot.viewed { background: #059669; }
+    .share-log-dot.unviewed { background: #e2e8f0; }
+    .share-log-name { font-size: 13px; color: #334155; letter-spacing: -0.26px; flex: 1; }
+    .share-log-time { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; white-space: nowrap; }
+
+    /* ── No active shares ── */
+    .shares-empty { padding: 40px 24px; text-align: center; color: #94a3b8; font-size: 14px; letter-spacing: -0.28px; }
+
+    /* ── Share modal ── */
+    .share-backdrop {
+      position: fixed; inset: 0; z-index: 5000;
+      background: rgba(15,23,42,0.4);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    .share-backdrop.is-visible { opacity: 1; pointer-events: auto; }
+    .share-modal {
+      background: #fff; border-radius: 16px;
+      width: 480px; max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 80px); overflow-y: auto;
+      padding: 24px; position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
+      transform: scale(0.97); transition: transform 0.2s ease;
+    }
+    .share-backdrop.is-visible .share-modal { transform: scale(1); }
+    .share-modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: #94a3b8; border-radius: 4px; display: flex;
+    }
+    .share-modal-close:hover { color: #0f172a; }
+    .share-modal-title { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.6px; line-height: 26px; margin-right: 32px; margin-bottom: 4px; }
+    .share-modal-sub { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-bottom: 20px; }
+    .share-creds-section { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .share-creds-label { font-size: 15px; font-weight: 600; color: #0f172a; letter-spacing: -0.3px; line-height: 22px; }
+    .share-creds-box {
+      border: 1px solid #cbd5e1; border-radius: 8px;
+      padding: 12px 8px 14px 16px; display: flex; gap: 8px; align-items: flex-start;
+    }
+    .share-creds-inner { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .share-creds-actions { display: flex; gap: 16px; }
+    .share-creds-action {
+      background: none; border: none; padding: 0; cursor: pointer;
+      font-family: inherit; font-size: 14px; color: #2c66ef; letter-spacing: -0.28px;
+    }
+    .share-creds-action:hover { text-decoration: underline; }
+    .share-cred-item { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+    .share-cred-item input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none; flex-shrink: 0;
+      width: 18px; height: 18px; border: 1.5px solid #2c66ef;
+      border-radius: 4px; cursor: pointer; position: relative; transition: background 0.15s;
+    }
+    .share-cred-item input[type="checkbox"]:checked { background: #2c66ef; border-color: #2c66ef; }
+    .share-cred-item input[type="checkbox"]:checked::after {
+      content: ''; position: absolute;
+      left: 4px; top: 1px; width: 7px; height: 11px;
+      border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg);
+    }
+    .share-cred-label { font-size: 14px; font-weight: 500; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
+    .share-cred-meta { display: flex; flex-direction: column; gap: 2px; }
+    .share-cred-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1px; line-height: 14px;
+      padding: 2px 7px; border-radius: 4px; width: fit-content;
+    }
+    .share-cred-badge.is-expiring { background: #fef3c7; color: #b45309; }
+    .share-cred-badge.is-missing { background: #f1f5f9; color: #94a3b8; }
+    .share-cred-item.is-disabled { pointer-events: none; opacity: 0.5; }
+    .share-cred-item.is-disabled input[type="checkbox"] { border-color: #cbd5e1; }
+    .share-creds-scrollbar { width: 4px; background: #cbd5e1; border-radius: 2px; height: 58px; flex-shrink: 0; margin-top: 38px; }
+    .share-form { display: flex; flex-direction: column; gap: 14px; }
+    .share-field { display: flex; flex-direction: column; gap: 4px; }
+    .share-label { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 22px; }
+    .share-select {
+      width: 100%; padding: 9px 36px 9px 12px; box-sizing: border-box;
+      border: 1.5px solid #e2e8f0; border-radius: 8px; background: #fff;
+      font-family: inherit; font-size: 14px; color: #0f172a;
+      letter-spacing: -0.28px; outline: none; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      cursor: pointer; transition: border-color 0.15s;
+    }
+    .share-select:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+    .share-email-input {
+      width: 100%; padding: 9px 12px; box-sizing: border-box;
+      border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-family: inherit; font-size: 14px; color: #0f172a;
+      letter-spacing: -0.28px; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s; background: #fff;
+    }
+    .share-email-input::placeholder { color: #94a3b8; }
+    .share-email-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+    .btn-share-action {
+      width: 100%; margin-top: 16px; padding: 8px 12px;
+      background: #2c66ef; border: none; color: #fff;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.15s;
+    }
+    .btn-share-action:hover { background: #1d56df; }
+    .btn-share-action svg { width: 16px; height: 16px; }
+    /* Shared view */
+    .share-secure-box {
+      border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;
+    }
+    .share-secure-top { display: flex; align-items: center; justify-content: space-between; }
+    .share-secure-label { font-size: 14px; font-weight: 600; color: #334155; letter-spacing: -0.28px; }
+    .share-secure-status { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: #16a34a; }
+    .share-secure-dot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; }
+    .share-secure-url { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #334155; line-height: 16px; word-break: break-all; }
+    .share-secure-btns { display: flex; gap: 8px; }
+    .btn-sec-copy {
+      padding: 7px 12px; border: 1px solid #e2e8f0; background: #fff;
+      border-radius: 6px; cursor: pointer; font-family: inherit;
+      font-size: 13px; font-weight: 500; color: #334155;
+      display: flex; align-items: center; gap: 6px;
+      letter-spacing: -0.26px; transition: background 0.15s;
+    }
+    .btn-sec-copy:hover { background: #f8fafc; }
+    .btn-sec-copy svg { width: 14px; height: 14px; }
+    .share-confirm-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .share-confirm-meta-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: #334155; letter-spacing: -0.28px; line-height: 20px;
+    }
+    .share-confirm-meta-item svg { width: 16px; height: 16px; flex-shrink: 0; color: #16a34a; }
+  </style>
+</head>
+<body>
+
+  <!-- Proto nav -->
+  <nav class="proto-nav">
+    <span class="proto-nav-title">Prototype / Portal / Contractor Profile</span>
+    <button data-map-key="portal" class="proto-nav-library proto-nav-map">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+      </svg>
+      Map
+    </button>
+    <a href="index.html" class="proto-nav-library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+  </nav>
+
+  <!-- Main layout -->
+  <div class="layout">
+    <div id="sidebarMount" data-active="compliance"></div>
+
+    <div class="main-wrap">
+      <div class="main">
+        <div class="content-inner">
+
+          <!-- Back -->
+          <a class="back-btn" href="portal.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Compliance
+          </a>
+
+          <!-- Profile header -->
+          <div class="profile-header-card">
+            <div class="profile-header-top">
+              <div class="profile-avatar">CP</div>
+              <div class="profile-identity">
+                <div class="profile-name">Carter Peters</div>
+                <div class="profile-sub">Plumber · Platypus Plumbing</div>
+              </div>
+              <div class="profile-header-actions">
+                <span class="status-pill status-expiring"><span class="dot"></span> Expiring soon</span>
+                <button class="btn-primary" onclick="openShareModal()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  Share credentials
+                </button>
+                <button class="btn-ghost danger">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  Deactivate
+                </button>
+              </div>
+            </div>
+            <div class="profile-divider"></div>
+            <div class="profile-stats">
+              <div class="profile-stat">
+                <div class="profile-stat-value">4</div>
+                <div class="profile-stat-label">Credentials</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-value amber">1</div>
+                <div class="profile-stat-label">Expiring soon</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-value">3</div>
+                <div class="profile-stat-label">Active shares</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-value">1</div>
+                <div class="profile-stat-label">Expired shares</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Credentials section -->
+          <div class="profile-section">
+            <div class="section-header">
+              <span class="section-title">Credentials</span>
+              <span class="section-count">4</span>
+            </div>
+
+            <!-- Nationally Coordinated Criminal History Check — Compliant -->
+            <div class="cred-row">
+              <div class="cred-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <div class="cred-info">
+                <div class="cred-name">Nationally Coordinated Criminal History Check</div>
+                <div class="cred-dates">Issued 14 Mar 2023 · Expires 14 Mar 2026 · Last verified 2 Mar 2026</div>
+              </div>
+              <div class="cred-right">
+                <span class="verified-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  Verified by Zipline AI
+                </span>
+                <span class="status-pill status-compliant"><span class="dot"></span> Compliant</span>
+              </div>
+            </div>
+
+            <!-- Plumbing License — Expiring soon -->
+            <div class="cred-row">
+              <div class="cred-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <div class="cred-info">
+                <div class="cred-name">Plumbing License</div>
+                <div class="cred-dates">Issued 1 Jun 2022 · Expires 17 Mar 2026 · Last verified 1 Mar 2026</div>
+              </div>
+              <div class="cred-right">
+                <span class="verified-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  Verified by Zipline AI
+                </span>
+                <span class="status-pill status-expiring"><span class="dot"></span> Expires in 14 days</span>
+              </div>
+            </div>
+
+            <!-- Australian Working Rights — Compliant -->
+            <div class="cred-row">
+              <div class="cred-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="cred-info">
+                <div class="cred-name">Australian Working Rights</div>
+                <div class="cred-dates">Issued 20 Aug 2024 · No expiry · Last verified 20 Aug 2024</div>
+              </div>
+              <div class="cred-right">
+                <span class="verified-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  Verified by Zipline AI
+                </span>
+                <span class="status-pill status-compliant"><span class="dot"></span> Compliant</span>
+              </div>
+            </div>
+
+            <!-- Working With Children Check — Non-compliant -->
+            <div class="cred-row is-missing">
+              <div class="cred-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+              </div>
+              <div class="cred-info">
+                <div class="cred-name">Working With Children Check</div>
+                <div class="cred-dates">Not submitted</div>
+              </div>
+              <div class="cred-right">
+                <span class="unverified-badge">Not submitted</span>
+                <span class="status-pill status-noncompliant"><span class="dot"></span> Not compliant</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Active shares section -->
+          <div class="profile-section">
+            <div class="section-header">
+              <span class="section-title">Access &amp; shares</span>
+              <span class="section-count">4</span>
+              <button class="btn-primary" onclick="openShareModal()" style="padding: 4px 10px; font-size: 13px; gap: 6px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Share
+              </button>
+            </div>
+
+            <!-- Wallaby Health — active, 2 days -->
+            <div class="share-row">
+              <div class="share-row-main">
+                <div class="share-org-avatar" style="background:#16a34a">WH</div>
+                <div class="share-org-info">
+                  <div class="share-org-name-row">
+                    <span class="share-org-name">Wallaby Health</span>
+                    <span class="share-type-tag share-type-zipline">Zipline</span>
+                  </div>
+                  <div class="share-org-sub">Shared 1 Mar 2026</div>
+                </div>
+                <div class="share-meta-cols">
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Expires</span>
+                    <span class="share-meta-value amber">2 days</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Views</span>
+                    <span class="share-meta-value">3 times</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Last viewed</span>
+                    <span class="share-meta-value">1 Mar 2026</span>
+                  </div>
+                </div>
+                <div class="share-row-actions">
+                  <button class="btn-sm revoke">Revoke</button>
+                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="share-log">
+                <div class="share-log-title">Per-document access log</div>
+                <div class="share-log-row">
+                  <span class="share-log-dot viewed"></span>
+                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
+                  <span class="share-log-time">2:15 pm, 1 Mar 2026</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot viewed"></span>
+                  <span class="share-log-name">Australian Working Rights</span>
+                  <span class="share-log-time">2:16 pm, 1 Mar 2026</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot unviewed"></span>
+                  <span class="share-log-name">Plumbing License</span>
+                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Catholic Healthcare — active, 3 days -->
+            <div class="share-row">
+              <div class="share-row-main">
+                <div class="share-org-avatar" style="background:#dc2626">CH</div>
+                <div class="share-org-info">
+                  <div class="share-org-name-row">
+                    <span class="share-org-name">Catholic Healthcare</span>
+                    <span class="share-type-tag share-type-zipline">Zipline</span>
+                  </div>
+                  <div class="share-org-sub">Shared 27 Feb 2026</div>
+                </div>
+                <div class="share-meta-cols">
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Expires</span>
+                    <span class="share-meta-value">3 days</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Views</span>
+                    <span class="share-meta-value">1 time</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Last viewed</span>
+                    <span class="share-meta-value">2 Mar 2026</span>
+                  </div>
+                </div>
+                <div class="share-row-actions">
+                  <button class="btn-sm revoke">Revoke</button>
+                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="share-log">
+                <div class="share-log-title">Per-document access log</div>
+                <div class="share-log-row">
+                  <span class="share-log-dot viewed"></span>
+                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
+                  <span class="share-log-time">10:34 am, 2 Mar 2026</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot unviewed"></span>
+                  <span class="share-log-name">Australian Working Rights</span>
+                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot unviewed"></span>
+                  <span class="share-log-name">Plumbing License</span>
+                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Regis — secure link, never viewed -->
+            <div class="share-row">
+              <div class="share-row-main">
+                <div class="share-org-avatar" style="background:#64748b">RE</div>
+                <div class="share-org-info">
+                  <div class="share-org-name-row">
+                    <span class="share-org-name">Regis</span>
+                    <span class="share-type-tag share-type-link">Secure link</span>
+                  </div>
+                  <div class="share-org-sub">sarah@regis.com.au · Shared 1 Mar 2026</div>
+                </div>
+                <div class="share-meta-cols">
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Expires</span>
+                    <span class="share-meta-value">5 days</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Views</span>
+                    <span class="share-meta-value muted">Never</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Last viewed</span>
+                    <span class="share-meta-value muted">—</span>
+                  </div>
+                </div>
+                <div class="share-row-actions">
+                  <button class="btn-sm revoke">Revoke</button>
+                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="share-log">
+                <div class="share-log-title">Per-document access log</div>
+                <div class="share-log-row">
+                  <span class="share-log-dot unviewed"></span>
+                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
+                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot unviewed"></span>
+                  <span class="share-log-name">Australian Working Rights</span>
+                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot unviewed"></span>
+                  <span class="share-log-name">Plumbing License</span>
+                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bolton Clarke — expired -->
+            <div class="share-row is-expired">
+              <div class="share-row-main">
+                <div class="share-org-avatar" style="background:#cbd5e1">BC</div>
+                <div class="share-org-info">
+                  <div class="share-org-name-row">
+                    <span class="share-org-name">Bolton Clarke</span>
+                    <span class="share-type-tag share-type-zipline">Zipline</span>
+                  </div>
+                  <div class="share-org-sub">Shared 15 Feb 2026 · Expired 28 Feb 2026</div>
+                </div>
+                <div class="share-meta-cols">
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Expires</span>
+                    <span class="share-meta-value red">Expired</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Views</span>
+                    <span class="share-meta-value">5 times</span>
+                  </div>
+                  <div class="share-meta-col">
+                    <span class="share-meta-label">Last viewed</span>
+                    <span class="share-meta-value">28 Feb 2026</span>
+                  </div>
+                </div>
+                <div class="share-row-actions">
+                  <button class="btn-renew">Renew access</button>
+                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="share-log">
+                <div class="share-log-title">Per-document access log</div>
+                <div class="share-log-row">
+                  <span class="share-log-dot viewed"></span>
+                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
+                  <span class="share-log-time">Viewed 3 times · last 28 Feb 2026</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot viewed"></span>
+                  <span class="share-log-name">Australian Working Rights</span>
+                  <span class="share-log-time">Viewed 2 times · last 27 Feb 2026</span>
+                </div>
+                <div class="share-log-row">
+                  <span class="share-log-dot viewed"></span>
+                  <span class="share-log-name">Plumbing License</span>
+                  <span class="share-log-time">Viewed 1 time · 20 Feb 2026</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div><!-- /content-inner -->
+      </div><!-- /main -->
+    </div><!-- /main-wrap -->
+  </div><!-- /layout -->
+
+  <!-- Share modal -->
+  <div class="share-backdrop" id="shareBackdrop" onclick="closeShareModal()">
+    <div class="share-modal" onclick="event.stopPropagation()">
+      <button class="share-modal-close" onclick="closeShareModal()" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <!-- Form view -->
+      <div id="shareFormView">
+        <div class="share-modal-title">Share Carter Peters' credentials</div>
+        <div class="share-modal-sub">Select credentials and enter the recipient's email address.</div>
+        <div class="share-creds-section">
+          <div class="share-creds-label">Share Credentials</div>
+          <div class="share-creds-box">
+            <div class="share-creds-inner">
+              <div class="share-creds-actions">
+                <button class="share-creds-action" onclick="selectAllCreds(true)">Select all</button>
+                <button class="share-creds-action" onclick="selectAllCreds(false)">Deselect all</button>
+              </div>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span class="share-cred-label">Nationally Coordinated Criminal History Check</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span class="share-cred-meta">
+                  <span class="share-cred-label">Plumbing License</span>
+                  <span class="share-cred-badge is-expiring">Expires in 14 days</span>
+                </span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span class="share-cred-label">Australian Working Rights</span>
+              </label>
+              <label class="share-cred-item is-disabled">
+                <input type="checkbox" name="cred" disabled>
+                <span class="share-cred-meta">
+                  <span class="share-cred-label">Working With Children Check</span>
+                  <span class="share-cred-badge is-missing">Not compliant</span>
+                </span>
+              </label>
+            </div>
+            <div class="share-creds-scrollbar"></div>
+          </div>
+        </div>
+        <div class="share-form">
+          <div class="share-field">
+            <label class="share-label" for="shareDuration">Link valid for</label>
+            <select class="share-select" id="shareDuration">
+              <option value="1 week">1 week</option>
+              <option value="2 weeks">2 weeks</option>
+              <option value="1 month">1 month</option>
+              <option value="3 months">3 months</option>
+            </select>
+          </div>
+          <div class="share-field">
+            <label class="share-label" for="shareEmail">Recipient email</label>
+            <input class="share-email-input" type="email" id="shareEmail" placeholder="e.g. sarah@regis.com.au" required>
+          </div>
+        </div>
+        <button class="btn-share-action" onclick="submitShare()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+      </div>
+
+      <!-- Shared view -->
+      <div id="shareSharedView" style="display:none">
+        <div class="share-modal-title">Share Carter Peters' credentials</div>
+        <div class="share-modal-sub">Credentials shared with <strong id="shareConfirmEmail"></strong></div>
+        <div class="share-confirm-meta">
+          <div class="share-confirm-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Valid for <span id="shareConfirmDuration"></span>
+          </div>
+          <div class="share-confirm-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Restricted to <span id="shareConfirmEmailMeta"></span>
+          </div>
+        </div>
+        <div class="share-secure-box">
+          <div class="share-secure-top">
+            <span class="share-secure-label">Secure Link</span>
+            <span class="share-secure-status"><span class="share-secure-dot"></span>Active</span>
+          </div>
+          <div class="share-secure-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61333123123</div>
+          <div class="share-secure-btns">
+            <button class="btn-sec-copy" onclick="copyModalLink(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy Link
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function toggleLog(btn) {
+      btn.classList.toggle('is-open');
+      var log = btn.closest('.share-row').querySelector('.share-log');
+      log.classList.toggle('is-open');
+    }
+
+    function openShareModal() {
+      document.getElementById('shareFormView').style.display = '';
+      document.getElementById('shareSharedView').style.display = 'none';
+      document.getElementById('shareEmail').value = '';
+      document.getElementById('shareBackdrop').classList.add('is-visible');
+    }
+
+    function closeShareModal() {
+      document.getElementById('shareBackdrop').classList.remove('is-visible');
+    }
+
+    function selectAllCreds(checked) {
+      document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled)').forEach(function(cb) {
+        cb.checked = checked;
+      });
+    }
+
+    function submitShare() {
+      var email = document.getElementById('shareEmail').value.trim();
+      var duration = document.getElementById('shareDuration').value;
+      document.getElementById('shareConfirmEmail').textContent = email || 'recipient';
+      document.getElementById('shareConfirmDuration').textContent = duration;
+      document.getElementById('shareConfirmEmailMeta').textContent = email || 'recipient';
+      document.getElementById('shareFormView').style.display = 'none';
+      document.getElementById('shareSharedView').style.display = '';
+    }
+
+    function copyModalLink(btn) {
+      navigator.clipboard.writeText('https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61333123123').then(function() {
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Copied!';
+        setTimeout(function() { btn.innerHTML = orig; }, 2000);
+      });
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeShareModal();
+    });
+  </script>
+  <script>
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 03/03/2026 21:44:08';
+  </script>
+  <script src="sidebar.js"></script>
+  <script src="sidebar-logo.js"></script>
+  <script src="sidebar-profile.js"></script>
+  <script>if(window.self!==window.top){var n=document.querySelector(".proto-nav");if(n)n.style.display="none";document.body.style.paddingTop="0";}</script>
+  <script src="map-modal.js"></script>
+</body>
+</html>

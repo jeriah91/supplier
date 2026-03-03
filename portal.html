@@ -449,6 +449,15 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .cd-person-sub { font-size: 12px; color: #64748b; line-height: 17px; }
+    .cd-profile-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 500; color: #2c66ef;
+      letter-spacing: -0.24px; text-decoration: none;
+      padding: 4px 8px; border-radius: 6px; border: 1px solid #ccdafb;
+      background: #eff6ff; white-space: nowrap; flex-shrink: 0;
+    }
+    .cd-profile-link:hover { background: #dbeafe; }
+    .cd-profile-link svg { width: 13px; height: 13px; }
     .cd-status-badge {
       display: inline-flex; align-items: center; gap: 4px;
       padding: 2px 8px; border-radius: 12px;
@@ -1767,6 +1776,12 @@
       <span class="cd-status-badge non-compliant" id="cdStatusBadge">
         <span class="cd-status-dot"></span> Non-compliant
       </span>
+      <a class="cd-profile-link" href="contractor-profile.html" id="cdProfileLink" title="View full profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+        Full profile
+      </a>
     </div>
 
     <!-- Scrollable body -->
@@ -2379,7 +2394,7 @@
 
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 03/03/2026 21:44:08';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 03/03/2026 21:56:10';
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
