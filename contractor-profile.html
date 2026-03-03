@@ -35,50 +35,67 @@
     .proto-nav-library:hover { opacity: 0.75; }
     .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
     .proto-nav-title { flex: 1; color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; }
-    .proto-nav-updated { flex: 1; color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; text-align: right; white-space: nowrap; }
+    .proto-nav-updated { color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; text-align: right; white-space: nowrap; }
     body { padding-top: 40px; }
 
-    /* ── Layout ── */
+    /* ── Outer layout ── */
     .layout { display: flex; width: 100%; height: 100%; padding: 8px; }
     .main-wrap { flex: 1; min-width: 0; min-height: 0; padding-left: 4px; display: flex; flex-direction: column; }
     .main { background: #f1f5f9; border-radius: 8px; flex: 1; min-height: 0; overflow-y: auto; }
 
-    /* ── Content ── */
-    .content-inner { max-width: 860px; margin: 0 auto; padding: 24px 24px 56px; display: flex; flex-direction: column; gap: 16px; }
+    /* ── Content area ── */
+    .content-area { padding: 24px 24px 56px; display: flex; flex-direction: column; gap: 16px; }
 
-    /* ── Back button ── */
-    .back-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: none; border: none; cursor: pointer; padding: 0;
-      font-family: inherit; font-size: 14px; font-weight: 500;
-      color: #64748b; letter-spacing: -0.28px; line-height: 20px;
-      text-decoration: none;
+    /* ── Breadcrumb ── */
+    .breadcrumb { display: flex; align-items: center; gap: 6px; }
+    .breadcrumb-link {
+      font-size: 14px; font-weight: 500; color: #64748b;
+      text-decoration: none; letter-spacing: -0.28px; line-height: 20px;
     }
-    .back-btn:hover { color: #334155; }
-    .back-btn svg { width: 16px; height: 16px; }
+    .breadcrumb-link:hover { color: #334155; }
+    .breadcrumb-sep { color: #94a3b8; font-size: 14px; line-height: 20px; }
+    .breadcrumb-current { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
 
-    /* ── Profile header card ── */
-    .profile-header-card {
-      background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 24px;
-    }
-    .profile-header-top { display: flex; align-items: flex-start; gap: 16px; }
-    .profile-avatar {
-      width: 52px; height: 52px; border-radius: 50%;
-      background: #7c3aed;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 700; color: #fff; flex-shrink: 0; letter-spacing: -0.5px;
-    }
-    .profile-identity { flex: 1; min-width: 0; }
-    .profile-name { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.6px; line-height: 26px; }
-    .profile-sub { font-size: 13px; color: #64748b; letter-spacing: -0.26px; margin-top: 2px; }
-    .profile-header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    /* ── Two-column ── */
+    .two-col { display: flex; gap: 16px; align-items: flex-start; }
+    .col-left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+    .col-right { width: 348px; flex-shrink: 0; position: sticky; top: 0; }
 
-    .profile-divider { height: 1px; background: #f1f5f9; margin: 20px 0; }
-    .profile-stats { display: flex; gap: 32px; }
-    .profile-stat { display: flex; flex-direction: column; gap: 1px; }
-    .profile-stat-value { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.6px; }
-    .profile-stat-value.amber { color: #b45309; }
-    .profile-stat-label { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; line-height: 16px; }
+    /* ── Card base ── */
+    .card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+    .card-header {
+      padding: 14px 20px; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title { font-size: 15px; font-weight: 600; color: #0f172a; letter-spacing: -0.3px; flex: 1; }
+    .card-count {
+      background: #f1f5f9; color: #64748b;
+      font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
+      padding: 1px 7px; border-radius: 10px;
+    }
+
+    /* ── Detail rows ── */
+    .detail-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 20px; border-bottom: 1px solid #f8fafc;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label {
+      width: 144px; flex-shrink: 0;
+      font-size: 13px; color: #94a3b8; letter-spacing: -0.26px; line-height: 20px;
+    }
+    .detail-value {
+      flex: 1;
+      font-size: 14px; font-weight: 500; color: #0f172a;
+      letter-spacing: -0.28px; line-height: 20px;
+    }
+    .detail-edit-btn {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: #e2e8f0; border-radius: 4px; display: flex;
+      transition: color 0.15s, background 0.15s; flex-shrink: 0;
+    }
+    .detail-edit-btn:hover { color: #64748b; background: #f1f5f9; }
+    .detail-edit-btn svg { width: 14px; height: 14px; }
 
     /* ── Status pills ── */
     .status-pill {
@@ -95,65 +112,17 @@
     .status-noncompliant { background: #fecaca; color: #dc2626; }
     .status-noncompliant .dot { background: #dc2626; }
 
-    /* ── Buttons ── */
-    .btn-primary {
-      background: #2c66ef; color: #fff; font-family: inherit;
-      font-size: 14px; font-weight: 500; letter-spacing: -0.28px; line-height: 24px;
-      padding: 6px 14px; border-radius: 8px; border: none; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
-    }
-    .btn-primary:hover { background: #1d56df; }
-    .btn-primary svg { width: 16px; height: 16px; }
-    .btn-ghost {
-      background: none; border: 1px solid #e2e8f0; color: #64748b; font-family: inherit;
-      font-size: 14px; font-weight: 500; letter-spacing: -0.28px;
-      padding: 6px 12px; border-radius: 8px; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
-    }
-    .btn-ghost:hover { background: #f8fafc; color: #334155; }
-    .btn-ghost svg { width: 16px; height: 16px; }
-    .btn-ghost.danger:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
-    .btn-sm {
-      background: #fff; border: 1px solid #e2e8f0; color: #334155; font-family: inherit;
-      font-size: 12px; font-weight: 500; letter-spacing: -0.24px;
-      padding: 4px 10px; border-radius: 6px; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
-    }
-    .btn-sm:hover { background: #f8fafc; }
-    .btn-sm svg { width: 13px; height: 13px; }
-    .btn-sm.revoke { color: #64748b; }
-    .btn-sm.revoke:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
-    .btn-renew {
-      background: #eff6ff; border: none; color: #2c66ef; font-family: inherit;
-      font-size: 12px; font-weight: 500; letter-spacing: -0.24px;
-      padding: 4px 10px; border-radius: 6px; cursor: pointer; white-space: nowrap;
-    }
-    .btn-renew:hover { background: #dbeafe; }
-
-    /* ── Profile sections ── */
-    .profile-section { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
-    .section-header {
-      padding: 16px 24px; border-bottom: 1px solid #f1f5f9;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .section-title { font-size: 15px; font-weight: 600; color: #0f172a; letter-spacing: -0.3px; flex: 1; }
-    .section-count {
-      background: #f1f5f9; color: #64748b;
-      font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
-      padding: 1px 7px; border-radius: 10px;
-    }
-
     /* ── Credential rows ── */
     .cred-row {
       display: flex; align-items: center; gap: 14px;
-      padding: 14px 24px; border-bottom: 1px solid #f8fafc;
+      padding: 13px 20px; border-bottom: 1px solid #f8fafc;
     }
     .cred-row:last-child { border-bottom: none; }
     .cred-icon {
-      width: 34px; height: 34px; border-radius: 8px;
+      width: 32px; height: 32px; border-radius: 8px;
       background: #f1f5f9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .cred-icon svg { width: 17px; height: 17px; color: #64748b; }
+    .cred-icon svg { width: 16px; height: 16px; color: #64748b; }
     .cred-info { flex: 1; min-width: 0; }
     .cred-name { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
     .cred-dates { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; line-height: 18px; margin-top: 2px; }
@@ -175,70 +144,128 @@
     .cred-row.is-missing .cred-icon { background: #f8fafc; }
     .cred-row.is-missing .cred-icon svg { color: #cbd5e1; }
 
-    /* ── Share rows ── */
-    .share-row { border-bottom: 1px solid #f8fafc; }
-    .share-row:last-child { border-bottom: none; }
-    .share-row-main {
-      display: flex; align-items: center; gap: 14px; padding: 14px 24px;
+    /* ── Buttons ── */
+    .btn-primary {
+      background: #2c66ef; color: #fff; font-family: inherit;
+      font-size: 13px; font-weight: 500; letter-spacing: -0.26px; line-height: 22px;
+      padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0;
     }
-    .share-org-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+    .btn-primary:hover { background: #1d56df; }
+    .btn-primary svg { width: 14px; height: 14px; }
+    .btn-sm {
+      background: #fff; border: 1px solid #e2e8f0; color: #334155; font-family: inherit;
+      font-size: 11px; font-weight: 500; letter-spacing: -0.22px;
+      padding: 3px 8px; border-radius: 5px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;
     }
-    .share-org-info { flex: 1; min-width: 0; }
-    .share-org-name-row { display: flex; align-items: center; gap: 7px; }
-    .share-org-name { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
-    .share-type-tag {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase;
-      padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+    .btn-sm:hover { background: #f8fafc; }
+    .btn-sm svg { width: 12px; height: 12px; }
+    .btn-sm.revoke { color: #64748b; }
+    .btn-sm.revoke:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+    .btn-renew-sm {
+      background: #eff6ff; border: none; color: #2c66ef; font-family: inherit;
+      font-size: 11px; font-weight: 500; letter-spacing: -0.22px;
+      padding: 3px 8px; border-radius: 5px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
     }
-    .share-type-zipline { background: #eff6ff; color: #2563eb; }
-    .share-type-link { background: #f8fafc; color: #64748b; }
-    .share-org-sub { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; margin-top: 1px; }
-    .share-meta-cols { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
-    .share-meta-col { display: flex; flex-direction: column; gap: 1px; min-width: 80px; }
-    .share-meta-label {
-      font-size: 10px; color: #94a3b8; letter-spacing: 0.4px; text-transform: uppercase;
-      font-weight: 700; line-height: 14px;
-    }
-    .share-meta-value { font-size: 13px; font-weight: 500; color: #334155; letter-spacing: -0.26px; line-height: 18px; }
-    .share-meta-value.amber { color: #b45309; }
-    .share-meta-value.muted { color: #94a3b8; }
-    .share-meta-value.red { color: #dc2626; }
-    .share-row-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .share-expand-btn {
-      background: none; border: none; cursor: pointer; padding: 4px;
-      color: #94a3b8; display: flex; align-items: center; transition: color 0.15s;
-      border-radius: 4px;
-    }
-    .share-expand-btn:hover { background: #f1f5f9; color: #334155; }
-    .share-expand-btn svg { width: 16px; height: 16px; transition: transform 0.2s; }
-    .share-expand-btn.is-open svg { transform: rotate(180deg); }
-    .share-row.is-expired .share-org-name { color: #94a3b8; }
+    .btn-renew-sm:hover { background: #dbeafe; }
 
-    /* ── Per-document log ── */
-    .share-log {
-      display: none; border-top: 1px solid #f1f5f9;
-      background: #fafcff; padding: 10px 24px 14px 74px;
+    /* ── Passport sidebar card ── */
+    .passport-card {
+      background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;
     }
-    .share-log.is-open { display: block; }
-    .share-log-title {
+    .passport-top {
+      padding: 14px 20px; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .passport-title { font-size: 16px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; flex: 1; }
+
+    /* ── Secure link box ── */
+    .secure-link-section { padding: 14px 20px 0; }
+    .secure-link-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }
+    .secure-link-top {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+    }
+    .secure-link-label { font-size: 13px; font-weight: 600; color: #334155; letter-spacing: -0.26px; }
+    .secure-link-status { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #16a34a; }
+    .secure-link-dot { width: 7px; height: 7px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
+    .secure-link-url {
+      font-family: 'SF Mono','Fira Code',monospace; font-size: 10px; color: #64748b;
+      line-height: 14px; word-break: break-all; margin-bottom: 10px;
+    }
+    .btn-copy-link {
+      width: 100%; padding: 6px 10px; border: 1px solid #e2e8f0; background: #fff;
+      border-radius: 6px; cursor: pointer; font-family: inherit;
+      font-size: 12px; font-weight: 500; color: #334155;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+      letter-spacing: -0.24px; transition: background 0.15s;
+    }
+    .btn-copy-link:hover { background: #f8fafc; }
+    .btn-copy-link svg { width: 13px; height: 13px; }
+
+    /* ── Shared with ── */
+    .shared-with-header {
+      margin: 14px 20px 8px; padding-top: 14px;
+      border-top: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .shared-with-label {
       font-size: 10px; font-weight: 700; color: #94a3b8;
-      letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+      letter-spacing: 0.6px; text-transform: uppercase; flex: 1;
     }
-    .share-log-row {
-      display: flex; align-items: center; gap: 8px; padding: 5px 0;
+    .shared-with-count {
+      background: #f1f5f9; color: #64748b;
+      font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px;
     }
-    .share-log-row + .share-log-row { border-top: 1px solid #f1f5f9; }
-    .share-log-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .share-log-dot.viewed { background: #059669; }
-    .share-log-dot.unviewed { background: #e2e8f0; }
-    .share-log-name { font-size: 13px; color: #334155; letter-spacing: -0.26px; flex: 1; }
-    .share-log-time { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; white-space: nowrap; }
+    .shared-org-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px; border-bottom: 1px solid #f8fafc;
+    }
+    .shared-org-row:last-child { border-bottom: none; padding-bottom: 16px; }
+    .shared-org-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .shared-org-info { flex: 1; min-width: 0; }
+    .shared-org-name { font-size: 13px; font-weight: 600; color: #0f172a; letter-spacing: -0.26px; line-height: 18px; }
+    .shared-org-sub { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; line-height: 16px; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .shared-org-row.is-expired .shared-org-name { color: #94a3b8; }
 
-    /* ── No active shares ── */
-    .shares-empty { padding: 40px 24px; text-align: center; color: #94a3b8; font-size: 14px; letter-spacing: -0.28px; }
+    /* ── Audit log table ── */
+    .audit-log-wrap { overflow-x: auto; }
+    .audit-log-table { width: 100%; border-collapse: collapse; min-width: 820px; }
+    .audit-log-th {
+      padding: 9px 14px; text-align: left;
+      font-size: 10px; font-weight: 700; color: #94a3b8;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      background: #f8fafc; border-bottom: 1px solid #f1f5f9;
+      white-space: nowrap;
+    }
+    .audit-log-th:first-child { padding-left: 20px; }
+    .audit-log-th:last-child { padding-right: 20px; }
+    .audit-log-td {
+      padding: 10px 14px; font-size: 13px; color: #334155;
+      letter-spacing: -0.26px; line-height: 18px;
+      border-bottom: 1px solid #f8fafc; vertical-align: middle;
+    }
+    .audit-log-td:first-child { padding-left: 20px; }
+    .audit-log-td:last-child { padding-right: 20px; }
+    .audit-log-tr:last-child .audit-log-td { border-bottom: none; }
+    .audit-log-date { font-weight: 500; color: #0f172a; white-space: nowrap; }
+    .audit-log-time { color: #64748b; font-size: 12px; margin-top: 1px; white-space: nowrap; }
+    .audit-log-tz { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+    .audit-log-org-cell { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .audit-log-org-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .audit-log-action-badge {
+      display: inline-flex; align-items: center;
+      background: #f0fdf4; color: #16a34a;
+      font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
+      padding: 2px 7px; border-radius: 4px; white-space: nowrap;
+    }
+    .audit-log-ip { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #94a3b8; white-space: nowrap; }
+    .audit-log-cred { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .audit-log-access { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; white-space: nowrap; }
 
     /* ── Share modal ── */
     .share-backdrop {
@@ -334,7 +361,6 @@
     }
     .btn-share-action:hover { background: #1d56df; }
     .btn-share-action svg { width: 16px; height: 16px; }
-    /* Shared view */
     .share-secure-box {
       border: 1px solid #e2e8f0; border-radius: 8px;
       padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;
@@ -379,7 +405,7 @@
       </svg>
       Library
     </a>
-    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+    <span class="proto-nav-updated" id="protoLastUpdated" style="flex:0 0 auto;"></span>
   </nav>
 
   <!-- Main layout -->
@@ -388,365 +414,436 @@
 
     <div class="main-wrap">
       <div class="main">
-        <div class="content-inner">
+        <div class="content-area">
 
-          <!-- Back -->
-          <a class="back-btn" href="portal.html">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Compliance
-          </a>
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb">
+            <a class="breadcrumb-link" href="portal.html">Compliance</a>
+            <span class="breadcrumb-sep">/</span>
+            <span class="breadcrumb-current">Carter Peters</span>
+          </nav>
 
-          <!-- Profile header -->
-          <div class="profile-header-card">
-            <div class="profile-header-top">
-              <div class="profile-avatar">CP</div>
-              <div class="profile-identity">
-                <div class="profile-name">Carter Peters</div>
-                <div class="profile-sub">Plumber · Platypus Plumbing</div>
-              </div>
-              <div class="profile-header-actions">
-                <span class="status-pill status-expiring"><span class="dot"></span> Expiring soon</span>
-                <button class="btn-primary" onclick="openShareModal()">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                  Share credentials
-                </button>
-                <button class="btn-ghost danger">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                  Deactivate
-                </button>
-              </div>
-            </div>
-            <div class="profile-divider"></div>
-            <div class="profile-stats">
-              <div class="profile-stat">
-                <div class="profile-stat-value">4</div>
-                <div class="profile-stat-label">Credentials</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-value amber">1</div>
-                <div class="profile-stat-label">Expiring soon</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-value">3</div>
-                <div class="profile-stat-label">Active shares</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-value">1</div>
-                <div class="profile-stat-label">Expired shares</div>
-              </div>
-            </div>
-          </div>
+          <!-- Two-column layout -->
+          <div class="two-col">
 
-          <!-- Credentials section -->
-          <div class="profile-section">
-            <div class="section-header">
-              <span class="section-title">Credentials</span>
-              <span class="section-count">4</span>
-            </div>
+            <!-- ── Left column ── -->
+            <div class="col-left">
 
-            <!-- Nationally Coordinated Criminal History Check — Compliant -->
-            <div class="cred-row">
-              <div class="cred-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                </svg>
-              </div>
-              <div class="cred-info">
-                <div class="cred-name">Nationally Coordinated Criminal History Check</div>
-                <div class="cred-dates">Issued 14 Mar 2023 · Expires 14 Mar 2026 · Last verified 2 Mar 2026</div>
-              </div>
-              <div class="cred-right">
-                <span class="verified-badge">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  Verified by Zipline AI
-                </span>
-                <span class="status-pill status-compliant"><span class="dot"></span> Compliant</span>
-              </div>
-            </div>
-
-            <!-- Plumbing License — Expiring soon -->
-            <div class="cred-row">
-              <div class="cred-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-              </div>
-              <div class="cred-info">
-                <div class="cred-name">Plumbing License</div>
-                <div class="cred-dates">Issued 1 Jun 2022 · Expires 17 Mar 2026 · Last verified 1 Mar 2026</div>
-              </div>
-              <div class="cred-right">
-                <span class="verified-badge">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  Verified by Zipline AI
-                </span>
-                <span class="status-pill status-expiring"><span class="dot"></span> Expires in 14 days</span>
-              </div>
-            </div>
-
-            <!-- Australian Working Rights — Compliant -->
-            <div class="cred-row">
-              <div class="cred-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
-              <div class="cred-info">
-                <div class="cred-name">Australian Working Rights</div>
-                <div class="cred-dates">Issued 20 Aug 2024 · No expiry · Last verified 20 Aug 2024</div>
-              </div>
-              <div class="cred-right">
-                <span class="verified-badge">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  Verified by Zipline AI
-                </span>
-                <span class="status-pill status-compliant"><span class="dot"></span> Compliant</span>
-              </div>
-            </div>
-
-            <!-- Working With Children Check — Non-compliant -->
-            <div class="cred-row is-missing">
-              <div class="cred-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-              </div>
-              <div class="cred-info">
-                <div class="cred-name">Working With Children Check</div>
-                <div class="cred-dates">Not submitted</div>
-              </div>
-              <div class="cred-right">
-                <span class="unverified-badge">Not submitted</span>
-                <span class="status-pill status-noncompliant"><span class="dot"></span> Not compliant</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Active shares section -->
-          <div class="profile-section">
-            <div class="section-header">
-              <span class="section-title">Access &amp; shares</span>
-              <span class="section-count">4</span>
-              <button class="btn-primary" onclick="openShareModal()" style="padding: 4px 10px; font-size: 13px; gap: 6px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                Share
-              </button>
-            </div>
-
-            <!-- Wallaby Health — active, 2 days -->
-            <div class="share-row">
-              <div class="share-row-main">
-                <div class="share-org-avatar" style="background:#16a34a">WH</div>
-                <div class="share-org-info">
-                  <div class="share-org-name-row">
-                    <span class="share-org-name">Wallaby Health</span>
-                    <span class="share-type-tag share-type-zipline">Zipline</span>
-                  </div>
-                  <div class="share-org-sub">Shared 1 Mar 2026</div>
+              <!-- Details card -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Details</span>
                 </div>
-                <div class="share-meta-cols">
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Expires</span>
-                    <span class="share-meta-value amber">2 days</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Views</span>
-                    <span class="share-meta-value">3 times</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Last viewed</span>
-                    <span class="share-meta-value">1 Mar 2026</span>
-                  </div>
+                <div class="detail-row">
+                  <span class="detail-label">Legal first name</span>
+                  <span class="detail-value">Carter</span>
+                  <button class="detail-edit-btn" aria-label="Edit legal first name">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
                 </div>
-                <div class="share-row-actions">
-                  <button class="btn-sm revoke">Revoke</button>
-                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                <div class="detail-row">
+                  <span class="detail-label">Legal last name</span>
+                  <span class="detail-value">Peters</span>
+                  <button class="detail-edit-btn" aria-label="Edit legal last name">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Phone</span>
+                  <span class="detail-value">+61 412 345 678</span>
+                  <button class="detail-edit-btn" aria-label="Edit phone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Email</span>
+                  <span class="detail-value">carter.peters@platypusplumbing.com.au</span>
+                  <button class="detail-edit-btn" aria-label="Edit email">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Role</span>
+                  <span class="detail-value">Plumber</span>
+                  <button class="detail-edit-btn" aria-label="Edit role">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Status</span>
+                  <span class="detail-value">
+                    <span class="status-pill status-expiring"><span class="dot"></span>Expiring soon</span>
+                  </span>
+                  <button class="detail-edit-btn" style="opacity:0;pointer-events:none;" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
                   </button>
                 </div>
               </div>
-              <div class="share-log">
-                <div class="share-log-title">Per-document access log</div>
-                <div class="share-log-row">
-                  <span class="share-log-dot viewed"></span>
-                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
-                  <span class="share-log-time">2:15 pm, 1 Mar 2026</span>
+
+              <!-- Requirements card -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Requirements</span>
+                  <span class="card-count">4</span>
                 </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot viewed"></span>
-                  <span class="share-log-name">Australian Working Rights</span>
-                  <span class="share-log-time">2:16 pm, 1 Mar 2026</span>
+
+                <!-- NCCHC — Compliant -->
+                <div class="cred-row">
+                  <div class="cred-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                  </div>
+                  <div class="cred-info">
+                    <div class="cred-name">Nationally Coordinated Criminal History Check</div>
+                    <div class="cred-dates">Issued 14 Mar 2023 · Expires 14 Mar 2026 · Last verified 2 Mar 2026</div>
+                  </div>
+                  <div class="cred-right">
+                    <span class="verified-badge">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                      Verified by Zipline AI
+                    </span>
+                    <span class="status-pill status-compliant"><span class="dot"></span>Compliant</span>
+                  </div>
                 </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot unviewed"></span>
-                  <span class="share-log-name">Plumbing License</span>
-                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
+
+                <!-- Plumbing License — Expiring -->
+                <div class="cred-row">
+                  <div class="cred-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                  <div class="cred-info">
+                    <div class="cred-name">Plumbing License</div>
+                    <div class="cred-dates">Issued 1 Jun 2022 · Expires 17 Mar 2026 · Last verified 1 Mar 2026</div>
+                  </div>
+                  <div class="cred-right">
+                    <span class="verified-badge">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                      Verified by Zipline AI
+                    </span>
+                    <span class="status-pill status-expiring"><span class="dot"></span>Expires in 14 days</span>
+                  </div>
+                </div>
+
+                <!-- Australian Working Rights — Compliant -->
+                <div class="cred-row">
+                  <div class="cred-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <div class="cred-info">
+                    <div class="cred-name">Australian Working Rights</div>
+                    <div class="cred-dates">Issued 20 Aug 2024 · No expiry · Last verified 20 Aug 2024</div>
+                  </div>
+                  <div class="cred-right">
+                    <span class="verified-badge">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                      Verified by Zipline AI
+                    </span>
+                    <span class="status-pill status-compliant"><span class="dot"></span>Compliant</span>
+                  </div>
+                </div>
+
+                <!-- Working With Children Check — Non-compliant -->
+                <div class="cred-row is-missing">
+                  <div class="cred-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                  </div>
+                  <div class="cred-info">
+                    <div class="cred-name">Working With Children Check</div>
+                    <div class="cred-dates">Not submitted</div>
+                  </div>
+                  <div class="cred-right">
+                    <span class="unverified-badge">Not submitted</span>
+                    <span class="status-pill status-noncompliant"><span class="dot"></span>Not compliant</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Access log card -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Access log</span>
+                  <span class="card-count">8 events</span>
+                </div>
+                <div class="audit-log-wrap">
+                  <table class="audit-log-table">
+                    <thead>
+                      <tr>
+                        <th class="audit-log-th">Date &amp; Time</th>
+                        <th class="audit-log-th">Timezone</th>
+                        <th class="audit-log-th">Organisation</th>
+                        <th class="audit-log-th">User / Access</th>
+                        <th class="audit-log-th">Requirement</th>
+                        <th class="audit-log-th">Action</th>
+                        <th class="audit-log-th">IP Address</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">2 Mar 2026</div>
+                          <div class="audit-log-time">10:34:19 AM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#fb7185"></span>
+                            Catholic Healthcare
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">203.0.113.10</td>
+                      </tr>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">1 Mar 2026</div>
+                          <div class="audit-log-time">2:16:08 PM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#34d399"></span>
+                            Wallaby Health
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Australian Working Rights</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">203.0.113.45</td>
+                      </tr>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">1 Mar 2026</div>
+                          <div class="audit-log-time">2:15:42 PM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#34d399"></span>
+                            Wallaby Health
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">203.0.113.45</td>
+                      </tr>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">28 Feb 2026</div>
+                          <div class="audit-log-time">3:45:02 PM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
+                            Bolton Clarke
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
+                      </tr>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">28 Feb 2026</div>
+                          <div class="audit-log-time">3:44:51 PM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
+                            Bolton Clarke
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Australian Working Rights</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
+                      </tr>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">28 Feb 2026</div>
+                          <div class="audit-log-time">3:44:33 PM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
+                            Bolton Clarke
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
+                      </tr>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">27 Feb 2026</div>
+                          <div class="audit-log-time">11:22:07 AM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
+                            Bolton Clarke
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Australian Working Rights</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
+                      </tr>
+
+                      <tr class="audit-log-tr">
+                        <td class="audit-log-td">
+                          <div class="audit-log-date">20 Feb 2026</div>
+                          <div class="audit-log-time">9:11:33 AM</div>
+                        </td>
+                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
+                        <td class="audit-log-td">
+                          <div class="audit-log-org-cell">
+                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
+                            Bolton Clarke
+                          </div>
+                        </td>
+                        <td class="audit-log-td audit-log-access">Zipline platform</td>
+                        <td class="audit-log-td"><div class="audit-log-cred">Plumbing License</div></td>
+                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
+                        <td class="audit-log-td audit-log-ip">198.51.100.22</td>
+                      </tr>
+
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </div>
 
-            <!-- Catholic Healthcare — active, 3 days -->
-            <div class="share-row">
-              <div class="share-row-main">
-                <div class="share-org-avatar" style="background:#dc2626">CH</div>
-                <div class="share-org-info">
-                  <div class="share-org-name-row">
-                    <span class="share-org-name">Catholic Healthcare</span>
-                    <span class="share-type-tag share-type-zipline">Zipline</span>
-                  </div>
-                  <div class="share-org-sub">Shared 27 Feb 2026</div>
-                </div>
-                <div class="share-meta-cols">
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Expires</span>
-                    <span class="share-meta-value">3 days</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Views</span>
-                    <span class="share-meta-value">1 time</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Last viewed</span>
-                    <span class="share-meta-value">2 Mar 2026</span>
-                  </div>
-                </div>
-                <div class="share-row-actions">
-                  <button class="btn-sm revoke">Revoke</button>
-                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </div><!-- /col-left -->
+
+            <!-- ── Right sidebar: Passport ── -->
+            <div class="col-right">
+              <div class="passport-card">
+
+                <div class="passport-top">
+                  <span class="passport-title">Passport</span>
+                  <button class="btn-primary" onclick="openShareModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    Share credentials
                   </button>
                 </div>
-              </div>
-              <div class="share-log">
-                <div class="share-log-title">Per-document access log</div>
-                <div class="share-log-row">
-                  <span class="share-log-dot viewed"></span>
-                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
-                  <span class="share-log-time">10:34 am, 2 Mar 2026</span>
-                </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot unviewed"></span>
-                  <span class="share-log-name">Australian Working Rights</span>
-                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
-                </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot unviewed"></span>
-                  <span class="share-log-name">Plumbing License</span>
-                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
-                </div>
-              </div>
-            </div>
 
-            <!-- Regis — secure link, never viewed -->
-            <div class="share-row">
-              <div class="share-row-main">
-                <div class="share-org-avatar" style="background:#64748b">RE</div>
-                <div class="share-org-info">
-                  <div class="share-org-name-row">
-                    <span class="share-org-name">Regis</span>
-                    <span class="share-type-tag share-type-link">Secure link</span>
-                  </div>
-                  <div class="share-org-sub">sarah@regis.com.au · Shared 1 Mar 2026</div>
-                </div>
-                <div class="share-meta-cols">
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Expires</span>
-                    <span class="share-meta-value">5 days</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Views</span>
-                    <span class="share-meta-value muted">Never</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Last viewed</span>
-                    <span class="share-meta-value muted">—</span>
+                <!-- Secure link -->
+                <div class="secure-link-section">
+                  <div class="secure-link-box">
+                    <div class="secure-link-top">
+                      <span class="secure-link-label">Secure Link</span>
+                      <span class="secure-link-status"><span class="secure-link-dot"></span>Active</span>
+                    </div>
+                    <div class="secure-link-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678</div>
+                    <button class="btn-copy-link" onclick="copySidebarLink(this)">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                      Copy link
+                    </button>
                   </div>
                 </div>
-                <div class="share-row-actions">
-                  <button class="btn-sm revoke">Revoke</button>
-                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+
+                <!-- Shared with -->
+                <div class="shared-with-header">
+                  <span class="shared-with-label">Shared with</span>
+                  <span class="shared-with-count">4</span>
+                </div>
+
+                <!-- Wallaby Health — 2 days -->
+                <div class="shared-org-row">
+                  <div class="shared-org-avatar" style="background:#34d399">WH</div>
+                  <div class="shared-org-info">
+                    <div class="shared-org-name">Wallaby Health</div>
+                    <div class="shared-org-sub">2 days remaining</div>
+                  </div>
+                  <button class="btn-sm revoke">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                    </svg>
+                    Revoke
                   </button>
                 </div>
-              </div>
-              <div class="share-log">
-                <div class="share-log-title">Per-document access log</div>
-                <div class="share-log-row">
-                  <span class="share-log-dot unviewed"></span>
-                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
-                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
-                </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot unviewed"></span>
-                  <span class="share-log-name">Australian Working Rights</span>
-                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
-                </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot unviewed"></span>
-                  <span class="share-log-name">Plumbing License</span>
-                  <span class="share-log-time" style="color:#cbd5e1">Not yet viewed</span>
-                </div>
-              </div>
-            </div>
 
-            <!-- Bolton Clarke — expired -->
-            <div class="share-row is-expired">
-              <div class="share-row-main">
-                <div class="share-org-avatar" style="background:#cbd5e1">BC</div>
-                <div class="share-org-info">
-                  <div class="share-org-name-row">
-                    <span class="share-org-name">Bolton Clarke</span>
-                    <span class="share-type-tag share-type-zipline">Zipline</span>
+                <!-- Catholic Healthcare — 3 days -->
+                <div class="shared-org-row">
+                  <div class="shared-org-avatar" style="background:#fb7185">CH</div>
+                  <div class="shared-org-info">
+                    <div class="shared-org-name">Catholic Healthcare</div>
+                    <div class="shared-org-sub">3 days remaining</div>
                   </div>
-                  <div class="share-org-sub">Shared 15 Feb 2026 · Expired 28 Feb 2026</div>
-                </div>
-                <div class="share-meta-cols">
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Expires</span>
-                    <span class="share-meta-value red">Expired</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Views</span>
-                    <span class="share-meta-value">5 times</span>
-                  </div>
-                  <div class="share-meta-col">
-                    <span class="share-meta-label">Last viewed</span>
-                    <span class="share-meta-value">28 Feb 2026</span>
-                  </div>
-                </div>
-                <div class="share-row-actions">
-                  <button class="btn-renew">Renew access</button>
-                  <button class="share-expand-btn" onclick="toggleLog(this)" aria-label="View access log">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  <button class="btn-sm revoke">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                    </svg>
+                    Revoke
                   </button>
                 </div>
-              </div>
-              <div class="share-log">
-                <div class="share-log-title">Per-document access log</div>
-                <div class="share-log-row">
-                  <span class="share-log-dot viewed"></span>
-                  <span class="share-log-name">Nationally Coordinated Criminal History Check</span>
-                  <span class="share-log-time">Viewed 3 times · last 28 Feb 2026</span>
-                </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot viewed"></span>
-                  <span class="share-log-name">Australian Working Rights</span>
-                  <span class="share-log-time">Viewed 2 times · last 27 Feb 2026</span>
-                </div>
-                <div class="share-log-row">
-                  <span class="share-log-dot viewed"></span>
-                  <span class="share-log-name">Plumbing License</span>
-                  <span class="share-log-time">Viewed 1 time · 20 Feb 2026</span>
-                </div>
-              </div>
-            </div>
 
-          </div>
+                <!-- Regis — 5 days, secure link -->
+                <div class="shared-org-row">
+                  <div class="shared-org-avatar" style="background:#64748b">RE</div>
+                  <div class="shared-org-info">
+                    <div class="shared-org-name">Regis</div>
+                    <div class="shared-org-sub">5 days · sarah@regis.com.au</div>
+                  </div>
+                  <button class="btn-sm revoke">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                    </svg>
+                    Revoke
+                  </button>
+                </div>
 
-        </div><!-- /content-inner -->
+                <!-- Bolton Clarke — Expired -->
+                <div class="shared-org-row is-expired">
+                  <div class="shared-org-avatar" style="background:#e2e8f0;color:#94a3b8">BC</div>
+                  <div class="shared-org-info">
+                    <div class="shared-org-name">Bolton Clarke</div>
+                    <div class="shared-org-sub">Expired 28 Feb 2026</div>
+                  </div>
+                  <button class="btn-renew-sm">Renew</button>
+                </div>
+
+              </div><!-- /passport-card -->
+            </div><!-- /col-right -->
+
+          </div><!-- /two-col -->
+
+        </div><!-- /content-area -->
       </div><!-- /main -->
     </div><!-- /main-wrap -->
   </div><!-- /layout -->
@@ -838,7 +935,7 @@
             <span class="share-secure-label">Secure Link</span>
             <span class="share-secure-status"><span class="share-secure-dot"></span>Active</span>
           </div>
-          <div class="share-secure-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61333123123</div>
+          <div class="share-secure-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678</div>
           <div class="share-secure-btns">
             <button class="btn-sec-copy" onclick="copyModalLink(this)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
@@ -852,12 +949,6 @@
   </div>
 
   <script>
-    function toggleLog(btn) {
-      btn.classList.toggle('is-open');
-      var log = btn.closest('.share-row').querySelector('.share-log');
-      log.classList.toggle('is-open');
-    }
-
     function openShareModal() {
       document.getElementById('shareFormView').style.display = '';
       document.getElementById('shareSharedView').style.display = 'none';
@@ -886,9 +977,17 @@
     }
 
     function copyModalLink(btn) {
-      navigator.clipboard.writeText('https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61333123123').then(function() {
+      navigator.clipboard.writeText('https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678').then(function() {
         var orig = btn.innerHTML;
         btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Copied!';
+        setTimeout(function() { btn.innerHTML = orig; }, 2000);
+      });
+    }
+
+    function copySidebarLink(btn) {
+      navigator.clipboard.writeText('https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678').then(function() {
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Copied!';
         setTimeout(function() { btn.innerHTML = orig; }, 2000);
       });
     }
