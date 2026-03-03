@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Secure credential access – Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+      min-height: 100vh;
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Proto nav ── */
+    .proto-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 9999; height: 40px; background: #000;
+      display: flex; align-items: center; gap: 12px; padding: 0 16px;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .proto-nav-library {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: #fff; font-size: 14px; font-weight: 500;
+      letter-spacing: -0.28px; line-height: 24px; white-space: nowrap; flex-shrink: 0;
+      background: none; border: none; cursor: pointer; padding: 0;
+    }
+    .proto-nav-library:hover { opacity: 0.75; }
+    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .proto-nav-title { flex: 1; color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; }
+    .proto-nav-updated { flex: 1; color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; text-align: right; white-space: nowrap; }
+
+    /* ── Page layout ── */
+    .page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Zipline wordmark ── */
+    .zipline-mark {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 40px;
+    }
+    .zipline-mark img { display: block; }
+    .zipline-mark-text {
+      font-size: 18px; font-weight: 700; color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Step card ── */
+    .step {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      max-width: 460px;
+    }
+    .step.is-active { display: flex; }
+    .step-card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: 0 4px 24px rgba(15,23,42,0.06);
+    }
+
+    /* ── Step: email & OTP & consent header area ── */
+    .step-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-icon.blue { background: #eff6ff; }
+    .step-icon.amber { background: #fef3c7; }
+    .step-icon.green { background: #f0fdf4; }
+    .step-icon svg { width: 22px; height: 22px; }
+    .step-icon.blue svg { color: #2c66ef; }
+    .step-icon.amber svg { color: #b45309; }
+    .step-icon.green svg { color: #15803d; }
+
+    .step-heading {
+      font-size: 22px; font-weight: 700; color: #0f172a;
+      letter-spacing: -0.7px; line-height: 28px;
+    }
+    .step-sub {
+      font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-top: 4px;
+    }
+    .step-sub strong { color: #334155; font-weight: 600; }
+
+    /* ── Input ── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 13px; font-weight: 600; color: #334155; letter-spacing: -0.26px; }
+    .text-input {
+      width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-family: inherit; font-size: 15px; color: #0f172a; letter-spacing: -0.3px;
+      background: #fff; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .text-input::placeholder { color: #94a3b8; }
+    .text-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+
+    /* ── OTP inputs ── */
+    .otp-group {
+      display: flex; gap: 8px; justify-content: flex-start;
+    }
+    .otp-box {
+      width: 48px; height: 56px; border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-family: inherit; font-size: 22px; font-weight: 700; color: #0f172a;
+      text-align: center; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s; background: #fff;
+      letter-spacing: 0;
+    }
+    .otp-box:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+    .otp-box.is-filled { border-color: #2c66ef; background: #eff6ff; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%; padding: 10px 16px; border-radius: 10px; border: none;
+      background: #2c66ef; color: #fff; font-family: inherit;
+      font-size: 15px; font-weight: 600; letter-spacing: -0.3px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 8px; transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #1d56df; }
+    .btn-primary svg { width: 16px; height: 16px; }
+    .btn-primary.green { background: #16a34a; }
+    .btn-primary.green:hover { background: #15803d; }
+    .btn-secondary-link {
+      background: none; border: none; cursor: pointer; font-family: inherit;
+      font-size: 13px; color: #64748b; letter-spacing: -0.26px; padding: 0; text-align: center;
+    }
+    .btn-secondary-link:hover { color: #2c66ef; text-decoration: underline; }
+    .btn-secondary-link span { color: #2c66ef; font-weight: 500; }
+
+    /* ── Consent list ── */
+    .consent-box {
+      background: #fefce8; border: 1px solid #fde68a; border-radius: 10px;
+      padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .consent-box-title { font-size: 13px; font-weight: 700; color: #92400e; letter-spacing: -0.26px; }
+    .consent-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .consent-list li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 13px; color: #78350f; letter-spacing: -0.26px; line-height: 18px;
+    }
+    .consent-list li svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; color: #b45309; }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: #f1f5f9; }
+
+    /* ── Footer text ── */
+    .step-footer {
+      font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; text-align: center; line-height: 18px;
+    }
+    .step-footer a { color: #94a3b8; }
+
+    /* ── Secure badge ── */
+    .secure-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px;
+      padding: 3px 8px; font-size: 11px; font-weight: 600; color: #15803d;
+      letter-spacing: -0.22px;
+    }
+    .secure-badge svg { width: 11px; height: 11px; }
+
+    /* ── STEP 4: Credentials view (wider) ── */
+    #step-creds {
+      max-width: 600px;
+    }
+    .creds-card {
+      background: #fff; border-radius: 16px; border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 24px rgba(15,23,42,0.06);
+      overflow: hidden;
+    }
+
+    /* Contractor header */
+    .creds-header {
+      padding: 24px 28px; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .creds-avatar {
+      width: 44px; height: 44px; border-radius: 50%; background: #7c3aed;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700; color: #fff; flex-shrink: 0; letter-spacing: -0.3px;
+    }
+    .creds-identity { flex: 1; }
+    .creds-name { font-size: 17px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; }
+    .creds-sub { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; margin-top: 2px; }
+    .creds-status { flex-shrink: 0; }
+
+    /* Section label */
+    .creds-section-label {
+      padding: 12px 28px; background: #f8fafc; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .creds-section-title { font-size: 12px; font-weight: 700; color: #94a3b8; letter-spacing: 0.4px; text-transform: uppercase; }
+
+    /* Credential rows */
+    .cred-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 28px; border-bottom: 1px solid #f8fafc;
+    }
+    .cred-row:last-child { border-bottom: none; }
+    .cred-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: #f1f5f9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .cred-icon svg { width: 16px; height: 16px; color: #64748b; }
+    .cred-info { flex: 1; min-width: 0; }
+    .cred-name { font-size: 13px; font-weight: 600; color: #0f172a; letter-spacing: -0.26px; line-height: 18px; }
+    .cred-dates { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; margin-top: 2px; }
+    .cred-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    /* Status pills */
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 7px; border-radius: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: -0.22px; white-space: nowrap;
+    }
+    .status-pill .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .compliant { background: #a7f3d0; color: #059669; }
+    .compliant .dot { background: #059669; }
+    .expiring { background: #fef3c7; color: #b45309; }
+    .expiring .dot { background: #b45309; }
+
+    /* Verified badge */
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 5px;
+      padding: 2px 6px; font-size: 10px; font-weight: 600; color: #15803d;
+      letter-spacing: -0.2px; white-space: nowrap;
+    }
+    .verified-badge svg { width: 10px; height: 10px; }
+
+    /* View button */
+    .btn-view {
+      background: #f1f5f9; border: none; color: #334155; font-family: inherit;
+      font-size: 12px; font-weight: 500; letter-spacing: -0.24px;
+      padding: 5px 10px; border-radius: 6px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .btn-view:hover { background: #e2e8f0; }
+    .btn-view svg { width: 12px; height: 12px; }
+
+    /* Footer */
+    .creds-footer {
+      padding: 14px 28px; background: #f8fafc; border-top: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .creds-footer-note { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; }
+    .creds-footer-note strong { color: #64748b; }
+
+    /* ── Document access confirm modal ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 8000;
+      background: rgba(15,23,42,0.45);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .modal-card {
+      background: #fff; border-radius: 16px;
+      width: 100%; max-width: 420px; padding: 28px;
+      box-shadow: 0 25px 50px rgba(15,23,42,0.25);
+      transform: scale(0.97); transition: transform 0.2s;
+    }
+    .modal-backdrop.is-open .modal-card { transform: scale(1); }
+    .modal-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: #fef3c7; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .modal-icon svg { width: 20px; height: 20px; color: #b45309; }
+    .modal-title { font-size: 17px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .modal-doc-name {
+      font-size: 14px; font-weight: 500; color: #334155;
+      letter-spacing: -0.28px; margin-bottom: 16px;
+    }
+    .modal-warning {
+      background: #fef9c3; border: 1px solid #fde68a; border-radius: 8px;
+      padding: 12px 14px; margin-bottom: 20px;
+    }
+    .modal-warning p { font-size: 13px; color: #78350f; letter-spacing: -0.26px; line-height: 18px; }
+    .modal-btns { display: flex; gap: 8px; }
+    .btn-modal-cancel {
+      flex: 1; padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+      background: #fff; font-family: inherit; font-size: 14px; font-weight: 500;
+      color: #64748b; cursor: pointer; letter-spacing: -0.28px;
+    }
+    .btn-modal-cancel:hover { background: #f8fafc; }
+    .btn-modal-confirm {
+      flex: 2; padding: 9px 12px; border-radius: 8px; border: none;
+      background: #2c66ef; color: #fff; font-family: inherit;
+      font-size: 14px; font-weight: 600; letter-spacing: -0.28px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-modal-confirm:hover { background: #1d56df; }
+    .btn-modal-confirm svg { width: 14px; height: 14px; }
+
+    /* ── Document view modal ── */
+    .doc-modal-backdrop {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(15,23,42,0.55);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .doc-modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .doc-modal-card {
+      background: #fff; border-radius: 16px;
+      width: 100%; max-width: 520px;
+      box-shadow: 0 25px 50px rgba(15,23,42,0.35);
+      transform: scale(0.97); transition: transform 0.2s; overflow: hidden;
+    }
+    .doc-modal-backdrop.is-open .doc-modal-card { transform: scale(1); }
+    .doc-modal-header {
+      padding: 16px 20px; border-bottom: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .doc-modal-title { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; }
+    .doc-modal-close {
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: #94a3b8; border-radius: 4px; display: flex;
+    }
+    .doc-modal-close:hover { color: #334155; background: #f1f5f9; }
+    .doc-modal-body { padding: 0; }
+
+    /* Credential certificate card */
+    .cert-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+      margin: 20px; border-radius: 12px; border: 1px solid #e2e8f0;
+      padding: 24px; position: relative; overflow: hidden;
+    }
+    .cert-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, #2c66ef, #7c3aed);
+    }
+    .cert-watermark {
+      position: absolute; bottom: -10px; right: -10px;
+      opacity: 0.04; transform: rotate(-15deg);
+    }
+    .cert-watermark svg { width: 100px; height: 100px; }
+    .cert-type {
+      font-size: 10px; font-weight: 700; color: #64748b; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .cert-name { font-size: 18px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .cert-holder { font-size: 14px; color: #64748b; letter-spacing: -0.28px; margin-bottom: 20px; }
+    .cert-fields { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .cert-field { display: flex; justify-content: space-between; align-items: flex-start; }
+    .cert-field-label { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; }
+    .cert-field-value { font-size: 12px; font-weight: 600; color: #334155; letter-spacing: -0.24px; text-align: right; }
+    .cert-verified {
+      display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+    }
+    .cert-verified svg { width: 16px; height: 16px; color: #15803d; flex-shrink: 0; }
+    .cert-verified-text { font-size: 12px; font-weight: 600; color: #15803d; letter-spacing: -0.24px; }
+
+    .doc-modal-footer {
+      padding: 14px 20px; border-top: 1px solid #f1f5f9;
+      background: #f8fafc;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .doc-modal-footer-note { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; }
+    .doc-modal-footer-note strong { color: #64748b; }
+    .btn-close-doc {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 6px;
+      padding: 5px 12px; font-family: inherit; font-size: 13px; font-weight: 500;
+      color: #334155; cursor: pointer; letter-spacing: -0.26px;
+    }
+    .btn-close-doc:hover { background: #f8fafc; }
+
+    /* Read-only notice ribbon */
+    .readonly-notice {
+      background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .readonly-notice svg { width: 14px; height: 14px; color: #64748b; flex-shrink: 0; }
+    .readonly-notice span { font-size: 12px; color: #64748b; letter-spacing: -0.24px; line-height: 16px; }
+    .readonly-notice strong { color: #334155; }
+  </style>
+</head>
+<body>
+
+  <!-- Proto nav -->
+  <nav class="proto-nav">
+    <span class="proto-nav-title">Prototype / Receiving Portal (Phase 2)</span>
+    <button data-map-key="portal" class="proto-nav-library proto-nav-map">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+      </svg>
+      Map
+    </button>
+    <a href="index.html" class="proto-nav-library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-updated" id="protoLastUpdated"></span>
+  </nav>
+
+  <div class="page">
+
+    <!-- Zipline wordmark -->
+    <div class="zipline-mark">
+      <img src="https://www.figma.com/api/mcp/asset/a20d6c37-f2ff-4e8a-b6ea-201800363f62" alt="Zipline" width="28" height="28" />
+      <span class="zipline-mark-text">Zipline</span>
+    </div>
+
+    <!-- ─── Step 1: Email verification ─────────────────────────── -->
+    <div class="step is-active" id="step-email">
+      <div class="step-card">
+        <div class="step-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="step-heading">Secure credential access</div>
+          <div class="step-sub">
+            You've been invited by <strong>Platypus Plumbing</strong> to view
+            verified compliance credentials. This link is restricted to a specific email address.
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="emailInput">Your email address</label>
+          <input class="text-input" type="email" id="emailInput" placeholder="e.g. sarah@regis.com.au"
+            value="" autocomplete="email" />
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-primary" onclick="goOtp()">
+            Continue
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <p class="step-footer">
+            This link expires in 5 days · All access is logged for audit purposes
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Step 2: OTP ──────────────────────────────────────────── -->
+    <div class="step" id="step-otp">
+      <div class="step-card">
+        <div class="step-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="step-heading">Check your inbox</div>
+          <div class="step-sub" id="otpSub">
+            We sent a 6-digit verification code to <strong id="otpEmail">sarah@regis.com.au</strong>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Verification code</label>
+          <div class="otp-group" id="otpGroup">
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" />
+            <input class="otp-box" type="text" inputmode="numeric" maxlength="1" />
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-primary" onclick="goConsent()">
+            Verify
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn-secondary-link" onclick="resendCode()">
+            Didn't receive a code? <span>Resend</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Step 3: Audit consent ────────────────────────────────── -->
+    <div class="step" id="step-consent">
+      <div class="step-card">
+        <div class="step-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="step-heading">Before you continue</div>
+          <div class="step-sub">Accessing these credentials will be recorded for compliance and audit purposes.</div>
+        </div>
+        <div class="consent-box">
+          <div class="consent-box-title">The following will be logged</div>
+          <ul class="consent-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+              Your email address and verified identity
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+              The date and time you access each credential
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+              Which specific documents you open
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>
+              This log is available to <strong>Platypus Plumbing</strong>
+            </li>
+          </ul>
+        </div>
+        <button class="btn-primary green" onclick="goCredentials()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          I agree and continue
+        </button>
+        <p class="step-footer">
+          By continuing you confirm you are <strong id="consentEmail" style="color:#64748b">sarah@regis.com.au</strong> and that your access will be audited
+        </p>
+      </div>
+    </div>
+
+    <!-- ─── Step 4: Credential view ──────────────────────────────── -->
+    <div class="step" id="step-creds">
+      <div style="display:flex;flex-direction:column;gap:12px;width:100%;">
+
+        <div class="readonly-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path stroke-linecap="round" d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span><strong>Read-only access.</strong> Documents cannot be downloaded. All views are logged for audit purposes.</span>
+        </div>
+
+        <div class="creds-card">
+
+          <!-- Contractor identity -->
+          <div class="creds-header">
+            <div class="creds-avatar">CP</div>
+            <div class="creds-identity">
+              <div class="creds-name">Carter Peters</div>
+              <div class="creds-sub">Plumber · Platypus Plumbing</div>
+            </div>
+            <div class="creds-status">
+              <span class="status-pill expiring"><span class="dot"></span>Expiring soon</span>
+            </div>
+          </div>
+
+          <!-- Section label -->
+          <div class="creds-section-label">
+            <span class="creds-section-title">Shared credentials</span>
+            <span class="verified-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              Verified by Zipline AI
+            </span>
+          </div>
+
+          <!-- NCCHC — Compliant -->
+          <div class="cred-row">
+            <div class="cred-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <div class="cred-info">
+              <div class="cred-name">Nationally Coordinated Criminal History Check</div>
+              <div class="cred-dates">Issued 14 Mar 2023 · Expires 14 Mar 2026</div>
+            </div>
+            <div class="cred-right">
+              <span class="status-pill compliant"><span class="dot"></span>Compliant</span>
+              <button class="btn-view" onclick="openConfirm('Nationally Coordinated Criminal History Check', 'ncchc')">
+                View
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Plumbing License — Expiring -->
+          <div class="cred-row">
+            <div class="cred-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div class="cred-info">
+              <div class="cred-name">Plumbing License</div>
+              <div class="cred-dates">Issued 1 Jun 2022 · Expires 17 Mar 2026 (14 days)</div>
+            </div>
+            <div class="cred-right">
+              <span class="status-pill expiring"><span class="dot"></span>Expiring</span>
+              <button class="btn-view" onclick="openConfirm('Plumbing License', 'plumbing')">
+                View
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Australian Working Rights — Compliant -->
+          <div class="cred-row">
+            <div class="cred-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="cred-info">
+              <div class="cred-name">Australian Working Rights</div>
+              <div class="cred-dates">Issued 20 Aug 2024 · No expiry</div>
+            </div>
+            <div class="cred-right">
+              <span class="status-pill compliant"><span class="dot"></span>Compliant</span>
+              <button class="btn-view" onclick="openConfirm('Australian Working Rights', 'awr')">
+                View
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="creds-footer">
+            <span class="creds-footer-note">Shared by <strong>Platypus Plumbing</strong> · Expires 8 Mar 2026</span>
+            <span class="secure-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              Secured by Zipline
+            </span>
+          </div>
+
+        </div><!-- /creds-card -->
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <!-- ── Document access confirm modal ── -->
+  <div class="modal-backdrop" id="confirmBackdrop" onclick="closeConfirm()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+      </div>
+      <div class="modal-title">View this document?</div>
+      <div class="modal-doc-name" id="confirmDocName">Nationally Coordinated Criminal History Check</div>
+      <div class="modal-warning">
+        <p>This action will be recorded for audit purposes and the timestamp and your email address will be visible to Platypus Plumbing.</p>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-modal-cancel" onclick="closeConfirm()">Cancel</button>
+        <button class="btn-modal-confirm" onclick="openDoc()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          View document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Document view modal ── -->
+  <div class="doc-modal-backdrop" id="docModalBackdrop" onclick="closeDoc()">
+    <div class="doc-modal-card" onclick="event.stopPropagation()">
+      <div class="doc-modal-header">
+        <span class="doc-modal-title" id="docModalTitle">Nationally Coordinated Criminal History Check</span>
+        <button class="doc-modal-close" onclick="closeDoc()" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="doc-modal-body">
+        <div class="cert-card" id="certCard">
+          <div class="cert-watermark">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="color:#2c66ef">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <div class="cert-type" id="certType">National Police Check</div>
+          <div class="cert-name" id="certCredName">Nationally Coordinated Criminal History Check</div>
+          <div class="cert-holder">Carter Peters</div>
+          <div class="cert-fields" id="certFields"></div>
+          <div class="cert-verified">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span class="cert-verified-text">Verified by Zipline AI · Last checked 2 Mar 2026</span>
+          </div>
+        </div>
+      </div>
+      <div class="doc-modal-footer">
+        <span class="doc-modal-footer-note">Read-only · <strong>Downloads disabled</strong> · View logged at <span id="docViewTime"></span></span>
+        <button class="btn-close-doc" onclick="closeDoc()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Document data ──────────────────────────────────────────────
+    var DOCS = {
+      ncchc: {
+        type: 'National Police Check',
+        name: 'Nationally Coordinated Criminal History Check',
+        fields: [
+          ['Issued', '14 March 2023'],
+          ['Expires', '14 March 2026'],
+          ['Outcome', 'No disclosable court outcomes'],
+          ['Reference', 'NPC-2023-4471892'],
+        ]
+      },
+      plumbing: {
+        type: 'Trade Licence',
+        name: 'Plumbing License',
+        fields: [
+          ['Issued', '1 June 2022'],
+          ['Expires', '17 March 2026'],
+          ['Licence No.', 'PL-NSW-88123'],
+          ['Class', 'Plumbing and Drainage'],
+        ]
+      },
+      awr: {
+        type: 'Immigration / Working Rights',
+        name: 'Australian Working Rights',
+        fields: [
+          ['Status', 'Australian Citizen'],
+          ['Verified', '20 August 2024'],
+          ['Expiry', 'No expiry'],
+          ['Reference', 'AWR-2024-0087'],
+        ]
+      }
+    };
+
+    var _currentDocKey = null;
+
+    // ── Step transitions ────────────────────────────────────────────
+    function showStep(id) {
+      document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('is-active'); });
+      document.getElementById(id).classList.add('is-active');
+    }
+
+    function goOtp() {
+      var email = document.getElementById('emailInput').value.trim() || 'sarah@regis.com.au';
+      document.getElementById('otpEmail').textContent = email;
+      document.getElementById('consentEmail').textContent = email;
+      showStep('step-otp');
+      // Focus first OTP box
+      var boxes = document.querySelectorAll('.otp-box');
+      if (boxes[0]) boxes[0].focus();
+    }
+
+    function goConsent() { showStep('step-consent'); }
+    function goCredentials() { showStep('step-creds'); }
+
+    function resendCode() {
+      var btn = event.target.closest('button');
+      var orig = btn.innerHTML;
+      btn.innerHTML = 'Code resent!';
+      setTimeout(function() { btn.innerHTML = orig; }, 2000);
+    }
+
+    // ── OTP input behaviour ─────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+      var boxes = document.querySelectorAll('.otp-box');
+      boxes.forEach(function(box, i) {
+        box.addEventListener('input', function() {
+          box.classList.toggle('is-filled', box.value.length > 0);
+          if (box.value && i < boxes.length - 1) boxes[i + 1].focus();
+        });
+        box.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !box.value && i > 0) {
+            boxes[i - 1].focus();
+            boxes[i - 1].value = '';
+            boxes[i - 1].classList.remove('is-filled');
+          }
+        });
+        box.addEventListener('paste', function(e) {
+          e.preventDefault();
+          var text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+          for (var j = 0; j < text.length && (i + j) < boxes.length; j++) {
+            boxes[i + j].value = text[j];
+            boxes[i + j].classList.add('is-filled');
+          }
+          var last = Math.min(i + text.length, boxes.length - 1);
+          boxes[last].focus();
+        });
+      });
+    });
+
+    // ── Per-document confirm ────────────────────────────────────────
+    function openConfirm(docName, docKey) {
+      _currentDocKey = docKey;
+      document.getElementById('confirmDocName').textContent = docName;
+      document.getElementById('confirmBackdrop').classList.add('is-open');
+    }
+    function closeConfirm() {
+      document.getElementById('confirmBackdrop').classList.remove('is-open');
+    }
+
+    function openDoc() {
+      closeConfirm();
+      var doc = DOCS[_currentDocKey];
+      if (!doc) return;
+      document.getElementById('docModalTitle').textContent = doc.name;
+      document.getElementById('certType').textContent = doc.type;
+      document.getElementById('certCredName').textContent = doc.name;
+      var fieldsHtml = doc.fields.map(function(f) {
+        return '<div class="cert-field"><span class="cert-field-label">' + f[0] + '</span><span class="cert-field-value">' + f[1] + '</span></div>';
+      }).join('');
+      document.getElementById('certFields').innerHTML = fieldsHtml;
+      var now = new Date();
+      document.getElementById('docViewTime').textContent =
+        now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true }) + ', ' +
+        now.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+      document.getElementById('docModalBackdrop').classList.add('is-open');
+    }
+    function closeDoc() {
+      document.getElementById('docModalBackdrop').classList.remove('is-open');
+    }
+
+    // Escape key closes any open modal
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { closeDoc(); closeConfirm(); }
+    });
+
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 03/03/2026 21:44:08';
+  </script>
+  <script>if(window.self!==window.top){var n=document.querySelector(".proto-nav");if(n)n.style.display="none";document.body.style.paddingTop="0";}</script>
+  <script src="map-modal.js"></script>
+</body>
+</html>
