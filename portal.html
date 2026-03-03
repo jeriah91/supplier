@@ -1054,6 +1054,34 @@
     .share-cred-label { font-size: 16px; font-weight: 500; color: #0f172a; letter-spacing: -0.32px; line-height: 20px; }
     .share-creds-scrollbar { width: 4px; background: #cbd5e1; border-radius: 2px; height: 62px; flex-shrink: 0; margin-top: 42px; }
     .btn-share-action svg { width: 16px; height: 16px; }
+    /* Credential status states */
+    .share-cred-meta { display: flex; flex-direction: column; gap: 3px; }
+    .share-cred-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1px; line-height: 14px;
+      padding: 2px 7px; border-radius: 4px; width: fit-content;
+    }
+    .share-cred-badge.is-expiring { background: #fef3c7; color: #b45309; }
+    .share-cred-badge.is-missing { background: #f1f5f9; color: #94a3b8; }
+    .share-cred-item.is-disabled { pointer-events: none; opacity: 0.5; }
+    .share-cred-item.is-disabled input[type="checkbox"] { border-color: #cbd5e1; }
+    /* Always-visible email input */
+    .share-email-input {
+      width: 100%; padding: 9px 12px; box-sizing: border-box;
+      border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-family: inherit; font-size: 16px; color: #0f172a;
+      letter-spacing: -0.32px; line-height: 26px; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s; background: #fff;
+    }
+    .share-email-input::placeholder { color: #94a3b8; }
+    .share-email-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+    /* Shared view confirmation meta */
+    .share-confirm-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .share-confirm-meta-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; color: #334155; letter-spacing: -0.28px; line-height: 20px;
+    }
+    .share-confirm-meta-item svg { width: 16px; height: 16px; flex-shrink: 0; color: #16a34a; }
     /* Share modal shared view */
     .share-secure-box {
       border: 1px solid #e2e8f0; border-radius: 8px;
@@ -1914,8 +1942,8 @@
 
       <!-- Form view -->
       <div id="shareFormView">
-        <div class="share-modal-title">Share Compliance Profile</div>
-        <div class="share-modal-sub">Share a link to this profile with external providers.</div>
+        <div class="share-modal-title">Share Carter Peters' credentials</div>
+        <div class="share-modal-sub">Select credentials and enter the recipient's email address.</div>
         <div class="share-creds-section">
           <div class="share-creds-label">Share Credentials</div>
           <div class="share-creds-box">
@@ -1930,15 +1958,21 @@
               </label>
               <label class="share-cred-item">
                 <input type="checkbox" name="cred" checked>
-                <span class="share-cred-label">Plumbing License</span>
+                <span class="share-cred-meta">
+                  <span class="share-cred-label">Plumbing License</span>
+                  <span class="share-cred-badge is-expiring">Expires in 14 days</span>
+                </span>
               </label>
               <label class="share-cred-item">
                 <input type="checkbox" name="cred" checked>
                 <span class="share-cred-label">Australian Working Rights</span>
               </label>
-              <label class="share-cred-item">
-                <input type="checkbox" name="cred">
-                <span class="share-cred-label">Working With Children Check</span>
+              <label class="share-cred-item is-disabled">
+                <input type="checkbox" name="cred" disabled>
+                <span class="share-cred-meta">
+                  <span class="share-cred-label">Working With Children Check</span>
+                  <span class="share-cred-badge is-missing">Not compliant</span>
+                </span>
               </label>
             </div>
             <div class="share-creds-scrollbar"></div>
@@ -1948,25 +1982,15 @@
           <div class="share-field">
             <label class="share-label" for="shareDuration">Link valid for</label>
             <select class="share-select" id="shareDuration">
-              <option value="1week">1 week</option>
-              <option value="2weeks">2 weeks</option>
-              <option value="1month">1 month</option>
-              <option value="3months">3 months</option>
+              <option value="1 week">1 week</option>
+              <option value="2 weeks">2 weeks</option>
+              <option value="1 month">1 month</option>
+              <option value="3 months">3 months</option>
             </select>
           </div>
           <div class="share-field">
-            <label class="share-label" for="shareWith">Share with</label>
-            <select class="share-select" id="shareWith" onchange="toggleShareWith(this.value)">
-              <option value="anyone">Anyone with a link</option>
-              <option value="specific">Specific people</option>
-            </select>
-          </div>
-          <div class="share-field" id="emailInviteField" style="display:none">
-            <label class="share-label">Invite via email</label>
-            <div class="email-tags-wrap" id="emailTagsWrap" onclick="document.getElementById('emailInput').focus()">
-              <input class="email-input-field" id="emailInput" type="text" placeholder="e.g. email@gmail.com" onkeydown="handleEmailKeydown(event)" />
-            </div>
-            <p class="share-field-hint">Press Enter or comma after each email address to add it.</p>
+            <label class="share-label" for="shareEmail">Recipient email</label>
+            <input class="share-email-input" type="email" id="shareEmail" placeholder="e.g. sarah@regis.com.au" required>
           </div>
         </div>
         <button class="btn-share-action" id="shareBtn" onclick="submitShare()">
@@ -1977,8 +2001,18 @@
 
       <!-- Shared view (shown after sharing) -->
       <div id="shareSharedView" style="display:none">
-        <div class="share-modal-title">Share Compliance Profile</div>
-        <div class="share-modal-sub">Share a link to this profile with external providers.</div>
+        <div class="share-modal-title">Share Carter Peters' credentials</div>
+        <div class="share-modal-sub">Credentials shared with <strong id="shareConfirmEmail"></strong></div>
+        <div class="share-confirm-meta">
+          <div class="share-confirm-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Valid for <span id="shareConfirmDuration"></span>
+          </div>
+          <div class="share-confirm-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            Restricted to <span id="shareConfirmEmailMeta"></span>
+          </div>
+        </div>
         <div class="share-secure-box">
           <div class="share-secure-top">
             <span class="share-secure-label">Secure Link</span>
@@ -1989,43 +2023,6 @@
             <button class="btn-sec-copy" onclick="copyModalLink(this)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
               Copy Link
-            </button>
-            <button class="btn-sec-revoke">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
-              Revoke all access
-            </button>
-          </div>
-        </div>
-        <div class="share-shared-header">
-          <span class="share-shared-label">Shared with</span>
-          <span class="share-shared-line"></span>
-        </div>
-        <div>
-          <div class="share-shared-org-row">
-            <div class="share-org-avatar" style="background:#16a34a">WH</div>
-            <span class="share-org-name">Wallaby Health</span>
-            <span class="share-org-remaining">2 days remaining</span>
-            <button class="share-org-revoke-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
-              Revoke access
-            </button>
-          </div>
-          <div class="share-shared-org-row">
-            <div class="share-org-avatar" style="background:#dc2626">CH</div>
-            <span class="share-org-name">Catholic Healthcare</span>
-            <span class="share-org-remaining">3 days remaining</span>
-            <button class="share-org-revoke-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
-              Revoke access
-            </button>
-          </div>
-          <div class="share-shared-org-row">
-            <div class="share-org-avatar" style="background:#7c3aed">BC</div>
-            <span class="share-org-name">Bolton Clarke</span>
-            <span class="share-org-remaining">4 days remaining</span>
-            <button class="share-org-revoke-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
-              Revoke access
             </button>
           </div>
         </div>
@@ -2278,17 +2275,12 @@
     function openShareModal() {
       document.getElementById('shareFormView').style.display = '';
       document.getElementById('shareSharedView').style.display = 'none';
-      document.getElementById('shareWith').value = 'anyone';
-      document.getElementById('emailInviteField').style.display = 'none';
-      // Clear any tags from previous open
-      document.querySelectorAll('#emailTagsWrap .email-tag').forEach(function(t) { t.remove(); });
-      document.getElementById('emailInput').value = '';
-      document.getElementById('shareBtn').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share';
+      document.getElementById('shareEmail').value = '';
       document.getElementById('shareBackdrop').classList.add('is-visible');
     }
 
     function selectAllCreds(checked) {
-      document.querySelectorAll('#shareFormView input[name="cred"]').forEach(function(cb) {
+      document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled)').forEach(function(cb) {
         cb.checked = checked;
       });
     }
@@ -2297,47 +2289,12 @@
       document.getElementById('shareBackdrop').classList.remove('is-visible');
     }
 
-    function toggleShareWith(val) {
-      document.getElementById('emailInviteField').style.display = val === 'specific' ? '' : 'none';
-      updateShareBtn();
-    }
-
-    function updateShareBtn() {
-      var btn = document.getElementById('shareBtn');
-      var shareIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
-      if (document.getElementById('shareWith').value === 'specific') {
-        var count = document.querySelectorAll('#emailTagsWrap .email-tag').length;
-        btn.innerHTML = shareIcon + ' Share with ' + count + ' ' + (count === 1 ? 'person' : 'people');
-      } else {
-        btn.innerHTML = shareIcon + ' Share';
-      }
-    }
-
-    function handleEmailKeydown(e) {
-      if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        var val = e.target.value.trim().replace(/,$/, '');
-        if (!val) return;
-        var wrap = document.getElementById('emailTagsWrap');
-        var input = document.getElementById('emailInput');
-        var tag = document.createElement('span');
-        tag.className = 'email-tag';
-        tag.innerHTML = val + ' <button class="email-tag-x" onclick="removeEmailTag(this)">&#x2715;</button>';
-        wrap.insertBefore(tag, input);
-        e.target.value = '';
-        updateShareBtn();
-      } else if (e.key === 'Backspace' && !e.target.value) {
-        var tags = document.querySelectorAll('#emailTagsWrap .email-tag');
-        if (tags.length > 0) { tags[tags.length - 1].remove(); updateShareBtn(); }
-      }
-    }
-
-    function removeEmailTag(xBtn) {
-      xBtn.closest('.email-tag').remove();
-      updateShareBtn();
-    }
-
     function submitShare() {
+      var email = document.getElementById('shareEmail').value.trim();
+      var duration = document.getElementById('shareDuration').value;
+      document.getElementById('shareConfirmEmail').textContent = email || 'recipient';
+      document.getElementById('shareConfirmDuration').textContent = duration;
+      document.getElementById('shareConfirmEmailMeta').textContent = email || 'recipient';
       document.getElementById('shareFormView').style.display = 'none';
       document.getElementById('shareSharedView').style.display = '';
     }
@@ -2422,7 +2379,7 @@
 
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 02/03/2026 12:51:56';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 03/03/2026 21:44:08';
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
