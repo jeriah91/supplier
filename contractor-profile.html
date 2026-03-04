@@ -267,6 +267,32 @@
     .share-confirm-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
     .share-confirm-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #334155; letter-spacing: -0.26px; }
     .share-confirm-meta-item svg { width: 14px; height: 14px; color: #16a34a; flex-shrink: 0; }
+    .share-org-notice {
+      display: none;
+      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+      padding: 10px 12px; align-items: center; gap: 10px;
+    }
+    .share-org-notice.is-visible { display: flex; }
+    .share-org-avatar {
+      width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #fff;
+    }
+    .share-org-info { flex: 1; }
+    .share-org-name { font-size: 13px; font-weight: 600; color: #166534; letter-spacing: -0.26px; line-height: 18px; }
+    .share-org-desc { font-size: 11px; color: #166534; letter-spacing: -0.22px; line-height: 16px; }
+    .share-notif-box {
+      border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px; background: #f0fdf4;
+      margin-top: 12px; display: flex; align-items: center; gap: 12px;
+    }
+    .share-notif-icon {
+      width: 36px; height: 36px; border-radius: 50%; background: #16a34a;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff;
+    }
+    .share-notif-icon svg { width: 18px; height: 18px; }
+    .share-notif-info { display: flex; flex-direction: column; gap: 2px; }
+    .share-notif-org-name { font-size: 14px; font-weight: 600; color: #166534; letter-spacing: -0.28px; }
+    .share-notif-org-desc { font-size: 12px; color: #166534; letter-spacing: -0.24px; }
 
     /* ── Deactivate modal ── */
     .deact-backdrop {
@@ -675,38 +701,68 @@
           </div>
           <div class="share-field">
             <label class="share-label" for="shareEmail">Recipient email</label>
-            <input class="share-email-input" type="email" id="shareEmail" placeholder="e.g. sarah@regis.com.au" required>
+            <input class="share-email-input" type="email" id="shareEmail" placeholder="e.g. sarah@regis.com.au" required oninput="detectOrg()">
+          </div>
+          <div id="orgNotice" class="share-org-notice">
+            <div id="orgNoticeAvatar" class="share-org-avatar"></div>
+            <div class="share-org-info">
+              <div id="orgNoticeName" class="share-org-name"></div>
+              <div class="share-org-desc">Already part of the Zipline system — no OTP required. Only an email notification will be sent.</div>
+            </div>
           </div>
         </div>
         <button class="btn-share-action" onclick="submitShare()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          Share
+          <span id="shareActionIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+          <span id="shareActionText">Share</span>
         </button>
       </div>
       <div id="shareSharedView" style="display:none">
-        <div class="share-modal-title">Share Carter Peters' credentials</div>
-        <div class="share-modal-sub">Credentials shared with <strong id="shareConfirmEmail"></strong></div>
-        <div class="share-confirm-meta">
-          <div class="share-confirm-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            Valid for <span id="shareConfirmDuration"></span>
+        <!-- External recipient confirmed view -->
+        <div id="shareSharedExternal">
+          <div class="share-modal-title">Share Carter Peters' credentials</div>
+          <div class="share-modal-sub">Credentials shared with <strong id="shareConfirmEmail"></strong></div>
+          <div class="share-confirm-meta">
+            <div class="share-confirm-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Valid for <span id="shareConfirmDuration"></span>
+            </div>
+            <div class="share-confirm-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Restricted to <span id="shareConfirmEmailMeta"></span>
+            </div>
           </div>
-          <div class="share-confirm-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            Restricted to <span id="shareConfirmEmailMeta"></span>
+          <div class="share-secure-box">
+            <div class="share-secure-top">
+              <span class="share-secure-label">Secure Link</span>
+              <span class="share-secure-status"><span class="share-secure-dot"></span>Active</span>
+            </div>
+            <div class="share-secure-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678</div>
+            <div class="share-secure-btns">
+              <button class="btn-sec-copy" onclick="copyModalLink(this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copy Link
+              </button>
+            </div>
           </div>
         </div>
-        <div class="share-secure-box">
-          <div class="share-secure-top">
-            <span class="share-secure-label">Secure Link</span>
-            <span class="share-secure-status"><span class="share-secure-dot"></span>Active</span>
+        <!-- System org confirmed view -->
+        <div id="shareSharedSystem" style="display:none">
+          <div class="share-modal-title">Notification sent</div>
+          <div class="share-modal-sub">An email was sent to <strong id="shareConfirmEmailSys"></strong>. They can access the credentials directly through their Zipline account.</div>
+          <div class="share-confirm-meta">
+            <div class="share-confirm-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Restricted to <span id="shareConfirmEmailSysMeta"></span>
+            </div>
           </div>
-          <div class="share-secure-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678</div>
-          <div class="share-secure-btns">
-            <button class="btn-sec-copy" onclick="copyModalLink(this)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy Link
-            </button>
+          <div class="share-notif-box">
+            <div class="share-notif-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div class="share-notif-info">
+              <span class="share-notif-org-name" id="shareConfirmOrgName"></span>
+              <span class="share-notif-org-desc">Already part of the Zipline system — no OTP required</span>
+            </div>
           </div>
         </div>
       </div>
@@ -770,10 +826,42 @@
     function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     // ── Share Modal ──────────────────────────────────────────────────────
+    var ORG_MAP = [
+      { keyword: 'wallaby',  name: 'Wallaby Health',      initials: 'WH', color: '#16a34a' },
+      { keyword: 'bolton',   name: 'Bolton Clarke',        initials: 'BC', color: '#7c3aed' },
+      { keyword: 'catholic', name: 'Catholic Healthcare',  initials: 'CH', color: '#e11d48' }
+    ];
+    function getMatchedOrg(email) {
+      var domain = (email.split('@')[1] || '').toLowerCase();
+      for (var i = 0; i < ORG_MAP.length; i++) {
+        if (domain.indexOf(ORG_MAP[i].keyword) !== -1) return ORG_MAP[i];
+      }
+      return null;
+    }
+    function detectOrg() {
+      var email = document.getElementById('shareEmail').value.trim();
+      var org = getMatchedOrg(email);
+      var notice = document.getElementById('orgNotice');
+      if (org) {
+        document.getElementById('orgNoticeAvatar').style.background = org.color;
+        document.getElementById('orgNoticeAvatar').textContent = org.initials;
+        document.getElementById('orgNoticeName').textContent = org.name;
+        notice.classList.add('is-visible');
+        document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>';
+        document.getElementById('shareActionText').textContent = 'Send notification';
+      } else {
+        notice.classList.remove('is-visible');
+        document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+        document.getElementById('shareActionText').textContent = 'Share';
+      }
+    }
     function openShareModal() {
       document.getElementById('shareFormView').style.display = '';
       document.getElementById('shareSharedView').style.display = 'none';
       document.getElementById('shareEmail').value = '';
+      document.getElementById('orgNotice').classList.remove('is-visible');
+      document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+      document.getElementById('shareActionText').textContent = 'Share';
       document.getElementById('shareBackdrop').classList.add('is-visible');
     }
     function closeShareModal() {
@@ -788,9 +876,20 @@
       var email = document.getElementById('shareEmail').value.trim();
       var duration = document.getElementById('shareDuration').value;
       if (!email) { document.getElementById('shareEmail').focus(); return; }
-      document.getElementById('shareConfirmEmail').textContent = email;
-      document.getElementById('shareConfirmDuration').textContent = duration;
-      document.getElementById('shareConfirmEmailMeta').textContent = email;
+      var org = getMatchedOrg(email);
+      if (org) {
+        document.getElementById('shareConfirmEmailSys').textContent = email;
+        document.getElementById('shareConfirmEmailSysMeta').textContent = email;
+        document.getElementById('shareConfirmOrgName').textContent = org.name;
+        document.getElementById('shareSharedExternal').style.display = 'none';
+        document.getElementById('shareSharedSystem').style.display = '';
+      } else {
+        document.getElementById('shareConfirmEmail').textContent = email;
+        document.getElementById('shareConfirmDuration').textContent = duration;
+        document.getElementById('shareConfirmEmailMeta').textContent = email;
+        document.getElementById('shareSharedExternal').style.display = '';
+        document.getElementById('shareSharedSystem').style.display = 'none';
+      }
       document.getElementById('shareFormView').style.display = 'none';
       document.getElementById('shareSharedView').style.display = '';
     }
