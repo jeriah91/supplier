@@ -265,7 +265,10 @@
     .deact-backdrop.is-visible { opacity: 1; pointer-events: auto; }
     .deact-modal { background: #fff; border-radius: 16px; padding: 24px; width: 400px; max-width: calc(100vw - 32px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); }
     .deact-title { font-size: 18px; font-weight: 700; color: #0f172a; letter-spacing: -0.54px; margin-bottom: 8px; }
-    .deact-body { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-bottom: 20px; }
+    .deact-body { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-bottom: 12px; }
+    .deact-org-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; padding: 10px 12px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca; }
+    .deact-org-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #334155; letter-spacing: -0.26px; }
+    .deact-org-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .deact-btns { display: flex; gap: 10px; }
     .deact-btn-cancel { flex: 1; padding: 9px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 500; color: #334155; cursor: pointer; }
     .deact-btn-cancel:hover { background: #f8fafc; }
@@ -693,7 +696,12 @@
   <div class="deact-backdrop" id="deactBackdrop">
     <div class="deact-modal">
       <div class="deact-title">Deactivate this profile?</div>
-      <div class="deact-body">This will immediately revoke all active shares and secure links, removing this worker from all connected organisations.</div>
+      <div class="deact-body">This will immediately revoke all active shares and secure links. The following organisations will lose access:</div>
+      <div class="deact-org-list">
+        <div class="deact-org-item"><span class="deact-org-dot" style="background:#34d399"></span>Wallaby Health</div>
+        <div class="deact-org-item"><span class="deact-org-dot" style="background:#fb7185"></span>Catholic Healthcare</div>
+        <div class="deact-org-item"><span class="deact-org-dot" style="background:#a78bfa"></span>Bolton Clarke</div>
+      </div>
       <div class="deact-btns">
         <button class="deact-btn-cancel" onclick="closeDeactModal()">Cancel</button>
         <button class="deact-btn-confirm" onclick="closeDeactModal()">Deactivate</button>
