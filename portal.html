@@ -1672,8 +1672,13 @@
             </select>
           </div>
           <div class="share-field">
-            <label class="share-label" for="shareEmail">Recipient email</label>
-            <input class="share-email-input" type="email" id="shareEmail" placeholder="e.g. sarah@regis.com.au" required>
+            <label class="share-label">Recipient emails</label>
+            <div class="email-tags-wrap" id="shareEmailTags" onclick="document.getElementById('shareEmailInput').focus()">
+              <input type="email" id="shareEmailInput" class="email-input-field"
+                placeholder="Add email and press Enter or comma"
+                oninput="detectShareOrg()" onkeydown="handleShareEmailKey(event)" onblur="commitShareEmailInput()">
+            </div>
+            <span class="share-field-hint">Press Enter or comma to add multiple recipients</span>
           </div>
         </div>
         <button class="btn-share-action" id="shareBtn" onclick="submitShare()">
@@ -1926,10 +1931,71 @@
     }
 
     // ── Share Modal ──────────────────────────────────────────────────────────
+    var shareEmailTags = [];
+
+    var SHARE_ORG_MAP = [
+      { keyword: 'wallaby',  name: 'Wallaby Health',     initials: 'WH', color: '#16a34a' },
+      { keyword: 'bolton',   name: 'Bolton Clarke',       initials: 'BC', color: '#7c3aed' },
+      { keyword: 'catholic', name: 'Catholic Healthcare', initials: 'CH', color: '#e11d48' }
+    ];
+
+    function getShareOrg(email) {
+      var domain = (email.split('@')[1] || '').toLowerCase();
+      for (var i = 0; i < SHARE_ORG_MAP.length; i++) {
+        if (domain.indexOf(SHARE_ORG_MAP[i].keyword) !== -1) return SHARE_ORG_MAP[i];
+      }
+      return null;
+    }
+
+    function renderShareEmailTags() {
+      var container = document.getElementById('shareEmailTags');
+      var input = document.getElementById('shareEmailInput');
+      container.querySelectorAll('.email-tag').forEach(function(el) { el.remove(); });
+      shareEmailTags.forEach(function(email) {
+        var tag = document.createElement('span');
+        tag.className = 'email-tag';
+        var safe = email.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        tag.innerHTML = email + '<button class="email-tag-x" type="button" onclick="removeShareEmailTag(\'' + safe + '\')">&#x2715;</button>';
+        container.insertBefore(tag, input);
+      });
+    }
+
+    function addShareEmailTag(email) {
+      email = email.trim();
+      if (!email || shareEmailTags.indexOf(email) !== -1) return;
+      shareEmailTags.push(email);
+      renderShareEmailTags();
+    }
+
+    function removeShareEmailTag(email) {
+      shareEmailTags = shareEmailTags.filter(function(e) { return e !== email; });
+      renderShareEmailTags();
+    }
+
+    function handleShareEmailKey(e) {
+      var input = e.target;
+      if (e.key === 'Enter' || e.key === ',' || e.key === 'Tab') {
+        var val = input.value.replace(/,\s*$/, '').trim();
+        if (val) { e.preventDefault(); addShareEmailTag(val); input.value = ''; }
+      } else if (e.key === 'Backspace' && !input.value && shareEmailTags.length) {
+        removeShareEmailTag(shareEmailTags[shareEmailTags.length - 1]);
+      }
+    }
+
+    function commitShareEmailInput() {
+      var input = document.getElementById('shareEmailInput');
+      var val = input.value.replace(/,\s*$/, '').trim();
+      if (val) { addShareEmailTag(val); input.value = ''; }
+    }
+
+    function detectShareOrg() {}
+
     function openShareModal() {
+      shareEmailTags = [];
       document.getElementById('shareFormView').style.display = '';
       document.getElementById('shareSharedView').style.display = 'none';
-      document.getElementById('shareEmail').value = '';
+      document.getElementById('shareEmailInput').value = '';
+      renderShareEmailTags();
       document.getElementById('shareBackdrop').classList.add('is-visible');
     }
 
@@ -1944,11 +2010,15 @@
     }
 
     function submitShare() {
-      var email = document.getElementById('shareEmail').value.trim();
+      var inputVal = document.getElementById('shareEmailInput').value.replace(/,\s*$/, '').trim();
+      if (inputVal && shareEmailTags.indexOf(inputVal) === -1) shareEmailTags.push(inputVal);
+      if (!shareEmailTags.length) { document.getElementById('shareEmailInput').focus(); return; }
       var duration = document.getElementById('shareDuration').value;
-      document.getElementById('shareConfirmEmail').textContent = email || 'recipient';
+      var recipientLabel = shareEmailTags.length === 1 ? shareEmailTags[0]
+        : shareEmailTags[0] + ' +' + (shareEmailTags.length - 1) + ' other' + (shareEmailTags.length > 2 ? 's' : '');
+      document.getElementById('shareConfirmEmail').textContent = recipientLabel;
       document.getElementById('shareConfirmDuration').textContent = duration;
-      document.getElementById('shareConfirmEmailMeta').textContent = email || 'recipient';
+      document.getElementById('shareConfirmEmailMeta').textContent = recipientLabel;
       document.getElementById('shareFormView').style.display = 'none';
       document.getElementById('shareSharedView').style.display = '';
     }
