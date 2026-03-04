@@ -316,6 +316,21 @@
     .share-notif-info { display: flex; flex-direction: column; gap: 2px; }
     .share-notif-org-name { font-size: 14px; font-weight: 600; color: #166534; letter-spacing: -0.28px; }
     .share-notif-org-desc { font-size: 12px; color: #166534; letter-spacing: -0.24px; }
+    .share-email-suggestions {
+      position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 500; overflow: hidden;
+    }
+    .share-suggestion-item {
+      display: flex; align-items: center; gap: 12px; padding: 11px 14px; cursor: pointer;
+      transition: background 0.1s;
+    }
+    .share-suggestion-item:hover { background: #f8fafc; }
+    .suggestion-org-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .suggestion-text { display: flex; flex-direction: column; gap: 1px; }
+    .suggestion-org-name { font-size: 13px; font-weight: 600; color: #0f172a; letter-spacing: -0.26px; }
+    .suggestion-email-addr { font-size: 12px; color: #64748b; letter-spacing: -0.24px; }
+    .tag-org-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; display: inline-block; vertical-align: middle; margin-right: 4px; }
 
     /* ── Deactivate modal ── */
     .deact-backdrop {
@@ -737,9 +752,12 @@
           </div>
           <div class="share-field">
             <label class="share-label">Recipient emails</label>
-            <div class="share-email-tags" id="shareEmailTags" onclick="document.getElementById('shareEmailInput').focus()">
-              <input type="email" id="shareEmailInput" class="share-email-tag-input" placeholder="Add email and press Enter or comma"
-                oninput="detectOrg()" onkeydown="handleEmailKey(event)" onblur="commitEmailInput()">
+            <div style="position:relative;">
+              <div class="share-email-tags" id="shareEmailTags" onclick="document.getElementById('shareEmailInput').focus()">
+                <input type="email" id="shareEmailInput" class="share-email-tag-input" placeholder="Add email and press Enter or comma"
+                  oninput="detectOrg()" onkeydown="handleEmailKey(event)" onblur="commitEmailInput()">
+              </div>
+              <div id="shareEmailSuggestions" class="share-email-suggestions" style="display:none"></div>
             </div>
           </div>
           <div id="orgNotice" class="share-org-notice">
@@ -898,7 +916,8 @@
           tag.style.color = s.text;
         }
         var safeEmail = email.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-        tag.innerHTML = '<span style="user-select:none">' + email + '</span>'
+        var dotHtml = org ? '<span class="tag-org-dot" style="background:' + ORG_TAG_STYLES[org.keyword].text + '"></span>' : '';
+        tag.innerHTML = dotHtml + '<span style="user-select:none">' + email + '</span>'
           + '<button class="share-email-tag-remove" type="button" onclick="removeEmailTag(\'' + safeEmail + '\')">'
           + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>';
         container.insertBefore(tag, input);
@@ -909,6 +928,7 @@
       if (!email || emailTags.indexOf(email) !== -1) return;
       emailTags.push(email);
       renderEmailTags();
+      hideShareSuggestion();
       document.getElementById('orgNotice').classList.remove('is-visible');
       resetShareActionBtn();
     }
@@ -935,16 +955,40 @@
       var input = document.getElementById('shareEmailInput');
       var val = input.value.replace(/,\s*$/, '').trim();
       if (val) { addEmailTag(val); input.value = ''; }
+      hideShareSuggestion();
     }
     function resetShareActionBtn() {
       document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
       document.getElementById('shareActionText').textContent = 'Share';
     }
+    function showShareSuggestion(org, email) {
+      var s = ORG_TAG_STYLES[org.keyword];
+      var box = document.getElementById('shareEmailSuggestions');
+      var safeEmail = email.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      box.innerHTML = '<div class="share-suggestion-item" onmousedown="event.preventDefault()" onclick="selectShareSuggestion(\'' + safeEmail + '\')">'
+        + '<span class="suggestion-org-dot" style="background:' + s.text + '"></span>'
+        + '<div class="suggestion-text">'
+        + '<span class="suggestion-org-name">' + org.name + '</span>'
+        + '<span class="suggestion-email-addr">' + email + '</span>'
+        + '</div></div>';
+      box.style.display = '';
+    }
+    function hideShareSuggestion() {
+      document.getElementById('shareEmailSuggestions').style.display = 'none';
+    }
+    function selectShareSuggestion(email) {
+      addEmailTag(email);
+      document.getElementById('shareEmailInput').value = '';
+      hideShareSuggestion();
+      document.getElementById('orgNotice').classList.remove('is-visible');
+      resetShareActionBtn();
+    }
     function detectOrg() {
       var email = document.getElementById('shareEmailInput').value.trim();
       var org = getMatchedOrg(email);
       var notice = document.getElementById('orgNotice');
-      if (org) {
+      if (org && email.indexOf('@') !== -1) {
+        showShareSuggestion(org, email);
         document.getElementById('orgNoticeAvatar').style.background = org.color;
         document.getElementById('orgNoticeAvatar').textContent = org.initials;
         document.getElementById('orgNoticeName').textContent = org.name;
@@ -952,6 +996,7 @@
         document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>';
         document.getElementById('shareActionText').textContent = 'Send notification';
       } else {
+        hideShareSuggestion();
         notice.classList.remove('is-visible');
         resetShareActionBtn();
       }
@@ -962,6 +1007,7 @@
       document.getElementById('shareSharedView').style.display = 'none';
       document.getElementById('shareEmailInput').value = '';
       renderEmailTags();
+      hideShareSuggestion();
       document.getElementById('orgNotice').classList.remove('is-visible');
       resetShareActionBtn();
       document.getElementById('shareBackdrop').classList.add('is-visible');

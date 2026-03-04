@@ -505,6 +505,21 @@
     .share-field-hint {
       font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; line-height: 16px;
     }
+    .email-suggestions {
+      position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 500; overflow: hidden;
+    }
+    .email-suggestion-item {
+      display: flex; align-items: center; gap: 12px; padding: 11px 14px; cursor: pointer;
+      transition: background 0.1s;
+    }
+    .email-suggestion-item:hover { background: #f8fafc; }
+    .suggestion-org-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .suggestion-text { display: flex; flex-direction: column; gap: 1px; }
+    .suggestion-org-name { font-size: 13px; font-weight: 600; color: #0f172a; letter-spacing: -0.26px; }
+    .suggestion-email-addr { font-size: 12px; color: #64748b; letter-spacing: -0.24px; }
+    .tag-org-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; display: inline-block; vertical-align: middle; margin-right: 4px; }
     .btn-share-action {
       width: 100%; margin-top: 16px; padding: 8px 12px;
       background: #2c66ef; border: none; color: #fff;
@@ -1673,10 +1688,13 @@
           </div>
           <div class="share-field">
             <label class="share-label">Recipient emails</label>
-            <div class="email-tags-wrap" id="shareEmailTags" onclick="document.getElementById('shareEmailInput').focus()">
-              <input type="email" id="shareEmailInput" class="email-input-field"
-                placeholder="Add email and press Enter or comma"
-                oninput="detectShareOrg()" onkeydown="handleShareEmailKey(event)" onblur="commitShareEmailInput()">
+            <div style="position:relative;">
+              <div class="email-tags-wrap" id="shareEmailTags" onclick="document.getElementById('shareEmailInput').focus()">
+                <input type="email" id="shareEmailInput" class="email-input-field"
+                  placeholder="Add email and press Enter or comma"
+                  oninput="detectShareOrg()" onkeydown="handleShareEmailKey(event)" onblur="commitShareEmailInput()">
+              </div>
+              <div id="shareEmailSuggestions" class="email-suggestions" style="display:none"></div>
             </div>
             <span class="share-field-hint">Press Enter or comma to add multiple recipients</span>
           </div>
@@ -1967,7 +1985,8 @@
           tag.style.color = s.text;
         }
         var safe = email.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-        tag.innerHTML = email + '<button class="email-tag-x" type="button" onclick="removeShareEmailTag(\'' + safe + '\')">&#x2715;</button>';
+        var dotHtml = org ? '<span class="tag-org-dot" style="background:' + ORG_TAG_STYLES[org.keyword].text + '"></span>' : '';
+        tag.innerHTML = dotHtml + email + '<button class="email-tag-x" type="button" onclick="removeShareEmailTag(\'' + safe + '\')">&#x2715;</button>';
         container.insertBefore(tag, input);
       });
     }
@@ -1977,6 +1996,7 @@
       if (!email || shareEmailTags.indexOf(email) !== -1) return;
       shareEmailTags.push(email);
       renderShareEmailTags();
+      document.getElementById('shareEmailSuggestions').style.display = 'none';
     }
 
     function removeShareEmailTag(email) {
@@ -2000,7 +2020,29 @@
       if (val) { addShareEmailTag(val); input.value = ''; }
     }
 
-    function detectShareOrg() {}
+    function detectShareOrg() {
+      var email = document.getElementById('shareEmailInput').value.trim();
+      var org = getShareOrg(email);
+      var box = document.getElementById('shareEmailSuggestions');
+      if (org && email.indexOf('@') !== -1) {
+        var s = ORG_TAG_STYLES[org.keyword];
+        var safeEmail = email.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        box.innerHTML = '<div class="email-suggestion-item" onmousedown="event.preventDefault()" onclick="selectPortalSuggestion(\'' + safeEmail + '\')">'
+          + '<span class="suggestion-org-dot" style="background:' + s.text + '"></span>'
+          + '<div class="suggestion-text">'
+          + '<span class="suggestion-org-name">' + org.name + '</span>'
+          + '<span class="suggestion-email-addr">' + email + '</span>'
+          + '</div></div>';
+        box.style.display = '';
+      } else {
+        box.style.display = 'none';
+      }
+    }
+    function selectPortalSuggestion(email) {
+      addShareEmailTag(email);
+      document.getElementById('shareEmailInput').value = '';
+      document.getElementById('shareEmailSuggestions').style.display = 'none';
+    }
 
     function openShareModal() {
       shareEmailTags = [];
@@ -2008,6 +2050,7 @@
       document.getElementById('shareSharedView').style.display = 'none';
       document.getElementById('shareEmailInput').value = '';
       renderShareEmailTags();
+      document.getElementById('shareEmailSuggestions').style.display = 'none';
       document.getElementById('shareBackdrop').classList.add('is-visible');
     }
 
