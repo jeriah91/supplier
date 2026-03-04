@@ -279,6 +279,12 @@
       white-space: nowrap;
     }
     body { padding-top: 40px; }
+    .updated-short { display: none; }
+    @media (max-width: 767px) {
+      .nav-label { display: none; }
+      .updated-full { display: none; }
+      .updated-short { display: inline; }
+    }
   </style>
 </head>
 <body>
@@ -288,7 +294,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
       </svg>
-      Library
+      <span class="nav-label">Library</span>
     </a>
     <span class="proto-nav-title">Prototype / Worker App</span>
     <a href="map.html" class="proto-nav-library">
@@ -297,7 +303,7 @@
       </svg>
       Map
     </a>
-    <span class="proto-nav-updated" id="protoLastUpdated" style="flex:0 0 auto;"></span>
+    <span class="proto-nav-updated" id="protoLastUpdated" style="flex:0 0 auto;"><span class="updated-full"></span><span class="updated-short"></span></span>
   </nav>
   <div class="page">
 
@@ -413,9 +419,9 @@
     (function() {
       var d = new Date(document.lastModified);
       var pad = function(n) { return String(n).padStart(2, '0'); };
-      document.getElementById('protoLastUpdated').textContent =
-        'Last updated ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
-        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      var dateStr = pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear();
+      document.querySelector('#protoLastUpdated .updated-full').textContent = 'Last updated ' + dateStr + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      document.querySelector('#protoLastUpdated .updated-short').textContent = dateStr;
     })();
   </script>
   <script>if(window.self!==window.top){var n=document.querySelector(".proto-nav");if(n)n.style.display="none";document.body.style.paddingTop="0";}</script>
