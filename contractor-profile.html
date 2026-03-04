@@ -265,15 +265,21 @@
     .deact-btn-confirm { flex: 1; padding: 9px; background: #dc2626; border: none; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; }
     .deact-btn-confirm:hover { background: #b91c1c; }
 
-    /* ── Danger zone ── */
-    .danger-section { background: #fff; padding: 16px; flex-shrink: 0; }
-    .danger-label { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; }
-    .danger-box { border: 1px solid #fca5a5; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 16px; }
-    .danger-box-text { flex: 1; }
-    .danger-box-title { font-size: 15px; font-weight: 600; color: #334155; letter-spacing: -0.3px; line-height: 22px; }
-    .danger-box-sub { font-size: 13px; color: #64748b; letter-spacing: -0.26px; line-height: 18px; margin-top: 2px; }
-    .btn-deactivate { background: #dc2626; border: none; border-radius: 8px; padding: 8px 16px; font-family: inherit; font-size: 13px; font-weight: 600; color: #fff; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
-    .btn-deactivate:hover { background: #b91c1c; }
+    /* ── Deactivate icon button (bottom of right col) ── */
+    .deact-icon-wrap {
+      padding: 16px;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .deact-icon-btn {
+      background: none; border: none; cursor: pointer; padding: 6px;
+      color: #cbd5e1; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.15s, background 0.15s;
+    }
+    .deact-icon-btn:hover { color: #dc2626; background: #fef2f2; }
+    .deact-icon-btn svg { width: 18px; height: 18px; }
   </style>
 </head>
 <body>
@@ -422,20 +428,6 @@
               </div>
             </div>
 
-            <div class="h-divider"></div>
-
-            <!-- Danger zone -->
-            <div class="danger-section">
-              <div class="danger-label">Danger Zone</div>
-              <div class="danger-box">
-                <div class="danger-box-text">
-                  <div class="danger-box-title">Deactivate profile</div>
-                  <div class="danger-box-sub">This will immediately revoke all active shares and secure links, removing this worker from all connected organisations.</div>
-                </div>
-                <button class="btn-deactivate" onclick="openDeactModal()">Deactivate</button>
-              </div>
-            </div>
-
           </div><!-- /col-left -->
 
           <!-- Vertical divider -->
@@ -571,6 +563,15 @@
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            <!-- Deactivate icon -->
+            <div class="deact-icon-wrap">
+              <button class="deact-icon-btn" onclick="openDeactModal()" title="Deactivate profile" aria-label="Deactivate profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                </svg>
+              </button>
             </div>
 
           </div><!-- /col-right -->
