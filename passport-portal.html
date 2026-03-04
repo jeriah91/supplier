@@ -518,6 +518,47 @@
       .updated-full { display: none; }
       .updated-short { display: inline; }
     }
+
+    /* ── Audit notice modal ── */
+    .audit-backdrop {
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      transition: opacity 0.2s ease;
+    }
+    .audit-backdrop.is-dismissed {
+      opacity: 0; pointer-events: none;
+    }
+    .audit-modal {
+      background: #fff; border-radius: 16px; padding: 32px;
+      width: 440px; max-width: 100%;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35);
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .audit-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: #fef3c7; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .audit-icon svg { width: 22px; height: 22px; color: #d97706; }
+    .audit-title {
+      font-size: 18px; font-weight: 700; color: #0f172a;
+      letter-spacing: -0.54px; line-height: 26px; margin-bottom: 6px;
+    }
+    .audit-body {
+      font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 22px;
+    }
+    .audit-body strong { color: #334155; font-weight: 600; }
+    .btn-acknowledge {
+      width: 100%; padding: 11px 16px;
+      background: #0f172a; color: #fff; border: none; border-radius: 8px;
+      font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+      letter-spacing: -0.28px; transition: background 0.15s;
+    }
+    .btn-acknowledge:hover { background: #1e293b; }
   </style>
 </head>
 <body>
@@ -533,6 +574,26 @@
     </a>
     <span class="proto-nav-updated" id="protoLastUpdated" style="flex:0 0 auto;"><span class="updated-full"></span><span class="updated-short"></span></span>
   </nav>
+
+  <!-- Audit notice modal -->
+  <div class="audit-backdrop" id="auditBackdrop">
+    <div class="audit-modal">
+      <div class="audit-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="audit-title">This session is being recorded</div>
+        <div class="audit-body">
+          Your access to this compliance passport is logged for <strong>auditing purposes</strong>. All documents viewed during this session — including credential details and expiry dates — will be recorded and may be reviewed by the issuing organisation.
+          <br><br>
+          By continuing, you confirm you are an authorised recipient and agree to handle this information in accordance with applicable privacy obligations.
+        </div>
+      </div>
+      <button class="btn-acknowledge" onclick="dismissAudit()">I acknowledge</button>
+    </div>
+  </div>
 
   <div class="portal-outer">
     <div class="portal-card">
@@ -838,6 +899,11 @@
     // Auto-select first requirement
     selectReq(EMPLOYEES[0], EMPLOYEES[0].requirements[0]);
     document.getElementById('group-' + EMPLOYEES[0].id).classList.add('is-open');
+  </script>
+  <script>
+    function dismissAudit() {
+      document.getElementById('auditBackdrop').classList.add('is-dismissed');
+    }
   </script>
   <script>
     (function() {
