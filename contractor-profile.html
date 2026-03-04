@@ -238,8 +238,31 @@
     .share-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
     .share-field { display: flex; flex-direction: column; gap: 4px; }
     .share-label { font-size: 12px; font-weight: 600; color: #64748b; letter-spacing: 0.4px; text-transform: uppercase; }
-    .share-select, .share-email-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; color: #334155; background: #fff; outline: none; transition: border-color 0.15s; }
-    .share-select:focus, .share-email-input:focus { border-color: #2c66ef; }
+    .share-select { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; color: #334155; background: #fff; outline: none; transition: border-color 0.15s; }
+    .share-select:focus { border-color: #2c66ef; }
+    .share-email-tags {
+      min-height: 40px; padding: 6px 8px; border: 1px solid #e2e8f0; border-radius: 8px;
+      display: flex; flex-wrap: wrap; gap: 5px; align-items: center; cursor: text;
+      transition: border-color 0.15s; background: #fff;
+    }
+    .share-email-tags:focus-within { border-color: #2c66ef; }
+    .share-email-tag {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px;
+      padding: 2px 4px 2px 8px; font-size: 13px; color: #1d4ed8; letter-spacing: -0.26px; white-space: nowrap;
+    }
+    .share-email-tag.is-system { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+    .share-email-tag-remove {
+      background: none; border: none; cursor: pointer; color: inherit;
+      padding: 0; display: flex; align-items: center; opacity: 0.55;
+    }
+    .share-email-tag-remove:hover { opacity: 1; }
+    .share-email-tag-remove svg { width: 12px; height: 12px; }
+    .share-email-tag-input {
+      border: none; outline: none; font-family: inherit; font-size: 14px;
+      color: #334155; flex: 1; min-width: 150px; padding: 2px 4px; background: transparent;
+    }
+    .share-email-tag-input::placeholder { color: #94a3b8; }
     .btn-share-action {
       width: 100%; padding: 10px 16px; background: #2c66ef; color: #fff; border: none; border-radius: 8px;
       font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
@@ -677,7 +700,38 @@
               </label>
               <label class="share-cred-item">
                 <input type="checkbox" name="cred" checked>
-                <span>Australian Working Rights</span>
+                <span>Australian Work Rights</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span>Primary Use in Community Document</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span>Statutory Declaration</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span>Professional Qualifications</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span class="share-cred-meta">
+                  <span>Immunisation</span>
+                  <span class="share-cred-badge is-expiring">Expires in 28 days</span>
+                </span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span>Selfie with Primary ID</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span>Functional Assessment</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked>
+                <span>Reference Check</span>
               </label>
               <label class="share-cred-item is-disabled">
                 <input type="checkbox" name="cred" disabled>
@@ -700,8 +754,11 @@
             </select>
           </div>
           <div class="share-field">
-            <label class="share-label" for="shareEmail">Recipient email</label>
-            <input class="share-email-input" type="email" id="shareEmail" placeholder="e.g. sarah@regis.com.au" required oninput="detectOrg()">
+            <label class="share-label">Recipient emails</label>
+            <div class="share-email-tags" id="shareEmailTags" onclick="document.getElementById('shareEmailInput').focus()">
+              <input type="email" id="shareEmailInput" class="share-email-tag-input" placeholder="Add email and press Enter or comma"
+                oninput="detectOrg()" onkeydown="handleEmailKey(event)" onblur="commitEmailInput()">
+            </div>
           </div>
           <div id="orgNotice" class="share-org-notice">
             <div id="orgNoticeAvatar" class="share-org-avatar"></div>
@@ -831,6 +888,7 @@
       { keyword: 'bolton',   name: 'Bolton Clarke',        initials: 'BC', color: '#7c3aed' },
       { keyword: 'catholic', name: 'Catholic Healthcare',  initials: 'CH', color: '#e11d48' }
     ];
+    var emailTags = [];
     function getMatchedOrg(email) {
       var domain = (email.split('@')[1] || '').toLowerCase();
       for (var i = 0; i < ORG_MAP.length; i++) {
@@ -838,8 +896,59 @@
       }
       return null;
     }
+    function renderEmailTags() {
+      var container = document.getElementById('shareEmailTags');
+      var input = document.getElementById('shareEmailInput');
+      container.querySelectorAll('.share-email-tag').forEach(function(el) { el.remove(); });
+      emailTags.forEach(function(email) {
+        var org = getMatchedOrg(email);
+        var tag = document.createElement('span');
+        tag.className = 'share-email-tag' + (org ? ' is-system' : '');
+        var safeEmail = email.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        tag.innerHTML = '<span style="user-select:none">' + email + '</span>'
+          + '<button class="share-email-tag-remove" type="button" onclick="removeEmailTag(\'' + safeEmail + '\')">'
+          + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>';
+        container.insertBefore(tag, input);
+      });
+    }
+    function addEmailTag(email) {
+      email = email.trim();
+      if (!email || emailTags.indexOf(email) !== -1) return;
+      emailTags.push(email);
+      renderEmailTags();
+      document.getElementById('orgNotice').classList.remove('is-visible');
+      resetShareActionBtn();
+    }
+    function removeEmailTag(email) {
+      emailTags = emailTags.filter(function(e) { return e !== email; });
+      renderEmailTags();
+    }
+    function handleEmailKey(e) {
+      var input = e.target;
+      if (e.key === 'Enter' || e.key === ',' || e.key === 'Tab') {
+        var val = input.value.replace(/,\s*$/, '').trim();
+        if (val) {
+          e.preventDefault();
+          addEmailTag(val);
+          input.value = '';
+          document.getElementById('orgNotice').classList.remove('is-visible');
+          resetShareActionBtn();
+        }
+      } else if (e.key === 'Backspace' && !input.value && emailTags.length) {
+        removeEmailTag(emailTags[emailTags.length - 1]);
+      }
+    }
+    function commitEmailInput() {
+      var input = document.getElementById('shareEmailInput');
+      var val = input.value.replace(/,\s*$/, '').trim();
+      if (val) { addEmailTag(val); input.value = ''; }
+    }
+    function resetShareActionBtn() {
+      document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+      document.getElementById('shareActionText').textContent = 'Share';
+    }
     function detectOrg() {
-      var email = document.getElementById('shareEmail').value.trim();
+      var email = document.getElementById('shareEmailInput').value.trim();
       var org = getMatchedOrg(email);
       var notice = document.getElementById('orgNotice');
       if (org) {
@@ -851,17 +960,17 @@
         document.getElementById('shareActionText').textContent = 'Send notification';
       } else {
         notice.classList.remove('is-visible');
-        document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
-        document.getElementById('shareActionText').textContent = 'Share';
+        resetShareActionBtn();
       }
     }
     function openShareModal() {
+      emailTags = [];
       document.getElementById('shareFormView').style.display = '';
       document.getElementById('shareSharedView').style.display = 'none';
-      document.getElementById('shareEmail').value = '';
+      document.getElementById('shareEmailInput').value = '';
+      renderEmailTags();
       document.getElementById('orgNotice').classList.remove('is-visible');
-      document.getElementById('shareActionIcon').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
-      document.getElementById('shareActionText').textContent = 'Share';
+      resetShareActionBtn();
       document.getElementById('shareBackdrop').classList.add('is-visible');
     }
     function closeShareModal() {
@@ -873,20 +982,25 @@
       });
     }
     function submitShare() {
-      var email = document.getElementById('shareEmail').value.trim();
+      // commit any typed-but-not-yet-tagged email
+      var inputVal = document.getElementById('shareEmailInput').value.replace(/,\s*$/, '').trim();
+      if (inputVal && emailTags.indexOf(inputVal) === -1) emailTags.push(inputVal);
+      if (!emailTags.length) { document.getElementById('shareEmailInput').focus(); return; }
       var duration = document.getElementById('shareDuration').value;
-      if (!email) { document.getElementById('shareEmail').focus(); return; }
-      var org = getMatchedOrg(email);
-      if (org) {
-        document.getElementById('shareConfirmEmailSys').textContent = email;
-        document.getElementById('shareConfirmEmailSysMeta').textContent = email;
-        document.getElementById('shareConfirmOrgName').textContent = org.name;
+      var allSystem = emailTags.every(function(e) { return !!getMatchedOrg(e); });
+      var recipientLabel = emailTags.length === 1 ? emailTags[0]
+        : emailTags[0] + ' +' + (emailTags.length - 1) + ' other' + (emailTags.length > 2 ? 's' : '');
+      if (allSystem) {
+        var org = getMatchedOrg(emailTags[0]);
+        document.getElementById('shareConfirmEmailSys').textContent = recipientLabel;
+        document.getElementById('shareConfirmEmailSysMeta').textContent = recipientLabel;
+        document.getElementById('shareConfirmOrgName').textContent = emailTags.length === 1 ? org.name : emailTags.length + ' system recipients';
         document.getElementById('shareSharedExternal').style.display = 'none';
         document.getElementById('shareSharedSystem').style.display = '';
       } else {
-        document.getElementById('shareConfirmEmail').textContent = email;
+        document.getElementById('shareConfirmEmail').textContent = recipientLabel;
         document.getElementById('shareConfirmDuration').textContent = duration;
-        document.getElementById('shareConfirmEmailMeta').textContent = email;
+        document.getElementById('shareConfirmEmailMeta').textContent = recipientLabel;
         document.getElementById('shareSharedExternal').style.display = '';
         document.getElementById('shareSharedSystem').style.display = 'none';
       }
