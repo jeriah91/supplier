@@ -878,6 +878,11 @@
       }
       return null;
     }
+    var ORG_TAG_STYLES = {
+      wallaby:  { bg: '#f0fdf4', border: '#86efac', text: '#166534' },
+      bolton:   { bg: '#f5f3ff', border: '#c4b5fd', text: '#5b21b6' },
+      catholic: { bg: '#fff1f2', border: '#fda4af', text: '#be123c' }
+    };
     function renderEmailTags() {
       var container = document.getElementById('shareEmailTags');
       var input = document.getElementById('shareEmailInput');
@@ -885,7 +890,13 @@
       emailTags.forEach(function(email) {
         var org = getMatchedOrg(email);
         var tag = document.createElement('span');
-        tag.className = 'share-email-tag' + (org ? ' is-system' : '');
+        tag.className = 'share-email-tag';
+        if (org) {
+          var s = ORG_TAG_STYLES[org.keyword];
+          tag.style.background = s.bg;
+          tag.style.borderColor = s.border;
+          tag.style.color = s.text;
+        }
         var safeEmail = email.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         tag.innerHTML = '<span style="user-select:none">' + email + '</span>'
           + '<button class="share-email-tag-remove" type="button" onclick="removeEmailTag(\'' + safeEmail + '\')">'
