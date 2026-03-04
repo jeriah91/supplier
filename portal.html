@@ -2315,24 +2315,9 @@
 
     // ── Compliance Detail Drawer ─────────────────────────────────────────────
     function openCompliance(rowEl) {
-      const name = rowEl.querySelector('.name-text').textContent.trim();
-      document.getElementById('cdPersonName').textContent = name;
-      document.getElementById('cdLinkName').textContent = name;
-      const initials = name.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0, 2);
-      document.getElementById('cdAvatar').textContent = initials;
-
-      // Close add-person drawer if open
-      document.getElementById('apDrawer').classList.remove('is-open');
-      document.getElementById('apOverlay').classList.remove('is-visible');
-
-      document.getElementById('cdDrawer').classList.add('is-open');
-      document.getElementById('cdOverlay').classList.add('is-visible');
-      scaleCdIframe();
+      window.location.href = 'contractor-profile.html';
     }
-    function closeCompliance() {
-      document.getElementById('cdDrawer').classList.remove('is-open');
-      document.getElementById('cdOverlay').classList.remove('is-visible');
-    }
+    function closeCompliance() {}
     function openDeactivateModal() {
       document.getElementById('deactBackdrop').classList.add('is-visible');
     }
