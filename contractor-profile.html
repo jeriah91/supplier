@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carter Peters — Zipline</title>
+  <title>Carter Peters — Compliance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,10 +27,9 @@
     .proto-nav-library {
       display: flex; align-items: center; gap: 8px;
       text-decoration: none; color: #fff;
-      font-size: 14px; font-weight: 500;
-      letter-spacing: -0.28px; line-height: 24px;
+      font-size: 14px; font-weight: 500; letter-spacing: -0.28px; line-height: 24px;
       white-space: nowrap; flex-shrink: 0;
-      background: none; border: none; cursor: pointer; padding: 0;
+      background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;
     }
     .proto-nav-library:hover { opacity: 0.75; }
     .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
@@ -41,359 +40,247 @@
     /* ── Outer layout ── */
     .layout { display: flex; width: 100%; height: 100%; padding: 8px; }
     .main-wrap { flex: 1; min-width: 0; min-height: 0; padding-left: 4px; display: flex; flex-direction: column; }
-    .main { background: #f1f5f9; border-radius: 8px; flex: 1; min-height: 0; overflow-y: auto; }
+    .main { background: #f1f5f9; border-radius: 8px; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 
-    /* ── Content area ── */
-    .content-area { padding: 24px 24px 56px; display: flex; flex-direction: column; gap: 16px; }
+    /* ── Mobile header ── */
+    .mob-header {
+      display: none; background: #f1f5f9;
+      padding: 16px 24px; align-items: center; gap: 16px; flex-shrink: 0;
+    }
+    @media (max-width: 767px) { .mob-header { display: flex; } }
+    .ham-btn { background: none; border: none; cursor: pointer; padding: 0; color: #334155; flex-shrink: 0; }
+    .mob-header-title { flex: 1; color: #334155; font-size: 22px; font-weight: 600; letter-spacing: -0.88px; line-height: 28px; }
 
-    /* ── Breadcrumb ── */
-    .breadcrumb { display: flex; align-items: center; gap: 6px; }
-    .breadcrumb-link {
-      font-size: 14px; font-weight: 500; color: #64748b;
-      text-decoration: none; letter-spacing: -0.28px; line-height: 20px;
-    }
-    .breadcrumb-link:hover { color: #334155; }
-    .breadcrumb-sep { color: #94a3b8; font-size: 14px; line-height: 20px; }
-    .breadcrumb-current { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
+    /* ── Breadcrumb bar ── */
+    .bc-bar { background: #f1f5f9; padding: 12px 16px; flex-shrink: 0; }
+    .bc { display: flex; align-items: center; gap: 4px; font-size: 14px; letter-spacing: -0.28px; line-height: 18px; }
+    .bc-link { color: #2c66ef; font-weight: 600; text-decoration: none; }
+    .bc-link:hover { opacity: 0.75; }
+    .bc-sep { color: #0f172a; font-weight: 400; margin: 0 2px; }
+    .bc-current { color: #0f172a; font-weight: 400; }
 
-    /* ── Two-column ── */
-    .two-col { display: flex; gap: 16px; align-items: flex-start; }
-    .col-left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
-    .col-right { width: 348px; flex-shrink: 0; position: sticky; top: 0; }
+    /* ── Dividers ── */
+    .h-divider { height: 1px; background: #e2e8f0; flex-shrink: 0; }
+    .v-divider { width: 1px; background: #cbd5e1; flex-shrink: 0; }
 
-    /* ── Card base ── */
-    .card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
-    .card-header {
-      padding: 14px 20px; border-bottom: 1px solid #f1f5f9;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .card-title { font-size: 15px; font-weight: 600; color: #0f172a; letter-spacing: -0.3px; flex: 1; }
-    .card-count {
-      background: #f1f5f9; color: #64748b;
-      font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
-      padding: 1px 7px; border-radius: 10px;
-    }
+    /* ── Two-col ── */
+    .two-col { display: flex; flex: 1; min-height: 0; }
+    .col-left { flex: 1; min-width: 0; overflow-y: auto; display: flex; flex-direction: column; }
+    .col-right { width: 456px; flex-shrink: 0; overflow-y: auto; display: flex; flex-direction: column; }
 
-    /* ── Detail rows ── */
-    .detail-row {
-      display: flex; align-items: center; gap: 12px;
-      padding: 11px 20px; border-bottom: 1px solid #f8fafc;
-    }
-    .detail-row:last-child { border-bottom: none; }
-    .detail-label {
-      width: 144px; flex-shrink: 0;
-      font-size: 13px; color: #94a3b8; letter-spacing: -0.26px; line-height: 20px;
-    }
-    .detail-value {
-      flex: 1;
-      font-size: 14px; font-weight: 500; color: #0f172a;
-      letter-spacing: -0.28px; line-height: 20px;
-    }
-    .detail-edit-btn {
-      background: none; border: none; cursor: pointer; padding: 4px;
-      color: #e2e8f0; border-radius: 4px; display: flex;
-      transition: color 0.15s, background 0.15s; flex-shrink: 0;
-    }
-    .detail-edit-btn:hover { color: #64748b; background: #f1f5f9; }
-    .detail-edit-btn svg { width: 14px; height: 14px; }
+    /* ── Card section ── */
+    .card-sec { background: #fff; padding: 16px; flex-shrink: 0; }
 
-    /* ── Status pills ── */
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 8px; border-radius: 12px;
-      font-size: 12px; font-weight: 600; letter-spacing: -0.24px;
-      width: fit-content; white-space: nowrap; flex-shrink: 0;
-    }
-    .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .status-compliant { background: #a7f3d0; color: #059669; }
-    .status-compliant .dot { background: #059669; }
-    .status-expiring { background: #fef3c7; color: #b45309; }
-    .status-expiring .dot { background: #b45309; }
-    .status-noncompliant { background: #fecaca; color: #dc2626; }
-    .status-noncompliant .dot { background: #dc2626; }
+    /* ── Section heading ── */
+    .sec-title { font-size: 18px; font-weight: 600; color: #334155; letter-spacing: -0.36px; line-height: 26px; white-space: nowrap; }
+    .sec-sub { font-size: 14px; color: #0f172a; letter-spacing: -0.28px; line-height: 18px; margin-top: 2px; }
 
-    /* ── Credential rows ── */
-    .cred-row {
-      display: flex; align-items: center; gap: 14px;
-      padding: 13px 20px; border-bottom: 1px solid #f8fafc;
+    /* ── Detail fields ── */
+    .form-fields { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .field-row { display: flex; align-items: center; }
+    .field-label { width: 180px; flex-shrink: 0; font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 26px; }
+    .field-value-wrap { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
+    .field-value { font-size: 14px; color: #0f172a; line-height: 26px; }
+    .edit-btn { background: none; border: none; cursor: pointer; color: #94a3b8; padding: 0; display: flex; align-items: center; flex-shrink: 0; }
+    .edit-btn:hover { color: #334155; }
+    .edit-btn svg { width: 20px; height: 20px; }
+    .edit-input {
+      flex: 1; font-family: inherit; font-size: 14px; color: #0f172a; line-height: 26px;
+      border: 1px solid #2c66ef; border-radius: 6px; padding: 1px 8px; outline: none;
     }
-    .cred-row:last-child { border-bottom: none; }
-    .cred-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: #f1f5f9; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .cred-icon svg { width: 16px; height: 16px; color: #64748b; }
-    .cred-info { flex: 1; min-width: 0; }
-    .cred-name { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
-    .cred-dates { font-size: 12px; color: #94a3b8; letter-spacing: -0.24px; line-height: 18px; margin-top: 2px; }
-    .cred-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .verified-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 5px;
-      padding: 2px 7px; font-size: 11px; font-weight: 600; color: #15803d;
-      letter-spacing: -0.22px; white-space: nowrap;
-    }
-    .verified-badge svg { width: 11px; height: 11px; }
-    .unverified-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px;
-      padding: 2px 7px; font-size: 11px; font-weight: 600; color: #94a3b8;
-      letter-spacing: -0.22px; white-space: nowrap;
-    }
-    .cred-row.is-missing .cred-name { color: #94a3b8; }
-    .cred-row.is-missing .cred-icon { background: #f8fafc; }
-    .cred-row.is-missing .cred-icon svg { color: #cbd5e1; }
+    .edit-actions { display: flex; gap: 4px; flex-shrink: 0; }
+    .edit-save { background: #2c66ef; color: #fff; border: none; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 4px; letter-spacing: -0.24px; }
+    .edit-save:hover { background: #1d55d6; }
+    .edit-cancel { background: #fff; color: #64748b; border: 1px solid #e2e8f0; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 4px; letter-spacing: -0.24px; }
+    .edit-cancel:hover { background: #f8fafc; }
 
-    /* ── Buttons ── */
-    .btn-primary {
-      background: #2c66ef; color: #fff; font-family: inherit;
-      font-size: 13px; font-weight: 500; letter-spacing: -0.26px; line-height: 22px;
-      padding: 6px 12px; border-radius: 8px; border: none; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0;
-    }
-    .btn-primary:hover { background: #1d56df; }
-    .btn-primary svg { width: 14px; height: 14px; }
-    .btn-sm {
-      background: #fff; border: 1px solid #e2e8f0; color: #334155; font-family: inherit;
-      font-size: 11px; font-weight: 500; letter-spacing: -0.22px;
-      padding: 3px 8px; border-radius: 5px; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;
-    }
-    .btn-sm:hover { background: #f8fafc; }
-    .btn-sm svg { width: 12px; height: 12px; }
-    .btn-sm.revoke { color: #64748b; }
-    .btn-sm.revoke:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
-    .btn-renew-sm {
-      background: #eff6ff; border: none; color: #2c66ef; font-family: inherit;
-      font-size: 11px; font-weight: 500; letter-spacing: -0.22px;
-      padding: 3px 8px; border-radius: 5px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    }
-    .btn-renew-sm:hover { background: #dbeafe; }
-
-    /* ── Passport sidebar card ── */
-    .passport-card {
-      background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;
-    }
-    .passport-top {
-      padding: 14px 20px; border-bottom: 1px solid #f1f5f9;
+    /* ── Requirements section ── */
+    .req-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+    .req-head-text { flex: 1; min-width: 0; }
+    .btn-share-direct {
+      border: 1px solid #2c66ef; background: #fff; color: #2c66ef;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      padding: 4px 12px; border-radius: 8px; cursor: pointer;
       display: flex; align-items: center; gap: 10px;
+      letter-spacing: -0.28px; line-height: 24px; white-space: nowrap; flex-shrink: 0;
     }
-    .passport-title { font-size: 16px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; flex: 1; }
+    .btn-share-direct:hover { background: #eff6ff; }
+    .btn-share-direct svg { width: 16px; height: 16px; }
+    .req-iframe-wrap {
+      background: #f8fafc; border-radius: 8px; padding: 20px;
+      display: flex; align-items: flex-start; justify-content: center; overflow: hidden;
+    }
+    .req-iframe-inner {
+      border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden;
+      width: 376px; flex-shrink: 0; transform-origin: top left;
+    }
+    .req-iframe-inner iframe { width: 375px; height: 460px; border: none; display: block; }
 
-    /* ── Secure link box ── */
-    .secure-link-section { padding: 14px 20px 0; }
-    .secure-link-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }
-    .secure-link-top {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+    /* ── Passport — Secure Link ── */
+    .secure-link-box {
+      border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 17px 21px; margin-top: 16px;
+      display: flex; flex-direction: column; gap: 10px;
     }
-    .secure-link-label { font-size: 13px; font-weight: 600; color: #334155; letter-spacing: -0.26px; }
-    .secure-link-status { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: #16a34a; }
-    .secure-link-dot { width: 7px; height: 7px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
+    .secure-link-top { display: flex; align-items: center; justify-content: space-between; }
+    .secure-link-label { font-size: 14px; font-weight: 600; color: #334155; letter-spacing: -0.28px; }
+    .active-badge { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: #16a34a; }
+    .active-dot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
     .secure-link-url {
-      font-family: 'SF Mono','Fira Code',monospace; font-size: 10px; color: #64748b;
-      line-height: 14px; word-break: break-all; margin-bottom: 10px;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px; color: #334155; line-height: 16px; word-break: break-all;
     }
-    .btn-copy-link {
-      width: 100%; padding: 6px 10px; border: 1px solid #e2e8f0; background: #fff;
-      border-radius: 6px; cursor: pointer; font-family: inherit;
-      font-size: 12px; font-weight: 500; color: #334155;
-      display: flex; align-items: center; justify-content: center; gap: 5px;
-      letter-spacing: -0.24px; transition: background 0.15s;
-    }
-    .btn-copy-link:hover { background: #f8fafc; }
-    .btn-copy-link svg { width: 13px; height: 13px; }
 
     /* ── Shared with ── */
-    .shared-with-header {
-      margin: 14px 20px 8px; padding-top: 14px;
-      border-top: 1px solid #f1f5f9;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .shared-with-label {
-      font-size: 10px; font-weight: 700; color: #94a3b8;
-      letter-spacing: 0.6px; text-transform: uppercase; flex: 1;
-    }
-    .shared-with-count {
-      background: #f1f5f9; color: #64748b;
-      font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px;
-    }
-    .shared-org-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 20px; border-bottom: 1px solid #f8fafc;
-    }
-    .shared-org-row:last-child { border-bottom: none; padding-bottom: 16px; }
-    .shared-org-avatar {
-      width: 30px; height: 30px; border-radius: 50%;
+    .shared-section { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .shared-label-row { display: flex; align-items: center; gap: 10px; }
+    .shared-label { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.8px; text-transform: uppercase; white-space: nowrap; }
+    .shared-line { flex: 1; height: 1px; background: #e2e8f0; }
+    .org-row { display: flex; align-items: center; gap: 8px; }
+    .org-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
+      font-size: 10px; font-weight: 700; color: #fff;
+      flex-shrink: 0; letter-spacing: -0.2px;
     }
-    .shared-org-info { flex: 1; min-width: 0; }
-    .shared-org-name { font-size: 13px; font-weight: 600; color: #0f172a; letter-spacing: -0.26px; line-height: 18px; }
-    .shared-org-sub { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; line-height: 16px; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .shared-org-row.is-expired .shared-org-name { color: #94a3b8; }
+    .org-avatar.wh { background: #34d399; }
+    .org-avatar.ch { background: #fb7185; }
+    .org-avatar.bc { background: #a78bfa; }
+    .org-avatar.re { background: #64748b; }
+    .org-name { flex: 1; font-size: 14px; color: #0f172a; letter-spacing: -0.28px; line-height: 18px; }
+    .org-remaining { font-size: 14px; color: #0f172a; letter-spacing: -0.28px; line-height: 18px; white-space: nowrap; }
+    .btn-revoke {
+      border: 1px solid #2c66ef; background: #fff; color: #2c66ef;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      padding: 4px 12px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      letter-spacing: -0.28px; line-height: 24px;
+      flex: 1; justify-content: center;
+    }
+    .btn-revoke:hover { background: #eff6ff; }
+    .btn-revoke svg { width: 16px; height: 16px; }
 
-    /* ── Audit log table ── */
-    .audit-log-wrap { overflow-x: auto; }
-    .audit-log-table { width: 100%; border-collapse: collapse; min-width: 820px; }
-    .audit-log-th {
-      padding: 9px 14px; text-align: left;
-      font-size: 10px; font-weight: 700; color: #94a3b8;
-      letter-spacing: 0.5px; text-transform: uppercase;
-      background: #f8fafc; border-bottom: 1px solid #f1f5f9;
-      white-space: nowrap;
+    /* ── Access log ── */
+    .access-log-outer { overflow-x: auto; margin-top: 16px; }
+    .access-log-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .access-log-table th {
+      padding: 8px 10px; text-align: left;
+      font-size: 11px; font-weight: 600; color: #94a3b8;
+      letter-spacing: 0.4px; text-transform: uppercase;
+      border-bottom: 1px solid #e2e8f0; white-space: nowrap;
     }
-    .audit-log-th:first-child { padding-left: 20px; }
-    .audit-log-th:last-child { padding-right: 20px; }
-    .audit-log-td {
-      padding: 10px 14px; font-size: 13px; color: #334155;
-      letter-spacing: -0.26px; line-height: 18px;
-      border-bottom: 1px solid #f8fafc; vertical-align: middle;
+    .access-log-table td {
+      padding: 10px 10px; border-bottom: 1px solid #f1f5f9;
+      font-size: 12px; color: #334155; line-height: 16px; vertical-align: middle;
     }
-    .audit-log-td:first-child { padding-left: 20px; }
-    .audit-log-td:last-child { padding-right: 20px; }
-    .audit-log-tr:last-child .audit-log-td { border-bottom: none; }
-    .audit-log-date { font-weight: 500; color: #0f172a; white-space: nowrap; }
-    .audit-log-time { color: #64748b; font-size: 12px; margin-top: 1px; white-space: nowrap; }
-    .audit-log-tz { font-size: 11px; color: #94a3b8; white-space: nowrap; }
-    .audit-log-org-cell { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
-    .audit-log-org-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .audit-log-action-badge {
-      display: inline-flex; align-items: center;
-      background: #f0fdf4; color: #16a34a;
-      font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
-      padding: 2px 7px; border-radius: 4px; white-space: nowrap;
-    }
-    .audit-log-ip { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #94a3b8; white-space: nowrap; }
-    .audit-log-cred { max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .audit-log-access { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; white-space: nowrap; }
+    .access-log-table tbody tr:last-child td { border-bottom: none; }
+    .log-viewed { background: #f0fdf4; color: #16a34a; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; }
+    .log-ip { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: #94a3b8; }
+    .log-org-pill { display: inline-flex; align-items: center; gap: 5px; }
+    .log-org-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-    /* ── Share modal ── */
+    /* ── Share Modal ── */
     .share-backdrop {
-      position: fixed; inset: 0; z-index: 5000;
-      background: rgba(15,23,42,0.4);
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(15,23,42,0.55);
       display: flex; align-items: center; justify-content: center;
       opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
     }
     .share-backdrop.is-visible { opacity: 1; pointer-events: auto; }
     .share-modal {
-      background: #fff; border-radius: 16px;
+      background: #fff; border-radius: 16px; padding: 24px;
       width: 480px; max-width: calc(100vw - 32px);
-      max-height: calc(100vh - 80px); overflow-y: auto;
-      padding: 24px; position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
-      transform: scale(0.97); transition: transform 0.2s ease;
+      max-height: calc(100vh - 64px); overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); position: relative;
     }
-    .share-backdrop.is-visible .share-modal { transform: scale(1); }
     .share-modal-close {
       position: absolute; top: 16px; right: 16px;
-      background: none; border: none; cursor: pointer; padding: 4px;
-      color: #94a3b8; border-radius: 4px; display: flex;
+      background: none; border: none; cursor: pointer; color: #64748b;
+      padding: 4px; border-radius: 6px;
     }
-    .share-modal-close:hover { color: #0f172a; }
-    .share-modal-title { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.6px; line-height: 26px; margin-right: 32px; margin-bottom: 4px; }
-    .share-modal-sub { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-bottom: 20px; }
-    .share-creds-section { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-    .share-creds-label { font-size: 15px; font-weight: 600; color: #0f172a; letter-spacing: -0.3px; line-height: 22px; }
-    .share-creds-box {
-      border: 1px solid #cbd5e1; border-radius: 8px;
-      padding: 12px 8px 14px 16px; display: flex; gap: 8px; align-items: flex-start;
-    }
-    .share-creds-inner { flex: 1; display: flex; flex-direction: column; gap: 14px; }
-    .share-creds-actions { display: flex; gap: 16px; }
-    .share-creds-action {
-      background: none; border: none; padding: 0; cursor: pointer;
-      font-family: inherit; font-size: 14px; color: #2c66ef; letter-spacing: -0.28px;
-    }
+    .share-modal-close:hover { background: #f1f5f9; }
+    .share-modal-title { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.6px; line-height: 28px; margin-bottom: 4px; padding-right: 32px; }
+    .share-modal-sub { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-bottom: 16px; }
+    .share-creds-section { margin-bottom: 16px; }
+    .share-creds-label { font-size: 12px; font-weight: 600; color: #64748b; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 6px; }
+    .share-creds-box { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+    .share-creds-inner { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .share-creds-actions { display: flex; gap: 12px; margin-bottom: 4px; }
+    .share-creds-action { background: none; border: none; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; color: #2c66ef; padding: 0; letter-spacing: -0.24px; }
     .share-creds-action:hover { text-decoration: underline; }
-    .share-cred-item { display: flex; align-items: center; gap: 14px; cursor: pointer; }
-    .share-cred-item input[type="checkbox"] {
-      appearance: none; -webkit-appearance: none; flex-shrink: 0;
-      width: 18px; height: 18px; border: 1.5px solid #2c66ef;
-      border-radius: 4px; cursor: pointer; position: relative; transition: background 0.15s;
-    }
-    .share-cred-item input[type="checkbox"]:checked { background: #2c66ef; border-color: #2c66ef; }
-    .share-cred-item input[type="checkbox"]:checked::after {
-      content: ''; position: absolute;
-      left: 4px; top: 1px; width: 7px; height: 11px;
-      border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg);
-    }
-    .share-cred-label { font-size: 14px; font-weight: 500; color: #0f172a; letter-spacing: -0.28px; line-height: 20px; }
+    .share-cred-item { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #334155; letter-spacing: -0.28px; line-height: 20px; }
+    .share-cred-item input[type="checkbox"] { accent-color: #2c66ef; width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+    .share-cred-item.is-disabled { opacity: 0.5; cursor: not-allowed; }
     .share-cred-meta { display: flex; flex-direction: column; gap: 2px; }
-    .share-cred-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 11px; font-weight: 600; letter-spacing: 0.1px; line-height: 14px;
-      padding: 2px 7px; border-radius: 4px; width: fit-content;
-    }
+    .share-cred-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 4px; }
     .share-cred-badge.is-expiring { background: #fef3c7; color: #b45309; }
-    .share-cred-badge.is-missing { background: #f1f5f9; color: #94a3b8; }
-    .share-cred-item.is-disabled { pointer-events: none; opacity: 0.5; }
-    .share-cred-item.is-disabled input[type="checkbox"] { border-color: #cbd5e1; }
-    .share-creds-scrollbar { width: 4px; background: #cbd5e1; border-radius: 2px; height: 58px; flex-shrink: 0; margin-top: 38px; }
-    .share-form { display: flex; flex-direction: column; gap: 14px; }
+    .share-cred-badge.is-missing { background: #fecaca; color: #dc2626; }
+    .share-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
     .share-field { display: flex; flex-direction: column; gap: 4px; }
-    .share-label { font-size: 14px; font-weight: 600; color: #0f172a; letter-spacing: -0.28px; line-height: 22px; }
-    .share-select {
-      width: 100%; padding: 9px 36px 9px 12px; box-sizing: border-box;
-      border: 1.5px solid #e2e8f0; border-radius: 8px; background: #fff;
-      font-family: inherit; font-size: 14px; color: #0f172a;
-      letter-spacing: -0.28px; outline: none; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 10px center;
-      cursor: pointer; transition: border-color 0.15s;
-    }
-    .share-select:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
-    .share-email-input {
-      width: 100%; padding: 9px 12px; box-sizing: border-box;
-      border: 1.5px solid #e2e8f0; border-radius: 8px;
-      font-family: inherit; font-size: 14px; color: #0f172a;
-      letter-spacing: -0.28px; outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s; background: #fff;
-    }
-    .share-email-input::placeholder { color: #94a3b8; }
-    .share-email-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 3px rgba(44,102,239,0.1); }
+    .share-label { font-size: 12px; font-weight: 600; color: #64748b; letter-spacing: 0.4px; text-transform: uppercase; }
+    .share-select, .share-email-input { padding: 9px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; color: #334155; background: #fff; outline: none; transition: border-color 0.15s; }
+    .share-select:focus, .share-email-input:focus { border-color: #2c66ef; }
     .btn-share-action {
-      width: 100%; margin-top: 16px; padding: 8px 12px;
-      background: #2c66ef; border: none; color: #fff;
-      font-family: inherit; font-size: 14px; font-weight: 500;
-      letter-spacing: -0.28px; line-height: 24px; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: background 0.15s;
+      width: 100%; padding: 10px 16px; background: #2c66ef; color: #fff; border: none; border-radius: 8px;
+      font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      letter-spacing: -0.28px; transition: background 0.15s;
     }
-    .btn-share-action:hover { background: #1d56df; }
+    .btn-share-action:hover { background: #1d55d6; }
     .btn-share-action svg { width: 16px; height: 16px; }
-    .share-secure-box {
-      border: 1px solid #e2e8f0; border-radius: 8px;
-      padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;
-    }
-    .share-secure-top { display: flex; align-items: center; justify-content: space-between; }
+    .share-secure-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-top: 12px; }
+    .share-secure-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
     .share-secure-label { font-size: 14px; font-weight: 600; color: #334155; letter-spacing: -0.28px; }
     .share-secure-status { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: #16a34a; }
     .share-secure-dot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; }
-    .share-secure-url { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #334155; line-height: 16px; word-break: break-all; }
+    .share-secure-url { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #334155; line-height: 16px; word-break: break-all; margin-bottom: 10px; }
     .share-secure-btns { display: flex; gap: 8px; }
     .btn-sec-copy {
-      padding: 7px 12px; border: 1px solid #e2e8f0; background: #fff;
+      flex: 1; padding: 7px 12px; border: 1px solid #e2e8f0; background: #fff;
       border-radius: 6px; cursor: pointer; font-family: inherit;
       font-size: 13px; font-weight: 500; color: #334155;
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
       letter-spacing: -0.26px; transition: background 0.15s;
     }
     .btn-sec-copy:hover { background: #f8fafc; }
     .btn-sec-copy svg { width: 14px; height: 14px; }
-    .share-confirm-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-    .share-confirm-meta-item {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 14px; color: #334155; letter-spacing: -0.28px; line-height: 20px;
+    .share-confirm-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .share-confirm-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #334155; letter-spacing: -0.26px; }
+    .share-confirm-meta-item svg { width: 14px; height: 14px; color: #16a34a; flex-shrink: 0; }
+
+    /* ── Deactivate modal ── */
+    .deact-backdrop {
+      position: fixed; inset: 0; z-index: 9500;
+      background: rgba(15,23,42,0.55);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
     }
-    .share-confirm-meta-item svg { width: 16px; height: 16px; flex-shrink: 0; color: #16a34a; }
+    .deact-backdrop.is-visible { opacity: 1; pointer-events: auto; }
+    .deact-modal { background: #fff; border-radius: 16px; padding: 24px; width: 400px; max-width: calc(100vw - 32px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); }
+    .deact-title { font-size: 18px; font-weight: 700; color: #0f172a; letter-spacing: -0.54px; margin-bottom: 8px; }
+    .deact-body { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-bottom: 20px; }
+    .deact-btns { display: flex; gap: 10px; }
+    .deact-btn-cancel { flex: 1; padding: 9px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 500; color: #334155; cursor: pointer; }
+    .deact-btn-cancel:hover { background: #f8fafc; }
+    .deact-btn-confirm { flex: 1; padding: 9px; background: #dc2626; border: none; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; }
+    .deact-btn-confirm:hover { background: #b91c1c; }
+
+    /* ── Danger zone ── */
+    .danger-section { background: #fff; padding: 16px; flex-shrink: 0; }
+    .danger-label { font-size: 11px; font-weight: 700; color: #dc2626; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 12px; }
+    .danger-box { border: 1px solid #fca5a5; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 16px; }
+    .danger-box-text { flex: 1; }
+    .danger-box-title { font-size: 15px; font-weight: 600; color: #334155; letter-spacing: -0.3px; line-height: 22px; }
+    .danger-box-sub { font-size: 13px; color: #64748b; letter-spacing: -0.26px; line-height: 18px; margin-top: 2px; }
+    .btn-deactivate { background: #dc2626; border: none; border-radius: 8px; padding: 8px 16px; font-family: inherit; font-size: 13px; font-weight: 600; color: #fff; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+    .btn-deactivate:hover { background: #b91c1c; }
   </style>
 </head>
 <body>
-
-  <!-- Proto nav -->
+  <!-- Prototype nav bar -->
   <nav class="proto-nav">
-    <span class="proto-nav-title">Prototype / Portal / Contractor Profile</span>
-    <button data-map-key="portal" class="proto-nav-library proto-nav-map">
+    <span class="proto-nav-title">Prototype / Portal</span>
+    <button data-map-key="contractor-profile" class="proto-nav-library proto-nav-map">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
       </svg>
@@ -408,447 +295,292 @@
     <span class="proto-nav-updated" id="protoLastUpdated" style="flex:0 0 auto;"></span>
   </nav>
 
-  <!-- Main layout -->
+  <!-- Layout -->
   <div class="layout">
     <div id="sidebarMount" data-active="compliance"></div>
 
     <div class="main-wrap">
+      <!-- Mobile header -->
+      <div class="mob-header">
+        <button class="ham-btn" onclick="openSidebar()" aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+        <span class="mob-header-title">Carter Peters</span>
+      </div>
+
       <div class="main">
-        <div class="content-area">
+        <!-- Breadcrumb bar -->
+        <div class="bc-bar">
+          <div class="bc">
+            <a href="portal.html" class="bc-link">Compliance</a>
+            <span class="bc-sep">/</span>
+            <span class="bc-current">Carter Peters</span>
+          </div>
+        </div>
+        <div class="h-divider"></div>
 
-          <!-- Breadcrumb -->
-          <nav class="breadcrumb">
-            <a class="breadcrumb-link" href="portal.html">Compliance</a>
-            <span class="breadcrumb-sep">/</span>
-            <span class="breadcrumb-current">Carter Peters</span>
-          </nav>
+        <!-- Two-column layout -->
+        <div class="two-col">
 
-          <!-- Two-column layout -->
-          <div class="two-col">
+          <!-- Left column -->
+          <div class="col-left">
 
-            <!-- ── Left column ── -->
-            <div class="col-left">
-
-              <!-- Details card -->
-              <div class="card">
-                <div class="card-header">
-                  <span class="card-title">Details</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Legal first name</span>
-                  <span class="detail-value">Carter</span>
-                  <button class="detail-edit-btn" aria-label="Edit legal first name">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Legal last name</span>
-                  <span class="detail-value">Peters</span>
-                  <button class="detail-edit-btn" aria-label="Edit legal last name">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Phone</span>
-                  <span class="detail-value">+61 412 345 678</span>
-                  <button class="detail-edit-btn" aria-label="Edit phone">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Email</span>
-                  <span class="detail-value">carter.peters@platypusplumbing.com.au</span>
-                  <button class="detail-edit-btn" aria-label="Edit email">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Role</span>
-                  <span class="detail-value">Plumber</span>
-                  <button class="detail-edit-btn" aria-label="Edit role">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Status</span>
-                  <span class="detail-value">
-                    <span class="status-pill status-expiring"><span class="dot"></span>Expiring soon</span>
-                  </span>
-                  <button class="detail-edit-btn" style="opacity:0;pointer-events:none;" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Requirements card -->
-              <div class="card">
-                <div class="card-header">
-                  <span class="card-title">Requirements</span>
-                  <span class="card-count">4</span>
-                </div>
-
-                <!-- NCCHC — Compliant -->
-                <div class="cred-row">
-                  <div class="cred-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                  </div>
-                  <div class="cred-info">
-                    <div class="cred-name">Nationally Coordinated Criminal History Check</div>
-                    <div class="cred-dates">Issued 14 Mar 2023 · Expires 14 Mar 2026 · Last verified 2 Mar 2026</div>
-                  </div>
-                  <div class="cred-right">
-                    <span class="verified-badge">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                      Verified by Zipline AI
-                    </span>
-                    <span class="status-pill status-compliant"><span class="dot"></span>Compliant</span>
-                  </div>
-                </div>
-
-                <!-- Plumbing License — Expiring -->
-                <div class="cred-row">
-                  <div class="cred-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                  </div>
-                  <div class="cred-info">
-                    <div class="cred-name">Plumbing License</div>
-                    <div class="cred-dates">Issued 1 Jun 2022 · Expires 17 Mar 2026 · Last verified 1 Mar 2026</div>
-                  </div>
-                  <div class="cred-right">
-                    <span class="verified-badge">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                      Verified by Zipline AI
-                    </span>
-                    <span class="status-pill status-expiring"><span class="dot"></span>Expires in 14 days</span>
-                  </div>
-                </div>
-
-                <!-- Australian Working Rights — Compliant -->
-                <div class="cred-row">
-                  <div class="cred-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                  </div>
-                  <div class="cred-info">
-                    <div class="cred-name">Australian Working Rights</div>
-                    <div class="cred-dates">Issued 20 Aug 2024 · No expiry · Last verified 20 Aug 2024</div>
-                  </div>
-                  <div class="cred-right">
-                    <span class="verified-badge">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                      Verified by Zipline AI
-                    </span>
-                    <span class="status-pill status-compliant"><span class="dot"></span>Compliant</span>
-                  </div>
-                </div>
-
-                <!-- Working With Children Check — Non-compliant -->
-                <div class="cred-row is-missing">
-                  <div class="cred-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                  </div>
-                  <div class="cred-info">
-                    <div class="cred-name">Working With Children Check</div>
-                    <div class="cred-dates">Not submitted</div>
-                  </div>
-                  <div class="cred-right">
-                    <span class="unverified-badge">Not submitted</span>
-                    <span class="status-pill status-noncompliant"><span class="dot"></span>Not compliant</span>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Access log card -->
-              <div class="card">
-                <div class="card-header">
-                  <span class="card-title">Access log</span>
-                  <span class="card-count">8 events</span>
-                </div>
-                <div class="audit-log-wrap">
-                  <table class="audit-log-table">
-                    <thead>
-                      <tr>
-                        <th class="audit-log-th">Date &amp; Time</th>
-                        <th class="audit-log-th">Timezone</th>
-                        <th class="audit-log-th">Organisation</th>
-                        <th class="audit-log-th">User / Access</th>
-                        <th class="audit-log-th">Requirement</th>
-                        <th class="audit-log-th">Action</th>
-                        <th class="audit-log-th">IP Address</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">2 Mar 2026</div>
-                          <div class="audit-log-time">10:34:19 AM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#fb7185"></span>
-                            Catholic Healthcare
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">203.0.113.10</td>
-                      </tr>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">1 Mar 2026</div>
-                          <div class="audit-log-time">2:16:08 PM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#34d399"></span>
-                            Wallaby Health
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Australian Working Rights</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">203.0.113.45</td>
-                      </tr>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">1 Mar 2026</div>
-                          <div class="audit-log-time">2:15:42 PM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#34d399"></span>
-                            Wallaby Health
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">203.0.113.45</td>
-                      </tr>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">28 Feb 2026</div>
-                          <div class="audit-log-time">3:45:02 PM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
-                            Bolton Clarke
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
-                      </tr>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">28 Feb 2026</div>
-                          <div class="audit-log-time">3:44:51 PM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
-                            Bolton Clarke
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Australian Working Rights</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
-                      </tr>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">28 Feb 2026</div>
-                          <div class="audit-log-time">3:44:33 PM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
-                            Bolton Clarke
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Nationally Coordinated Criminal History Check</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
-                      </tr>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">27 Feb 2026</div>
-                          <div class="audit-log-time">11:22:07 AM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
-                            Bolton Clarke
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Australian Working Rights</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">198.51.100.88</td>
-                      </tr>
-
-                      <tr class="audit-log-tr">
-                        <td class="audit-log-td">
-                          <div class="audit-log-date">20 Feb 2026</div>
-                          <div class="audit-log-time">9:11:33 AM</div>
-                        </td>
-                        <td class="audit-log-td audit-log-tz">AEDT (UTC+11)</td>
-                        <td class="audit-log-td">
-                          <div class="audit-log-org-cell">
-                            <span class="audit-log-org-dot" style="background:#a78bfa"></span>
-                            Bolton Clarke
-                          </div>
-                        </td>
-                        <td class="audit-log-td audit-log-access">Zipline platform</td>
-                        <td class="audit-log-td"><div class="audit-log-cred">Plumbing License</div></td>
-                        <td class="audit-log-td"><span class="audit-log-action-badge">Viewed</span></td>
-                        <td class="audit-log-td audit-log-ip">198.51.100.22</td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-            </div><!-- /col-left -->
-
-            <!-- ── Right sidebar: Passport ── -->
-            <div class="col-right">
-              <div class="passport-card">
-
-                <div class="passport-top">
-                  <span class="passport-title">Passport</span>
-                  <button class="btn-primary" onclick="openShareModal()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    Share credentials
-                  </button>
-                </div>
-
-                <!-- Secure link -->
-                <div class="secure-link-section">
-                  <div class="secure-link-box">
-                    <div class="secure-link-top">
-                      <span class="secure-link-label">Secure Link</span>
-                      <span class="secure-link-status"><span class="secure-link-dot"></span>Active</span>
-                    </div>
-                    <div class="secure-link-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678</div>
-                    <button class="btn-copy-link" onclick="copySidebarLink(this)">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                      Copy link
+            <!-- Details section -->
+            <div class="card-sec">
+              <div class="sec-title">Details</div>
+              <div class="sec-sub">Your employee details. The selected role will determine what is required to keep this employee compliant.</div>
+              <div class="form-fields">
+                <div class="field-row">
+                  <div class="field-label">Legal First Name</div>
+                  <div class="field-value-wrap" data-original="Carter">
+                    <span class="field-value">Carter</span>
+                    <button class="edit-btn" onclick="startEdit(this)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                     </button>
                   </div>
                 </div>
-
-                <!-- Shared with -->
-                <div class="shared-with-header">
-                  <span class="shared-with-label">Shared with</span>
-                  <span class="shared-with-count">4</span>
-                </div>
-
-                <!-- Wallaby Health — 2 days -->
-                <div class="shared-org-row">
-                  <div class="shared-org-avatar" style="background:#34d399">WH</div>
-                  <div class="shared-org-info">
-                    <div class="shared-org-name">Wallaby Health</div>
-                    <div class="shared-org-sub">2 days remaining</div>
+                <div class="field-row">
+                  <div class="field-label">Legal Last Name</div>
+                  <div class="field-value-wrap" data-original="Peters">
+                    <span class="field-value">Peters</span>
+                    <button class="edit-btn" onclick="startEdit(this)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
                   </div>
-                  <button class="btn-sm revoke">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                    </svg>
-                    Revoke
+                </div>
+                <div class="field-row">
+                  <div class="field-label">First Name</div>
+                  <div class="field-value-wrap" data-original="Carter">
+                    <span class="field-value">Carter</span>
+                    <button class="edit-btn" onclick="startEdit(this)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="field-row">
+                  <div class="field-label">Last Name</div>
+                  <div class="field-value-wrap" data-original="Peters">
+                    <span class="field-value">Peters</span>
+                    <button class="edit-btn" onclick="startEdit(this)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="field-row">
+                  <div class="field-label">Phone</div>
+                  <div class="field-value-wrap" data-original="0401 111 111">
+                    <span class="field-value">0401 111 111</span>
+                    <button class="edit-btn" onclick="startEdit(this)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="field-row">
+                  <div class="field-label">Email</div>
+                  <div class="field-value-wrap" data-original="carter.peters@platypusplumbing.com.au">
+                    <span class="field-value">carter.peters@platypusplumbing.com.au</span>
+                    <button class="edit-btn" onclick="startEdit(this)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="field-row">
+                  <div class="field-label">Role</div>
+                  <div class="field-value-wrap" data-original="Plumber">
+                    <span class="field-value">Plumber</span>
+                    <button class="edit-btn" onclick="startEdit(this)" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-divider"></div>
+
+            <!-- Requirements section -->
+            <div class="card-sec">
+              <div class="req-head">
+                <div class="req-head-text">
+                  <div class="sec-title">Requirements</div>
+                  <div class="sec-sub">Add the requirements below to stay compliant.</div>
+                </div>
+                <button class="btn-share-direct" onclick="openShareModal()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                  </svg>
+                  Share Direct Link
+                </button>
+              </div>
+              <div class="req-iframe-wrap">
+                <div class="req-iframe-inner" id="reqIframeInner">
+                  <iframe id="reqIframe" src="mobile-requirements.html" title="Requirements" scrolling="yes"></iframe>
+                </div>
+              </div>
+            </div>
+
+            <div class="h-divider"></div>
+
+            <!-- Danger zone -->
+            <div class="danger-section">
+              <div class="danger-label">Danger Zone</div>
+              <div class="danger-box">
+                <div class="danger-box-text">
+                  <div class="danger-box-title">Deactivate profile</div>
+                  <div class="danger-box-sub">This will immediately revoke all active shares and secure links, removing this worker from all connected organisations.</div>
+                </div>
+                <button class="btn-deactivate" onclick="openDeactModal()">Deactivate</button>
+              </div>
+            </div>
+
+          </div><!-- /col-left -->
+
+          <!-- Vertical divider -->
+          <div class="v-divider"></div>
+
+          <!-- Right column -->
+          <div class="col-right">
+
+            <!-- Passport section -->
+            <div class="card-sec">
+              <div class="sec-title">Passport</div>
+              <div class="sec-sub">Share secure links to this worker's verified credentials.</div>
+
+              <!-- Secure link box -->
+              <div class="secure-link-box">
+                <div class="secure-link-top">
+                  <span class="secure-link-label">Secure Link</span>
+                  <span class="active-badge"><span class="active-dot"></span>Active</span>
+                </div>
+                <div class="secure-link-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61333123123</div>
+              </div>
+
+              <!-- Shared with -->
+              <div class="shared-section">
+                <div class="shared-label-row">
+                  <span class="shared-label">Shared with</span>
+                  <div class="shared-line"></div>
+                </div>
+                <div class="org-row">
+                  <div class="org-avatar wh">WH</div>
+                  <span class="org-name">Wallaby Health</span>
+                  <button class="btn-revoke">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                    Revoke access
                   </button>
                 </div>
-
-                <!-- Catholic Healthcare — 3 days -->
-                <div class="shared-org-row">
-                  <div class="shared-org-avatar" style="background:#fb7185">CH</div>
-                  <div class="shared-org-info">
-                    <div class="shared-org-name">Catholic Healthcare</div>
-                    <div class="shared-org-sub">3 days remaining</div>
-                  </div>
-                  <button class="btn-sm revoke">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                    </svg>
-                    Revoke
-                  </button>
+                <div class="org-row">
+                  <div class="org-avatar ch">CH</div>
+                  <span class="org-name">Catholic Healthcare</span>
+                  <span class="org-remaining">3 days remaining</span>
                 </div>
-
-                <!-- Regis — 5 days, secure link -->
-                <div class="shared-org-row">
-                  <div class="shared-org-avatar" style="background:#64748b">RE</div>
-                  <div class="shared-org-info">
-                    <div class="shared-org-name">Regis</div>
-                    <div class="shared-org-sub">5 days · sarah@regis.com.au</div>
-                  </div>
-                  <button class="btn-sm revoke">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                    </svg>
-                    Revoke
-                  </button>
+                <div class="org-row">
+                  <div class="org-avatar bc">BC</div>
+                  <span class="org-name">Bolton Clarke</span>
+                  <span class="org-remaining">4 days remaining</span>
                 </div>
+              </div>
+            </div>
 
-                <!-- Bolton Clarke — Expired -->
-                <div class="shared-org-row is-expired">
-                  <div class="shared-org-avatar" style="background:#e2e8f0;color:#94a3b8">BC</div>
-                  <div class="shared-org-info">
-                    <div class="shared-org-name">Bolton Clarke</div>
-                    <div class="shared-org-sub">Expired 28 Feb 2026</div>
-                  </div>
-                  <button class="btn-renew-sm">Renew</button>
-                </div>
+            <div class="h-divider"></div>
 
-              </div><!-- /passport-card -->
-            </div><!-- /col-right -->
+            <!-- Access log section -->
+            <div class="card-sec">
+              <div class="sec-title">Access log</div>
+              <div class="sec-sub">A record of when credentials were accessed via secure link.</div>
+              <div class="access-log-outer">
+                <table class="access-log-table">
+                  <thead>
+                    <tr>
+                      <th>Date &amp; Time</th>
+                      <th>Timezone</th>
+                      <th>Organisation</th>
+                      <th>User / Access</th>
+                      <th>Requirement</th>
+                      <th>Action</th>
+                      <th>IP Address</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>15 Feb, 11:03 AM</td>
+                      <td>AEDT</td>
+                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#34d399"></span>Wallaby Health</span></td>
+                      <td>Sarah Johnson</td>
+                      <td>Plumbing License</td>
+                      <td><span class="log-viewed">Viewed</span></td>
+                      <td><span class="log-ip">203.0.113.42</span></td>
+                    </tr>
+                    <tr>
+                      <td>15 Feb, 11:01 AM</td>
+                      <td>AEDT</td>
+                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#34d399"></span>Wallaby Health</span></td>
+                      <td>Sarah Johnson</td>
+                      <td>NCCHC</td>
+                      <td><span class="log-viewed">Viewed</span></td>
+                      <td><span class="log-ip">203.0.113.42</span></td>
+                    </tr>
+                    <tr>
+                      <td>14 Feb, 2:47 PM</td>
+                      <td>AEDT</td>
+                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#fb7185"></span>Catholic Healthcare</span></td>
+                      <td>Secure Link</td>
+                      <td>Australian Work Rights</td>
+                      <td><span class="log-viewed">Viewed</span></td>
+                      <td><span class="log-ip">198.51.100.77</span></td>
+                    </tr>
+                    <tr>
+                      <td>14 Feb, 2:44 PM</td>
+                      <td>AEDT</td>
+                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#fb7185"></span>Catholic Healthcare</span></td>
+                      <td>Secure Link</td>
+                      <td>Plumbing License</td>
+                      <td><span class="log-viewed">Viewed</span></td>
+                      <td><span class="log-ip">198.51.100.77</span></td>
+                    </tr>
+                    <tr>
+                      <td>10 Feb, 9:15 AM</td>
+                      <td>AEDT</td>
+                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#a78bfa"></span>Bolton Clarke</span></td>
+                      <td>Michael Tan</td>
+                      <td>NCCHC</td>
+                      <td><span class="log-viewed">Viewed</span></td>
+                      <td><span class="log-ip">192.0.2.100</span></td>
+                    </tr>
+                    <tr>
+                      <td>10 Feb, 9:12 AM</td>
+                      <td>AEDT</td>
+                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#a78bfa"></span>Bolton Clarke</span></td>
+                      <td>Michael Tan</td>
+                      <td>Plumbing License</td>
+                      <td><span class="log-viewed">Viewed</span></td>
+                      <td><span class="log-ip">192.0.2.100</span></td>
+                    </tr>
+                    <tr>
+                      <td>3 Feb, 4:30 PM</td>
+                      <td>AEDT</td>
+                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#34d399"></span>Wallaby Health</span></td>
+                      <td>Sarah Johnson</td>
+                      <td>Australian Work Rights</td>
+                      <td><span class="log-viewed">Viewed</span></td>
+                      <td><span class="log-ip">203.0.113.42</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-          </div><!-- /two-col -->
+          </div><!-- /col-right -->
 
-        </div><!-- /content-area -->
+        </div><!-- /two-col -->
       </div><!-- /main -->
     </div><!-- /main-wrap -->
   </div><!-- /layout -->
 
-  <!-- Share modal -->
+  <!-- Share Modal -->
   <div class="share-backdrop" id="shareBackdrop" onclick="closeShareModal()">
     <div class="share-modal" onclick="event.stopPropagation()">
       <button class="share-modal-close" onclick="closeShareModal()" aria-label="Close">
@@ -856,8 +588,6 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
-
-      <!-- Form view -->
       <div id="shareFormView">
         <div class="share-modal-title">Share Carter Peters' credentials</div>
         <div class="share-modal-sub">Select credentials and enter the recipient's email address.</div>
@@ -871,38 +601,37 @@
               </div>
               <label class="share-cred-item">
                 <input type="checkbox" name="cred" checked>
-                <span class="share-cred-label">Nationally Coordinated Criminal History Check</span>
+                <span>Nationally Coordinated Criminal History Check</span>
               </label>
               <label class="share-cred-item">
                 <input type="checkbox" name="cred" checked>
                 <span class="share-cred-meta">
-                  <span class="share-cred-label">Plumbing License</span>
+                  <span>Plumbing License</span>
                   <span class="share-cred-badge is-expiring">Expires in 14 days</span>
                 </span>
               </label>
               <label class="share-cred-item">
                 <input type="checkbox" name="cred" checked>
-                <span class="share-cred-label">Australian Working Rights</span>
+                <span>Australian Working Rights</span>
               </label>
               <label class="share-cred-item is-disabled">
                 <input type="checkbox" name="cred" disabled>
                 <span class="share-cred-meta">
-                  <span class="share-cred-label">Working With Children Check</span>
+                  <span>Working With Children Check</span>
                   <span class="share-cred-badge is-missing">Not compliant</span>
                 </span>
               </label>
             </div>
-            <div class="share-creds-scrollbar"></div>
           </div>
         </div>
         <div class="share-form">
           <div class="share-field">
             <label class="share-label" for="shareDuration">Link valid for</label>
             <select class="share-select" id="shareDuration">
-              <option value="1 week">1 week</option>
-              <option value="2 weeks">2 weeks</option>
-              <option value="1 month">1 month</option>
-              <option value="3 months">3 months</option>
+              <option>1 week</option>
+              <option>2 weeks</option>
+              <option>1 month</option>
+              <option>3 months</option>
             </select>
           </div>
           <div class="share-field">
@@ -915,8 +644,6 @@
           Share
         </button>
       </div>
-
-      <!-- Shared view -->
       <div id="shareSharedView" style="display:none">
         <div class="share-modal-title">Share Carter Peters' credentials</div>
         <div class="share-modal-sub">Credentials shared with <strong id="shareConfirmEmail"></strong></div>
@@ -944,38 +671,85 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
+  <!-- Deactivate modal -->
+  <div class="deact-backdrop" id="deactBackdrop">
+    <div class="deact-modal">
+      <div class="deact-title">Deactivate this profile?</div>
+      <div class="deact-body">This will immediately revoke all active shares and secure links, removing this worker from all connected organisations.</div>
+      <div class="deact-btns">
+        <button class="deact-btn-cancel" onclick="closeDeactModal()">Cancel</button>
+        <button class="deact-btn-confirm" onclick="closeDeactModal()">Deactivate</button>
+      </div>
     </div>
   </div>
 
   <script>
+    // ── Inline field edit ────────────────────────────────────────────────
+    function startEdit(btn) {
+      var wrap = btn.closest('.field-value-wrap');
+      if (wrap.dataset.editing) return;
+      wrap.dataset.editing = '1';
+      var val = wrap.querySelector('.field-value').textContent.trim();
+      wrap.dataset.original = val;
+      wrap.innerHTML =
+        '<input class="edit-input" type="text" value="' + val.replace(/"/g, '&quot;') + '">' +
+        '<div class="edit-actions">' +
+          '<button class="edit-save" onclick="saveEdit(this)">Save</button>' +
+          '<button class="edit-cancel" onclick="cancelEdit(this)">Cancel</button>' +
+        '</div>';
+      var input = wrap.querySelector('.edit-input');
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
+    function saveEdit(btn) {
+      var wrap = btn.closest('.field-value-wrap');
+      var input = wrap.querySelector('.edit-input');
+      var val = input.value.trim() || wrap.dataset.original;
+      delete wrap.dataset.editing;
+      renderFieldView(wrap, val);
+    }
+    function cancelEdit(btn) {
+      var wrap = btn.closest('.field-value-wrap');
+      delete wrap.dataset.editing;
+      renderFieldView(wrap, wrap.dataset.original || '');
+    }
+    function renderFieldView(wrap, value) {
+      wrap.innerHTML =
+        '<span class="field-value">' + esc(value) + '</span>' +
+        '<button class="edit-btn" onclick="startEdit(this)" title="Edit">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>' +
+        '</button>';
+    }
+    function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // ── Share Modal ──────────────────────────────────────────────────────
     function openShareModal() {
       document.getElementById('shareFormView').style.display = '';
       document.getElementById('shareSharedView').style.display = 'none';
       document.getElementById('shareEmail').value = '';
       document.getElementById('shareBackdrop').classList.add('is-visible');
     }
-
     function closeShareModal() {
       document.getElementById('shareBackdrop').classList.remove('is-visible');
     }
-
     function selectAllCreds(checked) {
       document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled)').forEach(function(cb) {
         cb.checked = checked;
       });
     }
-
     function submitShare() {
       var email = document.getElementById('shareEmail').value.trim();
       var duration = document.getElementById('shareDuration').value;
-      document.getElementById('shareConfirmEmail').textContent = email || 'recipient';
+      if (!email) { document.getElementById('shareEmail').focus(); return; }
+      document.getElementById('shareConfirmEmail').textContent = email;
       document.getElementById('shareConfirmDuration').textContent = duration;
-      document.getElementById('shareConfirmEmailMeta').textContent = email || 'recipient';
+      document.getElementById('shareConfirmEmailMeta').textContent = email;
       document.getElementById('shareFormView').style.display = 'none';
       document.getElementById('shareSharedView').style.display = '';
     }
-
     function copyModalLink(btn) {
       navigator.clipboard.writeText('https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678').then(function() {
         var orig = btn.innerHTML;
@@ -983,21 +757,49 @@
         setTimeout(function() { btn.innerHTML = orig; }, 2000);
       });
     }
-
-    function copySidebarLink(btn) {
-      navigator.clipboard.writeText('https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678').then(function() {
-        var orig = btn.innerHTML;
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Copied!';
-        setTimeout(function() { btn.innerHTML = orig; }, 2000);
-      });
-    }
-
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeShareModal();
     });
+
+    // ── Deactivate modal ─────────────────────────────────────────────────
+    function openDeactModal() { document.getElementById('deactBackdrop').classList.add('is-visible'); }
+    function closeDeactModal() { document.getElementById('deactBackdrop').classList.remove('is-visible'); }
+
+    // ── Requirements iframe scale ────────────────────────────────────────
+    function scaleReqIframe() {
+      var inner = document.getElementById('reqIframeInner');
+      var iframe = document.getElementById('reqIframe');
+      var wrap = inner.parentElement;
+      var availW = wrap.clientWidth - 40; // subtract wrap padding
+      var nativeW = 375;
+      if (availW < nativeW) {
+        var scale = availW / nativeW;
+        inner.style.width = nativeW + 'px';
+        inner.style.transform = 'scale(' + scale + ')';
+        inner.style.transformOrigin = 'top left';
+        inner.style.height = Math.ceil(460 / scale) + 'px';
+        wrap.style.paddingBottom = '0';
+      } else {
+        inner.style.width = (nativeW + 1) + 'px';
+        inner.style.transform = '';
+        iframe.style.height = '460px';
+      }
+    }
+    window.addEventListener('resize', scaleReqIframe);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', scaleReqIframe);
+    } else {
+      scaleReqIframe();
+    }
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 03/03/2026 21:44:08';
+    (function() {
+      var d = new Date(document.lastModified);
+      var pad = function(n) { return String(n).padStart(2, '0'); };
+      document.getElementById('protoLastUpdated').textContent =
+        'Last updated ' + pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear() +
+        ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    })();
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
