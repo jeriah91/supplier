@@ -150,15 +150,17 @@
     .org-name { flex: 1; font-size: 14px; color: #0f172a; letter-spacing: -0.28px; line-height: 18px; }
     .org-remaining { font-size: 14px; color: #0f172a; letter-spacing: -0.28px; line-height: 18px; white-space: nowrap; }
     .btn-revoke {
-      border: 1px solid #2c66ef; background: #fff; color: #2c66ef;
-      font-family: inherit; font-size: 14px; font-weight: 500;
-      padding: 4px 12px; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; gap: 8px;
-      letter-spacing: -0.28px; line-height: 24px;
-      flex: 1; justify-content: center;
+      border: 1px solid #e2e8f0; background: #fff; color: #64748b;
+      font-family: inherit; font-size: 12px; font-weight: 500;
+      padding: 3px 10px; border-radius: 6px; cursor: pointer;
+      display: none; align-items: center; gap: 6px;
+      letter-spacing: -0.24px; line-height: 20px; flex-shrink: 0;
+      transition: border-color 0.15s, color 0.15s;
     }
-    .btn-revoke:hover { background: #eff6ff; }
-    .btn-revoke svg { width: 16px; height: 16px; }
+    .btn-revoke:hover { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
+    .btn-revoke svg { width: 14px; height: 14px; }
+    .org-row:hover .btn-revoke { display: flex; }
+    .org-row:hover .org-remaining { display: none; }
 
     /* ── Access log (grouped by org) ── */
     .access-log-groups { display: flex; flex-direction: column; gap: 20px; margin-top: 16px; }
@@ -465,7 +467,7 @@
                   <div class="org-avatar wh">WH</div>
                   <span class="org-name">Wallaby Health</span>
                   <button class="btn-revoke">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                     Revoke access
                   </button>
                 </div>
@@ -473,11 +475,19 @@
                   <div class="org-avatar ch">CH</div>
                   <span class="org-name">Catholic Healthcare</span>
                   <span class="org-remaining">3 days remaining</span>
+                  <button class="btn-revoke">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                    Revoke access
+                  </button>
                 </div>
                 <div class="org-row">
                   <div class="org-avatar bc">BC</div>
                   <span class="org-name">Bolton Clarke</span>
                   <span class="org-remaining">4 days remaining</span>
+                  <button class="btn-revoke">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                    Revoke access
+                  </button>
                 </div>
               </div>
             </div>
