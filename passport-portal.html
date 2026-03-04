@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compliance Passport — Zipline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #cbd5e1;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Outer wrap ── */
+    .portal-outer {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      padding: 8px;
+    }
+
+    .portal-card {
+      flex: 1;
+      min-width: 0;
+      background: #fff;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .portal-header {
+      background: #f1f5f9;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .portal-logo {
+      height: 16px;
+      width: 70px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .portal-validity {
+      flex: 1;
+      text-align: right;
+      font-size: 14px;
+      color: #0f172a;
+      letter-spacing: -0.28px;
+      line-height: 18px;
+    }
+
+    .h-divider { height: 1px; background: #e2e8f0; flex-shrink: 0; }
+    .v-divider { width: 1px; background: #cbd5e1; flex-shrink: 0; }
+
+    /* ── Body layout ── */
+    .portal-body {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── Left sidebar ── */
+    .portal-sidebar {
+      width: 456px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #f1f5f9;
+    }
+
+    .sidebar-header {
+      background: #fff;
+      padding: 16px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.36px;
+      line-height: 26px;
+    }
+
+    .sidebar-list {
+      flex: 1;
+      overflow-y: auto;
+      background: #fff;
+    }
+
+    /* ── Employee group ── */
+    .emp-group { border-bottom: 1px solid #e2e8f0; }
+
+    .emp-toggle {
+      width: 100%;
+      background: #f8fafc;
+      border: none;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .emp-toggle:hover { background: #f1f5f9; }
+
+    .emp-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .emp-toggle-name {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+    }
+
+    .emp-toggle-role {
+      font-size: 12px;
+      color: #64748b;
+      letter-spacing: -0.24px;
+    }
+
+    .emp-chevron {
+      width: 16px;
+      height: 16px;
+      color: #94a3b8;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .emp-group.is-open .emp-chevron { transform: rotate(180deg); }
+
+    .emp-reqs {
+      display: none;
+    }
+    .emp-group.is-open .emp-reqs { display: block; }
+
+    /* ── Requirement row ── */
+    .req-row {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 10px 16px 10px 54px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      cursor: pointer;
+      text-align: left;
+      border-left: 3px solid transparent;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .req-row:hover { background: #f8fafc; }
+    .req-row.is-active {
+      background: #eff6ff;
+      border-left-color: #2c66ef;
+    }
+
+    .req-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .req-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #334155;
+      letter-spacing: -0.28px;
+      line-height: 20px;
+      flex: 1;
+    }
+    .req-row.is-active .req-name { color: #2c66ef; }
+
+    .req-expiry {
+      font-size: 12px;
+      color: #94a3b8;
+      letter-spacing: -0.24px;
+      line-height: 16px;
+    }
+
+    /* ── Status badges (sidebar) ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      letter-spacing: -0.22px;
+    }
+    .badge.compliant { background: #f0fdf4; color: #16a34a; }
+    .badge.expiring  { background: #fef3c7; color: #d97706; }
+    .badge.expired   { background: #fef2f2; color: #dc2626; }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    }
+    .badge.compliant .badge-dot { background: #16a34a; }
+    .badge.expiring  .badge-dot { background: #d97706; }
+    .badge.expired   .badge-dot { background: #dc2626; }
+
+    /* ── Right: viewer ── */
+    .portal-viewer {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: #f1f5f9;
+    }
+
+    .viewer-header {
+      background: #fff;
+      padding: 16px;
+      flex-shrink: 0;
+    }
+
+    .viewer-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.36px;
+      line-height: 26px;
+    }
+
+    .viewer-content {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 16px;
+      background: #fff;
+    }
+
+    /* ── Empty state ── */
+    .viewer-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 14px;
+      color: #94a3b8;
+      letter-spacing: -0.28px;
+    }
+
+    /* ── Document panel ── */
+    .doc-panel { display: flex; flex-direction: column; gap: 16px; height: 100%; }
+
+    .doc-meta {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .doc-meta-employee {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .doc-meta-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .doc-meta-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -0.28px;
+    }
+
+    .doc-meta-sep {
+      width: 1px;
+      height: 20px;
+      background: #e2e8f0;
+      flex-shrink: 0;
+    }
+
+    .doc-meta-type {
+      font-size: 12px;
+      color: #64748b;
+      letter-spacing: -0.24px;
+    }
+
+    .doc-meta-expiry {
+      font-size: 13px;
+      color: #334155;
+      letter-spacing: -0.26px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .doc-meta-expiry svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .doc-meta-right { margin-left: auto; }
+
+    /* ── Document preview ── */
+    .doc-preview-wrap {
+      flex: 1;
+      min-height: 0;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 24px;
+    }
+
+    .doc-preview {
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      width: 100%;
+      max-width: 680px;
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .doc-preview-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+
+    .doc-preview-issuer {
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .doc-preview-doc-type {
+      font-size: 22px;
+      font-weight: 600;
+      color: #0f172a;
+      letter-spacing: -0.44px;
+      line-height: 28px;
+    }
+
+    .doc-preview-status-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .doc-preview-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+    .doc-preview-badge.compliant { background: #f0fdf4; color: #16a34a; }
+    .doc-preview-badge.expiring  { background: #fef3c7; color: #d97706; }
+    .doc-preview-badge.expired   { background: #fef2f2; color: #dc2626; }
+    .doc-preview-badge-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .doc-preview-badge.compliant .doc-preview-badge-dot { background: #16a34a; }
+    .doc-preview-badge.expiring  .doc-preview-badge-dot { background: #d97706; }
+    .doc-preview-badge.expired   .doc-preview-badge-dot { background: #dc2626; }
+
+    .doc-preview-expiry-label {
+      font-size: 11px;
+      color: #94a3b8;
+      letter-spacing: -0.22px;
+    }
+
+    .doc-preview-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .doc-field {
+      display: flex;
+      gap: 16px;
+    }
+
+    .doc-field-label {
+      width: 180px;
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: -0.26px;
+      line-height: 24px;
+    }
+
+    .doc-field-value {
+      flex: 1;
+      font-size: 14px;
+      color: #0f172a;
+      letter-spacing: -0.28px;
+      line-height: 24px;
+    }
+
+    .doc-preview-footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid #f1f5f9;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .doc-sig-label {
+      font-size: 11px;
+      color: #94a3b8;
+      letter-spacing: -0.22px;
+      margin-bottom: 4px;
+    }
+
+    .doc-sig-line {
+      width: 180px;
+      height: 1px;
+      background: #cbd5e1;
+    }
+
+    .doc-verified-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #16a34a;
+      letter-spacing: -0.24px;
+    }
+
+    .doc-verified-badge svg { width: 16px; height: 16px; }
+
+    /* ── No-doc selected placeholder ── */
+    .viewer-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: #94a3b8;
+    }
+
+    .viewer-placeholder svg { width: 40px; height: 40px; opacity: 0.4; }
+    .viewer-placeholder-text { font-size: 14px; letter-spacing: -0.28px; }
+  </style>
+</head>
+<body>
+  <div class="portal-outer">
+    <div class="portal-card">
+
+      <!-- ── Header ── -->
+      <header class="portal-header">
+        <img src="logo.svg" class="portal-logo" alt="Zipline" />
+        <span class="portal-validity" id="validityText">Valid until 28/02/2026</span>
+      </header>
+      <div class="h-divider"></div>
+
+      <!-- ── Two-panel layout ── -->
+      <div class="portal-body">
+
+        <!-- ── Left: requirement list ── -->
+        <aside class="portal-sidebar">
+          <div class="sidebar-header">
+            <div class="sidebar-title">Requirements</div>
+          </div>
+          <div class="h-divider"></div>
+          <div class="sidebar-list" id="sidebarList"></div>
+        </aside>
+
+        <div class="v-divider"></div>
+
+        <!-- ── Right: document viewer ── -->
+        <main class="portal-viewer">
+          <div class="viewer-header">
+            <h2 class="viewer-title" id="viewerTitle">Select a requirement</h2>
+          </div>
+          <div class="h-divider"></div>
+          <div class="viewer-content" id="viewerContent">
+            <div class="viewer-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <span class="viewer-placeholder-text">Select a requirement to view the document</span>
+            </div>
+          </div>
+        </main>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Employee and requirement data ─────────────────────────────────────
+    var EMPLOYEES = [
+      {
+        id: 'carter',
+        name: 'Carter Peters',
+        role: 'Plumber',
+        initials: 'CP',
+        color: '#34d399',
+        requirements: [
+          {
+            id: 'cp-plumbing',
+            name: 'Plumbing License',
+            status: 'expiring',
+            expires: '15 Mar 2026',
+            issuer: 'Queensland Building and Construction Commission',
+            docType: 'Trade License',
+            licenseNo: 'PL-2019-048391',
+            issued: '15 Mar 2019',
+            holder: 'Carter Peters',
+            address: '42 Ironbark Crescent, Brisbane QLD 4000',
+          },
+          {
+            id: 'cp-ncchc',
+            name: 'NCCHC',
+            fullName: 'Nationally Coordinated Criminal History Check',
+            status: 'compliant',
+            expires: '10 Jan 2027',
+            issuer: 'Australian Criminal Intelligence Commission',
+            docType: 'Background Check',
+            licenseNo: 'NCCHC-2024-7732881',
+            issued: '10 Jan 2024',
+            holder: 'Carter Peters',
+            address: '42 Ironbark Crescent, Brisbane QLD 4000',
+          },
+          {
+            id: 'cp-workrights',
+            name: 'Australian Work Rights',
+            status: 'compliant',
+            expires: null,
+            issuer: 'Department of Home Affairs',
+            docType: 'Visa / Work Rights',
+            licenseNo: 'AWR-AU-CITIZEN',
+            issued: 'N/A',
+            holder: 'Carter Peters',
+            address: '42 Ironbark Crescent, Brisbane QLD 4000',
+          },
+        ]
+      },
+      {
+        id: 'marcus',
+        name: 'Marcus Workman',
+        role: 'Plumber',
+        initials: 'MW',
+        color: '#a78bfa',
+        requirements: [
+          {
+            id: 'mw-plumbing',
+            name: 'Plumbing License',
+            status: 'compliant',
+            expires: '22 Apr 2026',
+            issuer: 'Queensland Building and Construction Commission',
+            docType: 'Trade License',
+            licenseNo: 'PL-2020-061184',
+            issued: '22 Apr 2020',
+            holder: 'Marcus Workman',
+            address: '18 Wattle Street, Gold Coast QLD 4217',
+          },
+          {
+            id: 'mw-liability',
+            name: 'Public Liability Insurance',
+            status: 'expiring',
+            expires: '08 Mar 2026',
+            issuer: 'CGU Insurance',
+            docType: 'Insurance Certificate',
+            licenseNo: 'CGU-PLI-2025-AA9821',
+            issued: '08 Mar 2025',
+            holder: 'Marcus Workman',
+            address: '18 Wattle Street, Gold Coast QLD 4217',
+          },
+          {
+            id: 'mw-ncchc',
+            name: 'NCCHC',
+            fullName: 'Nationally Coordinated Criminal History Check',
+            status: 'compliant',
+            expires: '05 Dec 2026',
+            issuer: 'Australian Criminal Intelligence Commission',
+            docType: 'Background Check',
+            licenseNo: 'NCCHC-2023-6641209',
+            issued: '05 Dec 2023',
+            holder: 'Marcus Workman',
+            address: '18 Wattle Street, Gold Coast QLD 4217',
+          },
+        ]
+      }
+    ];
+
+    var activeReqId = null;
+
+    // ── Build sidebar ─────────────────────────────────────────────────────
+    function buildSidebar() {
+      var list = document.getElementById('sidebarList');
+      list.innerHTML = '';
+
+      EMPLOYEES.forEach(function(emp, ei) {
+        var group = document.createElement('div');
+        group.className = 'emp-group' + (ei === 0 ? ' is-open' : '');
+        group.id = 'group-' + emp.id;
+
+        // Toggle button
+        var toggle = document.createElement('button');
+        toggle.className = 'emp-toggle';
+        toggle.innerHTML =
+          '<div class="emp-avatar" style="background:' + emp.color + '">' + emp.initials + '</div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div class="emp-toggle-name">' + emp.name + '</div>' +
+            '<div class="emp-toggle-role">' + emp.role + '</div>' +
+          '</div>' +
+          '<svg class="emp-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+            '<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>' +
+          '</svg>';
+        toggle.onclick = function() { group.classList.toggle('is-open'); };
+
+        // Requirements list
+        var reqs = document.createElement('div');
+        reqs.className = 'emp-reqs';
+
+        emp.requirements.forEach(function(req) {
+          var row = document.createElement('button');
+          row.className = 'req-row';
+          row.id = 'row-' + req.id;
+
+          var expiryText = req.expires ? 'Expires ' + req.expires : 'No expiry';
+
+          row.innerHTML =
+            '<div class="req-row-top">' +
+              '<span class="req-name">' + req.name + '</span>' +
+              '<span class="badge ' + req.status + '">' +
+                '<span class="badge-dot"></span>' +
+                (req.status === 'compliant' ? 'Compliant' : req.status === 'expiring' ? 'Expiring' : 'Expired') +
+              '</span>' +
+            '</div>' +
+            '<div class="req-expiry">' + expiryText + '</div>';
+
+          row.onclick = (function(e, r) {
+            return function() { selectReq(e, r); };
+          })(emp, req);
+
+          reqs.appendChild(row);
+        });
+
+        group.appendChild(toggle);
+        group.appendChild(reqs);
+        list.appendChild(group);
+
+        // Add divider
+        if (ei < EMPLOYEES.length - 1) {
+          var div = document.createElement('div');
+          div.className = 'h-divider';
+          list.appendChild(div);
+        }
+      });
+    }
+
+    // ── Select a requirement ──────────────────────────────────────────────
+    function selectReq(emp, req) {
+      // Remove previous active
+      document.querySelectorAll('.req-row.is-active').forEach(function(r) {
+        r.classList.remove('is-active');
+      });
+      document.getElementById('row-' + req.id).classList.add('is-active');
+      activeReqId = req.id;
+
+      // Update viewer title
+      document.getElementById('viewerTitle').textContent = req.fullName || req.name;
+
+      // Render document
+      renderDocument(emp, req);
+    }
+
+    function statusLabel(s) {
+      return s === 'compliant' ? 'Compliant' : s === 'expiring' ? 'Expiring Soon' : 'Expired';
+    }
+
+    function renderDocument(emp, req) {
+      var content = document.getElementById('viewerContent');
+
+      var expiryRow = req.expires
+        ? '<div class="doc-field"><div class="doc-field-label">Expiry Date</div><div class="doc-field-value">' + req.expires + '</div></div>'
+        : '<div class="doc-field"><div class="doc-field-label">Expiry Date</div><div class="doc-field-value" style="color:#64748b">Does not expire</div></div>';
+
+      content.innerHTML =
+        '<div class="doc-panel">' +
+
+          // Meta bar
+          '<div class="doc-meta">' +
+            '<div class="doc-meta-employee">' +
+              '<div class="doc-meta-avatar" style="background:' + emp.color + '">' + emp.initials + '</div>' +
+              '<span class="doc-meta-name">' + emp.name + '</span>' +
+            '</div>' +
+            '<div class="doc-meta-sep"></div>' +
+            '<span class="doc-meta-type">' + req.docType + '</span>' +
+            '<div class="doc-meta-right">' +
+              '<span class="badge ' + req.status + '">' +
+                '<span class="badge-dot"></span>' +
+                statusLabel(req.status) +
+              '</span>' +
+            '</div>' +
+          '</div>' +
+
+          // Document preview
+          '<div class="doc-preview-wrap">' +
+            '<div class="doc-preview">' +
+
+              '<div class="doc-preview-top">' +
+                '<div>' +
+                  '<div class="doc-preview-issuer">' + req.issuer + '</div>' +
+                  '<div class="doc-preview-doc-type">' + (req.fullName || req.name) + '</div>' +
+                '</div>' +
+                '<div class="doc-preview-status-col">' +
+                  '<span class="doc-preview-badge ' + req.status + '">' +
+                    '<span class="doc-preview-badge-dot"></span>' +
+                    statusLabel(req.status) +
+                  '</span>' +
+                  (req.expires ? '<div class="doc-preview-expiry-label">Expires ' + req.expires + '</div>' : '') +
+                '</div>' +
+              '</div>' +
+
+              '<div class="doc-preview-fields">' +
+                '<div class="doc-field"><div class="doc-field-label">Holder</div><div class="doc-field-value">' + req.holder + '</div></div>' +
+                '<div class="doc-field"><div class="doc-field-label">Address</div><div class="doc-field-value">' + req.address + '</div></div>' +
+                '<div class="doc-field"><div class="doc-field-label">Document Number</div><div class="doc-field-value" style="font-family:monospace;letter-spacing:0.5px">' + req.licenseNo + '</div></div>' +
+                '<div class="doc-field"><div class="doc-field-label">Date Issued</div><div class="doc-field-value">' + req.issued + '</div></div>' +
+                expiryRow +
+                '<div class="doc-field"><div class="doc-field-label">Issuing Authority</div><div class="doc-field-value">' + req.issuer + '</div></div>' +
+              '</div>' +
+
+              '<div class="doc-preview-footer">' +
+                '<div>' +
+                  '<div class="doc-sig-label">Authorised Signature</div>' +
+                  '<div class="doc-sig-line"></div>' +
+                '</div>' +
+                '<div class="doc-verified-badge">' +
+                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+                  'Verified by Zipline' +
+                '</div>' +
+              '</div>' +
+
+            '</div>' +
+          '</div>' +
+
+        '</div>';
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    buildSidebar();
+
+    // Auto-select first requirement
+    selectReq(EMPLOYEES[0], EMPLOYEES[0].requirements[0]);
+    document.getElementById('group-' + EMPLOYEES[0].id).classList.add('is-open');
+  </script>
+</body>
+</html>

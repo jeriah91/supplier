@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in — Zipline Passport</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f172a;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .otp-screen {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .otp-card {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 40px;
+      width: 413px;
+      max-width: calc(100vw - 32px);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Zipline icon mark — blue on light bg */
+    .otp-logo { width: 32px; height: 32px; flex-shrink: 0; }
+
+    .otp-title {
+      font-size: 36px;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: -1.44px;
+      line-height: 40px;
+    }
+
+    .otp-body {
+      font-size: 16px;
+      color: #0f172a;
+      letter-spacing: -0.32px;
+      line-height: 22px;
+    }
+
+    .otp-input {
+      width: 100%;
+      height: 40px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 16px;
+      color: #0f172a;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .otp-input:focus { border-color: #2c66ef; }
+    .otp-input::placeholder { color: #94a3b8; }
+
+    .btn-send {
+      background: #2c66ef;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 4px 12px;
+      height: 32px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.56px;
+      line-height: 24px;
+      transition: background 0.15s;
+    }
+    .btn-send:hover { background: #1d55d6; }
+    .btn-send svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ── OTP digit inputs ── */
+    .otp-digits { display: flex; gap: 8px; align-items: flex-end; }
+    .digit-wrap { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+    .digit-input {
+      width: 26px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 24px;
+      font-weight: 600;
+      color: #334155;
+      text-align: center;
+      letter-spacing: -0.48px;
+      line-height: 26px;
+      caret-color: #2c66ef;
+      padding: 0;
+    }
+    .digit-line {
+      width: 26px;
+      height: 2px;
+      background: #cbd5e1;
+      border-radius: 1px;
+      transition: background 0.15s;
+    }
+    .digit-input:focus + .digit-line { background: #2c66ef; }
+
+    .btn-signin {
+      width: 100%;
+      height: 32px;
+      border: none;
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.56px;
+      line-height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .btn-signin.ready { background: #2c66ef; color: #fff; cursor: pointer; }
+    .btn-signin.ready:hover { background: #1d55d6; }
+    .btn-signin:not(.ready) { background: #cbd5e1; color: #fff; cursor: not-allowed; }
+    .btn-signin svg { width: 16px; height: 16px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Step 1: Confirm email ── -->
+  <div class="otp-screen" id="stepEmail">
+    <div class="otp-card">
+      <!-- Zipline icon mark (blue) -->
+      <svg class="otp-logo" viewBox="0 0 22.334 22.757" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14.9195 15.1619L21.4042 21.7079C21.4892 21.7939 21.5471 21.9033 21.5705 22.0224C21.5939 22.1416 21.5819 22.265 21.5358 22.3772C21.4897 22.4894 21.4117 22.5853 21.3117 22.6529C21.2116 22.7205 21.0939 22.7568 20.9734 22.7571H7.65544C7.57219 22.7573 7.4897 22.741 7.4127 22.7091C7.33571 22.6771 7.26571 22.6302 7.20673 22.571L0.0887768 15.3842C0.0606339 15.3558 0.0383072 15.3222 0.023074 15.2852C0.00784089 15.2481 0 15.2085 0 15.1684C0 15.1283 0.00784089 15.0886 0.023074 15.0516C0.0383072 15.0145 0.0606339 14.9809 0.0887768 14.9526L7.39647 7.58225L0.906725 1.03371C0.825602 0.947443 0.771136 0.839252 0.749967 0.722328C0.728798 0.605403 0.741841 0.484797 0.787506 0.375215C0.833172 0.265633 0.909486 0.17181 1.00714 0.105185C1.1048 0.0385605 1.21958 0.00201316 1.33749 0H14.6708C14.8381 0.000211755 14.9985 0.0671012 15.117 0.186068L22.2452 7.37292C22.2733 7.40124 22.2957 7.43488 22.3109 7.47191C22.3261 7.50893 22.334 7.54862 22.334 7.58871C22.334 7.62879 22.3261 7.66848 22.3109 7.70551C22.2957 7.74254 22.2733 7.77617 22.2452 7.80449L14.9195 15.1619Z" fill="#6792FF"/>
+        <path d="M22.2324 7.36739C22.2604 7.39549 22.2827 7.42891 22.2979 7.46572C22.3131 7.50253 22.3209 7.54201 22.3209 7.58188C22.3209 7.62175 22.3131 7.66123 22.2979 7.69805C22.2827 7.73486 22.2604 7.76828 22.2324 7.79638L14.9195 15.1615L7.60416 22.5319C7.57628 22.5602 7.54312 22.5826 7.5066 22.5979C7.47007 22.6133 7.4309 22.6211 7.39134 22.6211C7.35178 22.6211 7.31261 22.6133 7.27609 22.5979C7.23956 22.5826 7.2064 22.5602 7.17852 22.5319L0.0887768 15.3838C0.0606339 15.3555 0.0383072 15.3218 0.023074 15.2848C0.00784089 15.2478 0 15.2081 0 15.168C0 15.1279 0.00784089 15.0882 0.023074 15.0512C0.0383072 15.0142 0.0606339 14.9805 0.0887768 14.9522L7.39134 7.58188L14.7042 0.211545C14.7323 0.183181 14.7656 0.160679 14.8024 0.145326C14.8391 0.129973 14.8785 0.12207 14.9183 0.12207C14.958 0.12207 14.9974 0.129973 15.0342 0.145326C15.0709 0.160679 15.1043 0.183181 15.1324 0.211545L22.2324 7.36739Z" fill="#2851F0"/>
+      </svg>
+
+      <h1 class="otp-title">Confirm email</h1>
+
+      <input
+        type="email"
+        class="otp-input"
+        id="emailInput"
+        placeholder="Your email"
+        onkeydown="if(event.key==='Enter') sendOtp()"
+      />
+
+      <button class="btn-send" onclick="sendOtp()">
+        Send one-time password
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 2: Enter 6-digit code ── -->
+  <div class="otp-screen" id="stepCode" style="display:none">
+    <div class="otp-card">
+      <svg class="otp-logo" viewBox="0 0 22.334 22.757" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14.9195 15.1619L21.4042 21.7079C21.4892 21.7939 21.5471 21.9033 21.5705 22.0224C21.5939 22.1416 21.5819 22.265 21.5358 22.3772C21.4897 22.4894 21.4117 22.5853 21.3117 22.6529C21.2116 22.7205 21.0939 22.7568 20.9734 22.7571H7.65544C7.57219 22.7573 7.4897 22.741 7.4127 22.7091C7.33571 22.6771 7.26571 22.6302 7.20673 22.571L0.0887768 15.3842C0.0606339 15.3558 0.0383072 15.3222 0.023074 15.2852C0.00784089 15.2481 0 15.2085 0 15.1684C0 15.1283 0.00784089 15.0886 0.023074 15.0516C0.0383072 15.0145 0.0606339 14.9809 0.0887768 14.9526L7.39647 7.58225L0.906725 1.03371C0.825602 0.947443 0.771136 0.839252 0.749967 0.722328C0.728798 0.605403 0.741841 0.484797 0.787506 0.375215C0.833172 0.265633 0.909486 0.17181 1.00714 0.105185C1.1048 0.0385605 1.21958 0.00201316 1.33749 0H14.6708C14.8381 0.000211755 14.9985 0.0671012 15.117 0.186068L22.2452 7.37292C22.2733 7.40124 22.2957 7.43488 22.3109 7.47191C22.3261 7.50893 22.334 7.54862 22.334 7.58871C22.334 7.62879 22.3261 7.66848 22.3109 7.70551C22.2957 7.74254 22.2733 7.77617 22.2452 7.80449L14.9195 15.1619Z" fill="#6792FF"/>
+        <path d="M22.2324 7.36739C22.2604 7.39549 22.2827 7.42891 22.2979 7.46572C22.3131 7.50253 22.3209 7.54201 22.3209 7.58188C22.3209 7.62175 22.3131 7.66123 22.2979 7.69805C22.2827 7.73486 22.2604 7.76828 22.2324 7.79638L14.9195 15.1615L7.60416 22.5319C7.57628 22.5602 7.54312 22.5826 7.5066 22.5979C7.47007 22.6133 7.4309 22.6211 7.39134 22.6211C7.35178 22.6211 7.31261 22.6133 7.27609 22.5979C7.23956 22.5826 7.2064 22.5602 7.17852 22.5319L0.0887768 15.3838C0.0606339 15.3555 0.0383072 15.3218 0.023074 15.2848C0.00784089 15.2478 0 15.2081 0 15.168C0 15.1279 0.00784089 15.0882 0.023074 15.0512C0.0383072 15.0142 0.0606339 14.9805 0.0887768 14.9522L7.39134 7.58188L14.7042 0.211545C14.7323 0.183181 14.7656 0.160679 14.8024 0.145326C14.8391 0.129973 14.8785 0.12207 14.9183 0.12207C14.958 0.12207 14.9974 0.129973 15.0342 0.145326C15.0709 0.160679 15.1043 0.183181 15.1324 0.211545L22.2324 7.36739Z" fill="#2851F0"/>
+      </svg>
+
+      <h1 class="otp-title">A one-time passcode has been sent</h1>
+
+      <p class="otp-body">Check your inbox to find your one-time passcode and enter the code below:</p>
+
+      <div class="otp-digits" id="otpDigits"></div>
+
+      <button class="btn-signin" id="signinBtn" onclick="signIn()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+        </svg>
+        Sign in
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ── Build 6 digit inputs ─────────────────────────────────────────────
+    var container = document.getElementById('otpDigits');
+    for (var i = 0; i < 6; i++) {
+      var wrap = document.createElement('div');
+      wrap.className = 'digit-wrap';
+      var inp = document.createElement('input');
+      inp.className = 'digit-input';
+      inp.type = 'text';
+      inp.inputMode = 'numeric';
+      inp.pattern = '[0-9]*';
+      inp.maxLength = 1;
+      inp.autocomplete = 'off';
+      inp.dataset.idx = i;
+      var line = document.createElement('div');
+      line.className = 'digit-line';
+      wrap.appendChild(inp);
+      wrap.appendChild(line);
+      container.appendChild(wrap);
+    }
+
+    var digits = document.querySelectorAll('.digit-input');
+    var signinBtn = document.getElementById('signinBtn');
+
+    digits.forEach(function(inp, i) {
+      inp.addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 1);
+        if (this.value && i < 5) digits[i + 1].focus();
+        checkReady();
+      });
+      inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value && i > 0) digits[i - 1].focus();
+        if (e.key === 'Enter') signIn();
+      });
+      inp.addEventListener('paste', function(e) {
+        e.preventDefault();
+        var text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        for (var j = 0; j < 6; j++) digits[j].value = text[j] || '';
+        digits[Math.min(text.length, 5)].focus();
+        checkReady();
+      });
+    });
+
+    function checkReady() {
+      var done = Array.from(digits).every(function(d) { return d.value.length === 1; });
+      signinBtn.classList.toggle('ready', done);
+    }
+
+    function sendOtp() {
+      var email = document.getElementById('emailInput').value.trim();
+      if (!email) { document.getElementById('emailInput').focus(); return; }
+      document.getElementById('stepEmail').style.display = 'none';
+      document.getElementById('stepCode').style.display = 'flex';
+      setTimeout(function() { digits[0].focus(); }, 80);
+    }
+
+    function signIn() {
+      var done = Array.from(digits).every(function(d) { return d.value.length === 1; });
+      if (!done) return;
+      window.location.href = 'passport-portal.html';
+    }
+  </script>
+</body>
+</html>
