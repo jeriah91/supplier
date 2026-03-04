@@ -160,24 +160,29 @@
     .btn-revoke:hover { background: #eff6ff; }
     .btn-revoke svg { width: 16px; height: 16px; }
 
-    /* ── Access log ── */
-    .access-log-outer { overflow-x: auto; margin-top: 16px; }
-    .access-log-table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    .access-log-table th {
-      padding: 8px 10px; text-align: left;
-      font-size: 11px; font-weight: 600; color: #94a3b8;
-      letter-spacing: 0.4px; text-transform: uppercase;
-      border-bottom: 1px solid #e2e8f0; white-space: nowrap;
+    /* ── Access log (grouped by org) ── */
+    .access-log-groups { display: flex; flex-direction: column; gap: 20px; margin-top: 16px; }
+    .log-org-group {}
+    .log-org-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 8px;
     }
-    .access-log-table td {
-      padding: 10px 10px; border-bottom: 1px solid #f1f5f9;
-      font-size: 12px; color: #334155; line-height: 16px; vertical-align: middle;
+    .log-org-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .log-org-name { font-size: 13px; font-weight: 600; color: #334155; letter-spacing: -0.26px; }
+    .log-email-group { display: flex; flex-direction: column; gap: 1px; }
+    .log-email-row {
+      font-size: 11px; font-weight: 500; color: #94a3b8;
+      letter-spacing: -0.22px; padding: 4px 0 6px 16px;
     }
-    .access-log-table tbody tr:last-child td { border-bottom: none; }
-    .log-viewed { background: #f0fdf4; color: #16a34a; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; }
-    .log-ip { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: #94a3b8; }
-    .log-org-pill { display: inline-flex; align-items: center; gap: 5px; }
-    .log-org-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .log-entries { display: flex; flex-direction: column; }
+    .log-entry {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 0 5px 16px;
+      border-left: 1px solid #e2e8f0;
+    }
+    .log-entry-req { flex: 1; font-size: 12px; color: #334155; letter-spacing: -0.24px; line-height: 16px; }
+    .log-entry-date { font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; white-space: nowrap; }
+    .log-viewed { background: #f0fdf4; color: #16a34a; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 4px; flex-shrink: 0; }
 
     /* ── Share Modal ── */
     .share-backdrop {
@@ -483,85 +488,82 @@
             <div class="card-sec">
               <div class="sec-title">Access log</div>
               <div class="sec-sub">A record of when credentials were accessed via secure link.</div>
-              <div class="access-log-outer">
-                <table class="access-log-table">
-                  <thead>
-                    <tr>
-                      <th>Date &amp; Time</th>
-                      <th>Timezone</th>
-                      <th>Organisation</th>
-                      <th>User / Access</th>
-                      <th>Requirement</th>
-                      <th>Action</th>
-                      <th>IP Address</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>15 Feb, 11:03 AM</td>
-                      <td>AEDT</td>
-                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#34d399"></span>Wallaby Health</span></td>
-                      <td>Sarah Johnson</td>
-                      <td>Plumbing License</td>
-                      <td><span class="log-viewed">Viewed</span></td>
-                      <td><span class="log-ip">203.0.113.42</span></td>
-                    </tr>
-                    <tr>
-                      <td>15 Feb, 11:01 AM</td>
-                      <td>AEDT</td>
-                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#34d399"></span>Wallaby Health</span></td>
-                      <td>Sarah Johnson</td>
-                      <td>NCCHC</td>
-                      <td><span class="log-viewed">Viewed</span></td>
-                      <td><span class="log-ip">203.0.113.42</span></td>
-                    </tr>
-                    <tr>
-                      <td>14 Feb, 2:47 PM</td>
-                      <td>AEDT</td>
-                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#fb7185"></span>Catholic Healthcare</span></td>
-                      <td>Secure Link</td>
-                      <td>Australian Work Rights</td>
-                      <td><span class="log-viewed">Viewed</span></td>
-                      <td><span class="log-ip">198.51.100.77</span></td>
-                    </tr>
-                    <tr>
-                      <td>14 Feb, 2:44 PM</td>
-                      <td>AEDT</td>
-                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#fb7185"></span>Catholic Healthcare</span></td>
-                      <td>Secure Link</td>
-                      <td>Plumbing License</td>
-                      <td><span class="log-viewed">Viewed</span></td>
-                      <td><span class="log-ip">198.51.100.77</span></td>
-                    </tr>
-                    <tr>
-                      <td>10 Feb, 9:15 AM</td>
-                      <td>AEDT</td>
-                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#a78bfa"></span>Bolton Clarke</span></td>
-                      <td>Michael Tan</td>
-                      <td>NCCHC</td>
-                      <td><span class="log-viewed">Viewed</span></td>
-                      <td><span class="log-ip">192.0.2.100</span></td>
-                    </tr>
-                    <tr>
-                      <td>10 Feb, 9:12 AM</td>
-                      <td>AEDT</td>
-                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#a78bfa"></span>Bolton Clarke</span></td>
-                      <td>Michael Tan</td>
-                      <td>Plumbing License</td>
-                      <td><span class="log-viewed">Viewed</span></td>
-                      <td><span class="log-ip">192.0.2.100</span></td>
-                    </tr>
-                    <tr>
-                      <td>3 Feb, 4:30 PM</td>
-                      <td>AEDT</td>
-                      <td><span class="log-org-pill"><span class="log-org-dot" style="background:#34d399"></span>Wallaby Health</span></td>
-                      <td>Sarah Johnson</td>
-                      <td>Australian Work Rights</td>
-                      <td><span class="log-viewed">Viewed</span></td>
-                      <td><span class="log-ip">203.0.113.42</span></td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="access-log-groups">
+
+                <!-- Wallaby Health -->
+                <div class="log-org-group">
+                  <div class="log-org-header">
+                    <span class="log-org-dot" style="background:#34d399"></span>
+                    <span class="log-org-name">Wallaby Health</span>
+                  </div>
+                  <div class="log-email-group">
+                    <div class="log-email-row">sarah.johnson@wallabyhealthcare.com.au</div>
+                    <div class="log-entries">
+                      <div class="log-entry">
+                        <span class="log-entry-req">Plumbing License</span>
+                        <span class="log-entry-date">15 Feb, 11:03 AM</span>
+                        <span class="log-viewed">Viewed</span>
+                      </div>
+                      <div class="log-entry">
+                        <span class="log-entry-req">NCCHC</span>
+                        <span class="log-entry-date">15 Feb, 11:01 AM</span>
+                        <span class="log-viewed">Viewed</span>
+                      </div>
+                      <div class="log-entry">
+                        <span class="log-entry-req">Australian Work Rights</span>
+                        <span class="log-entry-date">3 Feb, 4:30 PM</span>
+                        <span class="log-viewed">Viewed</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Catholic Healthcare -->
+                <div class="log-org-group">
+                  <div class="log-org-header">
+                    <span class="log-org-dot" style="background:#fb7185"></span>
+                    <span class="log-org-name">Catholic Healthcare</span>
+                  </div>
+                  <div class="log-email-group">
+                    <div class="log-email-row">jessica.nguyen@catholichealthcare.org.au</div>
+                    <div class="log-entries">
+                      <div class="log-entry">
+                        <span class="log-entry-req">Australian Work Rights</span>
+                        <span class="log-entry-date">14 Feb, 2:47 PM</span>
+                        <span class="log-viewed">Viewed</span>
+                      </div>
+                      <div class="log-entry">
+                        <span class="log-entry-req">Plumbing License</span>
+                        <span class="log-entry-date">14 Feb, 2:44 PM</span>
+                        <span class="log-viewed">Viewed</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bolton Clarke -->
+                <div class="log-org-group">
+                  <div class="log-org-header">
+                    <span class="log-org-dot" style="background:#a78bfa"></span>
+                    <span class="log-org-name">Bolton Clarke</span>
+                  </div>
+                  <div class="log-email-group">
+                    <div class="log-email-row">michael.tan@boltonclarke.com.au</div>
+                    <div class="log-entries">
+                      <div class="log-entry">
+                        <span class="log-entry-req">NCCHC</span>
+                        <span class="log-entry-date">10 Feb, 9:15 AM</span>
+                        <span class="log-viewed">Viewed</span>
+                      </div>
+                      <div class="log-entry">
+                        <span class="log-entry-req">Plumbing License</span>
+                        <span class="log-entry-date">10 Feb, 9:12 AM</span>
+                        <span class="log-viewed">Viewed</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
 
