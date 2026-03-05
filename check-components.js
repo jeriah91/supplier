@@ -28,6 +28,15 @@ const DS_FINGERPRINTS = {
   'btn-back':         'Secondary Button',
   'btn-send':         'Primary Button',
   'pill-btn':         'Pill Button (Active)',
+  'btn-later':        'Secondary Button',
+  'btn-cancel-inline':'Secondary Button',
+  'btn-save-inline':  'Primary Button',
+  'btn-bulk-share':   'Primary Button',
+  'btn-choose':       'Primary Button',
+  'btn-done':         'Primary Button',
+  'btn-soft':         'Secondary Button',
+  'btn-share-action': 'Primary Button',
+  'btn-sec-copy':     'Secondary Button',
   // Form controls
   'form-input':       'Text Input',
   'form-select':      'Select',
@@ -39,7 +48,9 @@ const DS_FINGERPRINTS = {
   'inline-edit':      'Inline Field Edit',
   // Badges & Tags
   'tag-caution':      'Tag: Caution',
+  'tag-org-dot':      'Tag: Caution',
   'status-approved':  'Status: Approved',
+  'status-expiring':  'Status Badge (Dot)',
   'status-in-review': 'Status: In Review',
   'status-pill':      'Status Badge (Dot)',
   'status-active':    'Status Badge (Dot)',
@@ -67,6 +78,7 @@ const DS_FINGERPRINTS = {
   'progress-title':   'Progress Bar',
   // Navigation
   'nav-item':         'Sidebar Nav Item',
+  'nav-label':        'Sidebar Nav Item',
   'nav-row':          'Sidebar Nav Item',
   'nav-row-mobile':   'Sidebar Nav Item',
   'nav-spacer':       'Sidebar Nav Item',

@@ -531,34 +531,40 @@
     .btn-share-action:hover { background: #1d56df; }
     .share-creds-section { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
     .share-creds-label { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.32px; line-height: 26px; }
-    .share-creds-box {
-      border: 1px solid #cbd5e1; border-radius: 8px;
-      padding: 12px 8px 16px 16px; display: flex; gap: 8px; align-items: flex-start;
+    .share-creds-box { border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
+    .share-creds-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;
     }
-    .share-creds-inner { flex: 1; display: flex; flex-direction: column; gap: 16px; }
     .share-creds-actions { display: flex; gap: 16px; }
     .share-creds-action {
       background: none; border: none; padding: 0; cursor: pointer;
-      font-family: inherit; font-size: 16px; color: #2c66ef;
-      letter-spacing: -0.32px; line-height: 26px;
+      font-family: inherit; font-size: 14px; color: #2c66ef;
+      letter-spacing: -0.28px; line-height: 22px;
     }
     .share-creds-action:hover { text-decoration: underline; }
-    .share-cred-item { display: flex; align-items: center; gap: 16px; cursor: pointer; }
+    .share-creds-count { font-size: 12px; font-weight: 500; color: #94a3b8; letter-spacing: -0.24px; }
+    .share-creds-scroll { max-height: 232px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+    .share-creds-scroll::-webkit-scrollbar { width: 4px; }
+    .share-creds-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+    .share-creds-group-header {
+      padding: 10px 16px 4px; font-size: 10px; font-weight: 700; color: #94a3b8;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      position: sticky; top: 0; background: #fff; z-index: 1;
+    }
+    .share-cred-item { display: flex; align-items: center; gap: 14px; cursor: pointer; padding: 7px 16px; }
+    .share-cred-item:hover:not(.is-disabled) { background: #f8fafc; }
     .share-cred-item input[type="checkbox"] {
       appearance: none; -webkit-appearance: none; flex-shrink: 0;
-      width: 20px; height: 20px; border: 1.5px solid #2c66ef;
-      border-radius: 4px; cursor: pointer; position: relative;
-      transition: background 0.15s;
+      width: 18px; height: 18px; border: 1.5px solid #2c66ef;
+      border-radius: 4px; cursor: pointer; position: relative; transition: background 0.15s;
     }
     .share-cred-item input[type="checkbox"]:checked { background: #2c66ef; border-color: #2c66ef; }
     .share-cred-item input[type="checkbox"]:checked::after {
-      content: ''; position: absolute;
-      left: 5px; top: 2px; width: 7px; height: 11px;
-      border: 2px solid #fff; border-top: none; border-left: none;
-      transform: rotate(45deg);
+      content: ''; position: absolute; left: 4px; top: 1px; width: 7px; height: 10px;
+      border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg);
     }
-    .share-cred-label { font-size: 16px; font-weight: 500; color: #0f172a; letter-spacing: -0.32px; line-height: 20px; }
-    .share-creds-scrollbar { width: 4px; background: #cbd5e1; border-radius: 2px; height: 62px; flex-shrink: 0; margin-top: 42px; }
+    .share-cred-label { font-size: 15px; font-weight: 500; color: #0f172a; letter-spacing: -0.3px; line-height: 20px; }
     .btn-share-action svg { width: 16px; height: 16px; }
     /* Credential status states */
     .share-cred-meta { display: flex; flex-direction: column; gap: 3px; }
@@ -1645,35 +1651,99 @@
         <div class="share-creds-section">
           <div class="share-creds-label">Share Credentials</div>
           <div class="share-creds-box">
-            <div class="share-creds-inner">
+            <div class="share-creds-toolbar">
               <div class="share-creds-actions">
                 <button class="share-creds-action" onclick="selectAllCreds(true)">Select all</button>
                 <button class="share-creds-action" onclick="selectAllCreds(false)">Deselect all</button>
               </div>
+              <span class="share-creds-count" id="shareCredCount"></span>
+            </div>
+            <div class="share-creds-scroll">
+              <div class="share-creds-group-header">Licences &amp; Qualifications</div>
               <label class="share-cred-item">
-                <input type="checkbox" name="cred" checked>
-                <span class="share-cred-label">Nationally Coordinated Criminal History Check</span>
-              </label>
-              <label class="share-cred-item">
-                <input type="checkbox" name="cred" checked>
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
                 <span class="share-cred-meta">
-                  <span class="share-cred-label">Plumbing License</span>
+                  <span class="share-cred-label">Current State/Territory Plumbing Licence</span>
                   <span class="share-cred-badge is-expiring">Expires in 14 days</span>
                 </span>
               </label>
               <label class="share-cred-item">
-                <input type="checkbox" name="cred" checked>
-                <span class="share-cred-label">Australian Working Rights</span>
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Gasfitting Licence</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Backflow Prevention Accreditation</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Professional Qualifications</span>
+              </label>
+
+              <div class="share-creds-group-header">Safety &amp; Compliance</div>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Public Liability Insurance ($20M min.)</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Workers' Compensation Insurance</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Safe Work Method Statements (SWMS)</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Construction Induction Card (White Card)</span>
+              </label>
+
+              <div class="share-creds-group-header">Aged Care Specific</div>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">National Police Check</span>
               </label>
               <label class="share-cred-item is-disabled">
                 <input type="checkbox" name="cred" disabled>
                 <span class="share-cred-meta">
-                  <span class="share-cred-label">Working With Children Check</span>
-                  <span class="share-cred-badge is-missing">Not compliant</span>
+                  <span class="share-cred-label">NDIS Worker Screening Check</span>
+                  <span class="share-cred-badge is-missing">Not provided</span>
                 </span>
               </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">COVID-19 Vaccination Records</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Infection Control Training Certificate</span>
+              </label>
+
+              <div class="share-creds-group-header">On-Site &amp; Administrative</div>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-meta">
+                  <span class="share-cred-label">Contractor Induction Records</span>
+                  <span class="share-cred-badge is-expiring">Expires in 28 days</span>
+                </span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Australian Work Rights</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Risk Assessments</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Certificate of Compliance — Hydraulic Services</span>
+              </label>
+              <label class="share-cred-item">
+                <input type="checkbox" name="cred" checked onchange="updateCredCount()">
+                <span class="share-cred-label">Asbestos Awareness Training Certificate</span>
+              </label>
             </div>
-            <div class="share-creds-scrollbar"></div>
           </div>
         </div>
         <div class="share-form">
@@ -2051,13 +2121,22 @@
       document.getElementById('shareEmailInput').value = '';
       renderShareEmailTags();
       document.getElementById('shareEmailSuggestions').style.display = 'none';
+      updateCredCount();
       document.getElementById('shareBackdrop').classList.add('is-visible');
+    }
+
+    function updateCredCount() {
+      var total = document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled)').length;
+      var checked = document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled):checked').length;
+      var el = document.getElementById('shareCredCount');
+      if (el) el.textContent = checked + ' of ' + total + ' selected';
     }
 
     function selectAllCreds(checked) {
       document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled)').forEach(function(cb) {
         cb.checked = checked;
       });
+      updateCredCount();
     }
 
     function closeShareModal() {
@@ -2260,7 +2339,7 @@
 
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 03/03/2026 21:56:10';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 11:05:21';
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
