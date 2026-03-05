@@ -1045,7 +1045,7 @@
       // Collect selected credential labels
       var credLabels = [];
       document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled):checked').forEach(function(cb) {
-        var lbl = cb.closest('.share-cred-item') && cb.closest('.share-cred-item').querySelector('label');
+        var lbl = cb.closest('label');
         if (lbl) credLabels.push(lbl.textContent.trim());
       });
 
