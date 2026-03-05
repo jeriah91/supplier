@@ -133,7 +133,7 @@
     /* OTP code block */
     .gm-otp-wrap {
       margin: 20px 0;
-      display: flex; align-items: center; gap: 0;
+      display: flex; align-items: flex-start; flex-direction: column; gap: 6px;
     }
     .gm-otp-block {
       display: inline-flex; align-items: center; justify-content: center;
@@ -141,8 +141,12 @@
       padding: 18px 36px;
       font-family: 'Roboto Mono', 'SF Mono', 'Courier New', monospace;
       font-size: 38px; font-weight: 700; color: #202124;
-      letter-spacing: 10px;
+      letter-spacing: 10px; text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+      cursor: pointer;
     }
+    .gm-otp-block:hover { background: #f1f3f4; border-color: #1a73e8; }
+    .gm-otp-hint { font-size: 11px; color: rgba(0,0,0,0.35); letter-spacing: 0.1px; }
     .gm-otp-expiry {
       font-size: 12px; color: rgba(0,0,0,0.54); margin-top: 8px;
       display: flex; align-items: center; gap: 5px;
@@ -301,13 +305,12 @@
 
       <!-- OTP code -->
       <div class="gm-otp-wrap">
-        <div>
-          <div class="gm-otp-block">847&thinsp;293</div>
-          <div class="gm-otp-expiry">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>
-            Expires in 10 minutes
-          </div>
+        <a class="gm-otp-block" href="passport-portal.html" title="Click to continue to Passport Portal">847&thinsp;293</a>
+        <div class="gm-otp-expiry">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>
+          Expires in 10 minutes
         </div>
+        <span class="gm-otp-hint">Click the code to continue the prototype flow</span>
       </div>
 
       <!-- Warning note -->

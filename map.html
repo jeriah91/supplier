@@ -144,6 +144,18 @@
       background: #fef3c7;
       border: 1.5px dashed #f59e0b;
     }
+    .map-node.email {
+      background: #cffafe;
+      border: 1px solid #22d3ee;
+    }
+    .map-node.passport {
+      background: #ede9fe;
+      border: 1px solid #8b5cf6;
+    }
+    .map-node.passport-modal {
+      background: #ede9fe;
+      border: 1.5px dashed #8b5cf6;
+    }
 
     /* ── Zoom controls ── */
     .zoom-controls {
@@ -252,6 +264,12 @@
       // Modals (amber, dashed border)
       { id: 'deactivate',      label: 'Deactivate Profile',      x: 1960, y: 60,  href: 'portal.html',               color: 'modal',         key: ''                },
       { id: 'shareprofile',    label: 'Share Compliance Profile', x: 1960, y: 170, href: 'portal.html',               color: 'modal',         key: ''                },
+      // Credential sharing email flow (teal = email, purple = passport)
+      { id: 'inviteemail',    label: 'Invite Email',       x: 2200, y: 310, href: 'email-passport-invite.html', color: 'email',          key: '' },
+      { id: 'passportenter',  label: 'Passport · Sign In', x: 2420, y: 310, href: 'passport-otp.html',          color: 'passport',       key: '' },
+      { id: 'otpemail',       label: 'OTP Email',          x: 2640, y: 310, href: 'email-otp.html',             color: 'email',          key: '' },
+      { id: 'passportview',   label: 'Passport Portal',    x: 2860, y: 310, href: 'passport-portal.html',       color: 'passport',       key: '' },
+      { id: 'passportaudit',  label: 'Audit Notice',       x: 2860, y: 430, href: 'passport-portal.html',       color: 'passport-modal', key: '' },
       // Onboarding flow (green)
       { id: 'onboarding',      label: 'Onboarding',        x: 0,    y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'onboarding'      },
       { id: 'welcome',         label: 'Welcome Page',      x: 161,  y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'welcome'         },
@@ -285,6 +303,11 @@
       { from: 'users',           to: 'adduser'         },
       { from: 'compliancedetail',to: 'deactivate'      },
       { from: 'compliancedetail',to: 'shareprofile'    },
+      { from: 'shareprofile',   to: 'inviteemail'     },
+      { from: 'inviteemail',    to: 'passportenter'   },
+      { from: 'passportenter',  to: 'otpemail'        },
+      { from: 'otpemail',       to: 'passportview'    },
+      { from: 'passportview',   to: 'passportaudit',   type: 'vertical' },
       { from: 'success',         to: 'portal',         type: 'up' },
       { from: 'onboarding',      to: 'welcome'         },
       { from: 'welcome',         to: 'business'        },
@@ -418,7 +441,7 @@
     function fitView() {
       var vw = viewport.clientWidth;
       var vh = viewport.clientHeight;
-      var CONTENT_W = 2200; // approximate content x-extent
+      var CONTENT_W = 3100; // approximate content x-extent
       var CONTENT_H = 790;  // approximate content y-extent
       var zoomW = (vw / CONTENT_W) * 0.95;
       var zoomH = (vh / CONTENT_H) * 0.90;

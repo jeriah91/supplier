@@ -281,9 +281,7 @@
     function sendOtp() {
       var email = document.getElementById('emailInput').value.trim();
       if (!email) { document.getElementById('emailInput').focus(); return; }
-      document.getElementById('stepEmail').style.display = 'none';
-      document.getElementById('stepCode').style.display = 'flex';
-      setTimeout(function() { digits[0].focus(); }, 80);
+      window.location.href = 'email-otp.html';
     }
 
     function signIn() {

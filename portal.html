@@ -590,7 +590,11 @@
     /* Share modal confirmed view */
     .share-confirm-icon { width: 48px; height: 48px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
     .share-confirm-icon svg { width: 24px; height: 24px; color: #16a34a; }
-    .share-confirm-title { font-size: 18px; font-weight: 700; color: #0f172a; letter-spacing: -0.36px; margin-bottom: 8px; }
+    .share-confirm-title-row { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .share-confirm-title { font-size: 18px; font-weight: 700; color: #0f172a; letter-spacing: -0.36px; }
+    .share-confirm-email-link { width: 26px; height: 26px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; color: #cbd5e1; text-decoration: none; flex-shrink: 0; transition: color 0.15s, background 0.15s; }
+    .share-confirm-email-link:hover { color: #64748b; background: #f1f5f9; }
+    .share-confirm-email-link svg { width: 14px; height: 14px; }
     .share-confirm-desc { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 22px; margin-bottom: 16px; }
     .share-confirm-recipients { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
     .share-confirm-recipient { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px 4px 10px; border-radius: 100px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 13px; font-weight: 500; color: #334155; letter-spacing: -0.26px; }
@@ -1762,7 +1766,12 @@
         <div class="share-confirm-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <div class="share-confirm-title">Credentials shared</div>
+        <div class="share-confirm-title-row">
+          <div class="share-confirm-title">Credentials shared</div>
+          <a class="share-confirm-email-link" href="email-passport-invite.html" target="_blank" title="Preview invite email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
         <div class="share-confirm-desc">An email has been sent to the following recipients with a secure link to view Carter Peters' credentials. The link expires in <span id="shareConfirmDuration"></span>.</div>
         <div class="share-confirm-recipients" id="shareConfirmRecipients"></div>
         <div class="share-confirm-creds">
@@ -2327,7 +2336,7 @@
 
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 11:22:25';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 11:33:51';
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
