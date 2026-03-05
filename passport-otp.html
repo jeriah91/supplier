@@ -280,6 +280,12 @@
       signinBtn.classList.toggle('ready', done);
     }
 
+    if (window.location.hash === '#code') {
+      document.getElementById('stepEmail').style.display = 'none';
+      document.getElementById('stepCode').style.display = 'flex';
+      document.querySelector('#stepCode .digit-input').focus();
+    }
+
     function sendOtp() {
       var email = document.getElementById('emailInput').value.trim();
       if (!email) { document.getElementById('emailInput').focus(); return; }
