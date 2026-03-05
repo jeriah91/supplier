@@ -78,7 +78,7 @@
     .map-canvas {
       position: absolute;
       left: 0; top: 0;
-      width: 2400px;
+      width: 3600px;
       height: 850px;
       transform-origin: 0 0;
       transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -89,7 +89,7 @@
     .map-svg {
       position: absolute;
       inset: 0;
-      width: 2400px;
+      width: 3600px;
       height: 850px;
       pointer-events: none;
       overflow: visible;
@@ -256,20 +256,24 @@
       { id: 'users',           label: 'Users',             x: 1476, y: 310, href: 'users.html',                       color: 'portal-sub',    key: 'users'           },
       // Portal drawers (blue, dashed border)
       { id: 'addperson',       label: 'Add Person',        x: 1720, y: 0,   href: 'portal.html',                      color: 'portal-drawer', key: ''                },
-      { id: 'compliancedetail',label: 'Compliance Detail', x: 1720, y: 100, href: 'portal.html',                      color: 'portal-drawer', key: ''                },
+      { id: 'compliancedetail',label: 'Compliance Detail', x: 1720, y: 100, href: 'contractor-profile.html',          color: 'portal-drawer', key: 'contractor-profile' },
       { id: 'companycomp',     label: 'Company Compliance',x: 1720, y: 205, href: 'portal.html',                      color: 'portal-drawer', key: ''                },
       // User sub-pages (blue, no border)
       { id: 'userdetail',      label: 'User Detail',       x: 1720, y: 310, href: 'user-detail.html',                 color: 'portal-main',   key: 'userdetail'      },
       { id: 'adduser',         label: 'Add User',          x: 1720, y: 420, href: 'add-user.html',                    color: 'portal-main',   key: 'adduser'         },
+      // Compliance profile tabs (blue, no border)
+      { id: 'tab-requirements',label: 'Requirements',      x: 1960, y: 0,   href: 'contractor-profile.html',          color: 'portal-sub',    key: ''                },
+      { id: 'tab-details',     label: 'Details',           x: 1960, y: 100, href: 'contractor-profile.html',          color: 'portal-sub',    key: ''                },
+      { id: 'tab-sharing',     label: 'Sharing',           x: 1960, y: 205, href: 'contractor-profile.html',          color: 'portal-sub',    key: ''                },
       // Modals (amber, dashed border)
-      { id: 'deactivate',      label: 'Deactivate Profile',      x: 1960, y: 60,  href: 'portal.html',               color: 'modal',         key: ''                },
-      { id: 'shareprofile',    label: 'Share Compliance Profile', x: 1960, y: 170, href: 'portal.html',               color: 'modal',         key: ''                },
+      { id: 'deactivate',      label: 'Deactivate Profile',      x: 2200, y: 60,  href: 'contractor-profile.html',    color: 'modal',         key: ''                },
+      { id: 'shareprofile',    label: 'Share Compliance Profile', x: 2200, y: 170, href: 'contractor-profile.html',   color: 'modal',         key: ''                },
       // Credential sharing email flow (teal = email, purple = passport)
-      { id: 'inviteemail',    label: 'Invite Email',       x: 2200, y: 310, href: 'email-passport-invite.html', color: 'email',          key: '' },
-      { id: 'passportenter',  label: 'Passport · Sign In', x: 2420, y: 310, href: 'passport-otp.html',          color: 'passport',       key: '' },
-      { id: 'otpemail',       label: 'OTP Email',          x: 2640, y: 310, href: 'email-otp.html',             color: 'email',          key: '' },
-      { id: 'passportview',   label: 'Passport Portal',    x: 2860, y: 310, href: 'passport-portal.html',       color: 'passport',       key: '' },
-      { id: 'passportaudit',  label: 'Audit Notice',       x: 2860, y: 430, href: 'passport-portal.html',       color: 'passport-modal', key: '' },
+      { id: 'inviteemail',    label: 'Invite Email',       x: 2440, y: 310, href: 'email-passport-invite.html', color: 'email',          key: '' },
+      { id: 'passportenter',  label: 'Passport · Sign In', x: 2660, y: 310, href: 'passport-otp.html',          color: 'passport',       key: '' },
+      { id: 'otpemail',       label: 'OTP Email',          x: 2880, y: 310, href: 'email-otp.html',             color: 'email',          key: '' },
+      { id: 'passportview',   label: 'Passport Portal',    x: 3100, y: 310, href: 'passport-portal.html',       color: 'passport',       key: 'passportview' },
+      { id: 'passportaudit',  label: 'Audit Notice',       x: 3100, y: 430, href: 'passport-portal.html',       color: 'passport-modal', key: '' },
       // Onboarding flow (green)
       { id: 'onboarding',      label: 'Onboarding',        x: 0,    y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'onboarding'      },
       { id: 'welcome',         label: 'Welcome Page',      x: 161,  y: 660, href: 'onboarding-welcome.html',          color: 'onboarding',    key: 'welcome'         },
@@ -296,13 +300,16 @@
       { from: 'portal',          to: 'users'           },
       { from: 'portal',          to: 'signout',        type: 'vertical' },
       { from: 'signout',         to: 'signin',         type: 'return'   },
-      { from: 'compliance',      to: 'addperson'       },
-      { from: 'compliance',      to: 'compliancedetail'},
-      { from: 'compliance',      to: 'companycomp'     },
-      { from: 'users',           to: 'userdetail'      },
-      { from: 'users',           to: 'adduser'         },
-      { from: 'compliancedetail',to: 'deactivate'      },
-      { from: 'compliancedetail',to: 'shareprofile'    },
+      { from: 'compliance',      to: 'addperson'         },
+      { from: 'compliance',      to: 'compliancedetail'  },
+      { from: 'compliance',      to: 'companycomp'       },
+      { from: 'users',           to: 'userdetail'        },
+      { from: 'users',           to: 'adduser'           },
+      { from: 'compliancedetail',to: 'tab-requirements'  },
+      { from: 'compliancedetail',to: 'tab-details'       },
+      { from: 'compliancedetail',to: 'tab-sharing'       },
+      { from: 'tab-sharing',     to: 'deactivate'        },
+      { from: 'tab-sharing',     to: 'shareprofile'      },
       { from: 'shareprofile',   to: 'inviteemail'     },
       { from: 'inviteemail',    to: 'passportenter'   },
       { from: 'passportenter',  to: 'otpemail'        },
@@ -441,7 +448,7 @@
     function fitView() {
       var vw = viewport.clientWidth;
       var vh = viewport.clientHeight;
-      var CONTENT_W = 3100; // approximate content x-extent
+      var CONTENT_W = 3400; // approximate content x-extent
       var CONTENT_H = 790;  // approximate content y-extent
       var zoomW = (vw / CONTENT_W) * 0.95;
       var zoomH = (vh / CONTENT_H) * 0.90;
