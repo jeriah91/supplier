@@ -9,26 +9,12 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ── Proto nav ─────────────────────────────────────────────────────── */
-    .proto-nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: #000; height: 44px;
-      display: flex; align-items: center; padding: 0 16px; gap: 12px;
-      font-family: Inter, system-ui, sans-serif; font-size: 14px;
-    }
-    .proto-nav-title { flex: 1; color: #fff; font-weight: 600; letter-spacing: -0.01em; }
-    .proto-nav-library {
-      display: flex; align-items: center; gap: 6px;
-      color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px;
-    }
-    .proto-nav-library:hover { color: #fff; }
-    .proto-nav-library svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .proto-nav-updated { font-size: 11px; color: rgba(255,255,255,0.3); }
 
     /* ── Page ────────────────────────────────────────────────────────── */
     body {
       background: #cbd5e1;
       height: 100vh; overflow: hidden;
-      padding-top: 44px;
+      padding-top: 40px;
       font-family: Inter, sans-serif;
       font-size: 13px;
       color: #0f172a;
@@ -381,16 +367,7 @@
 <body>
 
   <!-- Proto nav -->
-  <nav class="proto-nav">
-    <span class="proto-nav-title">Admin Portal</span>
-    <a class="proto-nav-library" href="index.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
-      </svg>
-      Library
-    </a>
-    <span class="proto-nav-updated" id="navUpdated"></span>
-  </nav>
+  <nav class="proto-nav" data-title="Admin Portal"></nav>
 
   <div class="ap-stage">
     <div class="ap-modal">
@@ -746,8 +723,7 @@
   </div><!-- /ap-stage -->
 
   <script>
-    document.getElementById('navUpdated').textContent =
-      'Updated ' + new Date(document.lastModified).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-  </script>
+      </script>
+  <script src="proto-nav.js"></script>
 </body>
 </html>

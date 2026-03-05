@@ -10,23 +10,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* ── Proto-nav ─────────────────────────────────────────────────────── */
-    .proto-nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-      height: 40px; background: #000;
-      display: flex; align-items: center; gap: 12px; padding: 0 16px;
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-    .proto-nav-library {
-      display: flex; align-items: center; gap: 8px;
-      text-decoration: none; color: #fff;
-      font-size: 14px; font-weight: 500; letter-spacing: -0.28px; line-height: 24px;
-      white-space: nowrap; flex-shrink: 0;
-      background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;
-    }
-    .proto-nav-library:hover { opacity: 0.75; }
-    .proto-nav-library svg { width: 20px; height: 20px; flex-shrink: 0; }
-    .proto-nav-title { flex: 1; color: #fff; font-size: 14px; font-weight: 500; letter-spacing: -0.28px; }
-    .proto-nav-updated { color: #fff; font-size: 14px; font-weight: 400; letter-spacing: -0.28px; white-space: nowrap; }
 
     /* ── Page ──────────────────────────────────────────────────────────── */
     body {
@@ -177,17 +160,7 @@
 <body>
 
   <!-- Proto-nav -->
-  <nav class="proto-nav" id="protoNav">
-    <span class="proto-nav-title">Prototype / Comms · Passport Invite</span>
-    </div>
-    <a href="index.html" class="proto-nav-library">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-      </svg>
-      Library
-    </a>
-    <span class="proto-nav-updated" id="protoTime"></span>
-  </nav>
+  <nav class="proto-nav" data-title="Prototype / Comms · Passport Invite"></nav>
 
   <!-- Gmail-style email card -->
   <div class="email-card">
@@ -341,8 +314,7 @@
     // Timestamp
     (function() {
       var d = new Date(document.lastModified);
-      var el = document.getElementById('protoTime');
-      if (el && !isNaN(d)) {
+      var el =       if (el && !isNaN(d)) {
         var pad = function(n) { return String(n).padStart(2, '0'); };
         var dateStr = pad(d.getDate()) + '/' + pad(d.getMonth()+1) + '/' + d.getFullYear();
         el.textContent = 'Last updated ' + dateStr + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
@@ -358,5 +330,6 @@
       }
     })();
   </script>
+  <script src="proto-nav.js"></script>
 </body>
 </html>
