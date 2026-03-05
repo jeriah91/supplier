@@ -2345,28 +2345,54 @@
       itemsList.appendChild(wrap);
     }
 
+    const CATEGORY_MAP = {
+      'btn': 'Buttons', 'button': 'Buttons',
+      'form': 'Form Controls', 'input': 'Form Controls', 'select': 'Form Controls',
+      'checkbox': 'Form Controls', 'radio': 'Form Controls', 'toggle': 'Form Controls',
+      'field': 'Form Controls', 'inline': 'Form Controls',
+      'badge': 'Badges & Tags', 'tag': 'Badges & Tags', 'status': 'Badges & Tags',
+      'pill': 'Badges & Tags', 'chip': 'Badges & Tags',
+      'card': 'Cards', 'notif': 'Cards', 'notification': 'Cards', 'panel': 'Cards',
+      'progress': 'Progress', 'step': 'Progress', 'stepper': 'Progress',
+      'nav': 'Navigation', 'tab': 'Navigation', 'sidebar': 'Navigation',
+      'breadcrumb': 'Navigation', 'menu': 'Navigation', 'avatar': 'Navigation',
+      'table': 'Tables', 'data': 'Tables',
+      'modal': 'Overlays', 'drawer': 'Overlays', 'dialog': 'Overlays',
+      'overlay': 'Overlays', 'tooltip': 'Overlays', 'popover': 'Overlays',
+      'toast': 'Feedback', 'alert': 'Feedback', 'empty': 'Feedback',
+      'banner': 'Feedback', 'error': 'Feedback',
+      'text': 'Typography', 'heading': 'Typography',
+      'color': 'Colors', 'swatch': 'Colors',
+    };
+
+    function resolveCategory(root) {
+      return CATEGORY_MAP[root] || toComponentName(root);
+    }
+
     function addDetectedComponents() {
       const checked = [...document.querySelectorAll('.check-item-cb:checked')];
       if (!checked.length) return;
 
-      let detectedGroup = DS.find(g => g.category === 'Detected');
-      let gi;
-      if (!detectedGroup) {
-        detectedGroup = { category: 'Detected', items: [] };
-        DS.push(detectedGroup);
-        gi = DS.length - 1;
-        appendNavCategory(gi, detectedGroup);
-      } else {
-        gi = DS.indexOf(detectedGroup);
-      }
-
       const added = [];
+      const addedByCategory = {};
+
       checked.forEach(cb => {
         const root = cb.dataset.root;
         const classes = cb.dataset.classes.trim().split(/\s+/);
         const name = toComponentName(classes[0] || root);
+
         DS_FINGERPRINTS[root] = name;
         classes.forEach(c => { DS_FINGERPRINTS[c] = name; });
+
+        const category = resolveCategory(root);
+        let group = DS.find(g => g.category === category);
+        if (!group) {
+          group = { category, items: [] };
+          DS.push(group);
+          appendNavCategory(DS.length - 1, group);
+        }
+        const gi = DS.indexOf(group);
+
         const item = {
           name,
           previewCSS: `.ds-${root} { font-family: Inter, sans-serif; padding: 8px 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; display: inline-block; font-size: 13px; color: #334155; }`,
@@ -2374,10 +2400,17 @@
           css: `.${root} {\n  /* TODO: add styles */\n}`,
           html: `<div class="${root}">\n  <!-- TODO: add markup -->\n</div>`
         };
-        detectedGroup.items.push(item);
-        appendNavItem(gi, detectedGroup.items.length - 1, name);
+        group.items.push(item);
+        appendNavItem(gi, group.items.length - 1, name);
+
         added.push(name);
+        if (!addedByCategory[category]) addedByCategory[category] = [];
+        addedByCategory[category].push(name);
       });
+
+      const categoryLines = Object.entries(addedByCategory)
+        .map(([cat, names]) => `<div style="margin-top:4px;"><strong style="color:#334155;">${cat}:</strong> ${names.join(', ')}</div>`)
+        .join('');
 
       const body = document.getElementById('checkResultBody');
       body.innerHTML = `
@@ -2387,7 +2420,7 @@
           </svg>
           ${added.length} component${added.length > 1 ? 's' : ''} added to the design system.
         </div>
-        <div style="font-size:12px;color:#94a3b8;margin-top:8px;">${added.map(n => `<strong>${n}</strong>`).join(', ')} — now listed under <em>Detected</em> in the left panel.</div>`;
+        <div style="font-size:12px;color:#94a3b8;margin-top:8px;">${categoryLines}</div>`;
       document.getElementById('checkDialogTitle').textContent = `${added.length} component${added.length > 1 ? 's' : ''} added`;
     }
 
