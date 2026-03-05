@@ -892,15 +892,15 @@
 
     // ── Share Modal ──────────────────────────────────────────────────────
     var ORG_MAP = [
-      { keyword: 'wallaby',  name: 'Wallaby Health',      initials: 'WH', color: '#16a34a' },
-      { keyword: 'bolton',   name: 'Bolton Clarke',        initials: 'BC', color: '#7c3aed' },
-      { keyword: 'catholic', name: 'Catholic Healthcare',  initials: 'CH', color: '#e11d48' }
+      { keyword: 'wallaby',  domain: 'wallabyhealth.org.au',  name: 'Wallaby Health',      initials: 'WH', color: '#16a34a' },
+      { keyword: 'bolton',   domain: 'boltonclarke.org.au',   name: 'Bolton Clarke',        initials: 'BC', color: '#7c3aed' },
+      { keyword: 'catholic', domain: 'catholichealth.org.au', name: 'Catholic Healthcare',  initials: 'CH', color: '#e11d48' }
     ];
     var emailTags = [];
     function getMatchedOrg(email) {
       var domain = (email.split('@')[1] || '').toLowerCase();
       for (var i = 0; i < ORG_MAP.length; i++) {
-        if (domain.indexOf(ORG_MAP[i].keyword) !== -1) return ORG_MAP[i];
+        if (domain === ORG_MAP[i].domain) return ORG_MAP[i];
       }
       return null;
     }

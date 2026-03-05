@@ -1998,15 +1998,15 @@
     var shareEmailTags = [];
 
     var SHARE_ORG_MAP = [
-      { keyword: 'wallaby',  name: 'Wallaby Health',     initials: 'WH', color: '#16a34a' },
-      { keyword: 'bolton',   name: 'Bolton Clarke',       initials: 'BC', color: '#7c3aed' },
-      { keyword: 'catholic', name: 'Catholic Healthcare', initials: 'CH', color: '#e11d48' }
+      { keyword: 'wallaby',  domain: 'wallabyhealth.org.au',  name: 'Wallaby Health',     initials: 'WH', color: '#16a34a' },
+      { keyword: 'bolton',   domain: 'boltonclarke.org.au',   name: 'Bolton Clarke',       initials: 'BC', color: '#7c3aed' },
+      { keyword: 'catholic', domain: 'catholichealth.org.au', name: 'Catholic Healthcare', initials: 'CH', color: '#e11d48' }
     ];
 
     function getShareOrg(email) {
       var domain = (email.split('@')[1] || '').toLowerCase();
       for (var i = 0; i < SHARE_ORG_MAP.length; i++) {
-        if (domain.indexOf(SHARE_ORG_MAP[i].keyword) !== -1) return SHARE_ORG_MAP[i];
+        if (domain === SHARE_ORG_MAP[i].domain) return SHARE_ORG_MAP[i];
       }
       return null;
     }
@@ -2377,7 +2377,7 @@
 
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 12:13:58';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 12:17:31';
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
