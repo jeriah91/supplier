@@ -424,6 +424,27 @@
         </div>
       </a>
 
+      <!-- Admin Portal -->
+      <a class="card" href="admin-portal.html">
+        <div class="thumbnail-wrap" data-native-width="1440">
+          <iframe src="admin-portal.html" title="Admin Portal" tabindex="-1" aria-hidden="true"></iframe>
+          <div class="platform-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M8 21h8M12 17v4"/></svg>
+            Web · 1440px
+          </div>
+          <div class="thumbnail-overlay"></div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-row">
+            <span class="card-label">Admin Portal</span>
+          </div>
+          <div class="card-meta-row">
+            <span class="card-desc">Worker compliance check review & approval</span>
+            <span class="screen-count">1 screen</span>
+          </div>
+        </div>
+      </a>
+
       <!-- Kiosk Check-in -->
       <a class="card" href="kiosk.html">
         <div class="thumbnail-wrap" data-native-width="624">
@@ -507,6 +528,11 @@
       <span class="section-heading">What's new</span>
       <div class="changelog">
         <div class="changelog-row">
+          <span class="changelog-date">6 Mar</span>
+          <span class="changelog-tag proto">Admin Portal</span>
+          <span class="changelog-msg">New prototype: worker compliance check review modal with check list, document viewer, and check details panel</span>
+        </div>
+        <div class="changelog-row">
           <span class="changelog-date">5 Mar</span>
           <span class="changelog-tag proto">Comms</span>
           <span class="changelog-msg">New email prototypes: Passport Portal invite and OTP verification code</span>
@@ -569,6 +595,28 @@
       const ro = new ResizeObserver(() => scaleAll());
       wraps.forEach(w => ro.observe(w));
     }
+
+    // Rule: hide proto nav bar in all workflow thumbnails
+    function applyThumbnailOverrides(iframe) {
+      const apply = () => {
+        try {
+          const doc = iframe.contentDocument;
+          if (!doc || !doc.head) return;
+          if (doc.getElementById('_idx_overrides')) return;
+          const s = doc.createElement('style');
+          s.id = '_idx_overrides';
+          s.textContent = [
+            '.proto-nav { display: none !important; }',
+            'body { padding-top: 0 !important; }',
+            '.stage, .ap-stage { height: 100vh !important; }'
+          ].join('\n');
+          doc.head.appendChild(s);
+        } catch(e) {}
+      };
+      iframe.addEventListener('load', apply);
+      try { if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') apply(); } catch(e) {}
+    }
+    document.querySelectorAll('.thumbnail-wrap iframe').forEach(applyThumbnailOverrides);
   </script>
 </body>
 </html>

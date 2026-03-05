@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal — Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Proto nav ─────────────────────────────────────────────────────── */
+    .proto-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: #000; height: 44px;
+      display: flex; align-items: center; padding: 0 16px; gap: 12px;
+      font-family: Inter, system-ui, sans-serif; font-size: 14px;
+    }
+    .proto-nav-title { flex: 1; color: #fff; font-weight: 600; letter-spacing: -0.01em; }
+    .proto-nav-library {
+      display: flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px;
+    }
+    .proto-nav-library:hover { color: #fff; }
+    .proto-nav-library svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .proto-nav-updated { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+    /* ── Page ────────────────────────────────────────────────────────── */
+    body {
+      background: #cbd5e1;
+      height: 100vh; overflow: hidden;
+      padding-top: 44px;
+      font-family: Inter, sans-serif;
+      font-size: 13px;
+      color: #0f172a;
+    }
+    .ap-stage {
+      height: calc(100vh - 44px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* ── Modal ───────────────────────────────────────────────────────── */
+    .ap-modal {
+      width: 100%; max-width: 1400px;
+      height: 100%; max-height: 818px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.22), 0 4px 16px rgba(0,0,0,0.1);
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Left panel ──────────────────────────────────────────────────── */
+    .ap-left {
+      width: 260px; flex-shrink: 0;
+      border-right: 1px solid #e2e8f0;
+      display: flex; flex-direction: column;
+      overflow: hidden; background: #fff;
+    }
+
+    .ap-lhdr {
+      flex-shrink: 0;
+      padding: 10px 12px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .ap-nav-row {
+      display: flex; align-items: center;
+      margin-bottom: 8px;
+    }
+    .ap-active-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #dcfce7; color: #166534;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px; flex: 1;
+    }
+    .ap-active-dot { width: 5px; height: 5px; border-radius: 50%; background: #16a34a; }
+    .ap-nav-arrows { display: flex; gap: 1px; }
+    .ap-nav-arrow {
+      width: 22px; height: 22px; border: none; background: none; cursor: pointer;
+      color: #64748b; display: flex; align-items: center; justify-content: center;
+      border-radius: 4px;
+    }
+    .ap-nav-arrow:hover { background: #f1f5f9; }
+    .ap-nav-arrow svg { width: 12px; height: 12px; }
+
+    .ap-profile-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    }
+    .ap-avatar {
+      width: 24px; height: 24px; border-radius: 50%; background: #22c55e;
+      color: #fff; font-size: 9px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .ap-profile-name { font-size: 13px; font-weight: 600; color: #0f172a; }
+
+    .ap-tab-row {
+      display: flex; border-bottom: none; margin: 0 -12px; padding: 0 12px;
+    }
+    .ap-tab {
+      display: flex; align-items: center; gap: 4px;
+      padding: 7px 6px; font-size: 12px; font-weight: 500; color: #64748b;
+      cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+      white-space: nowrap;
+    }
+    .ap-tab.active { color: #2c66ef; border-bottom-color: #2c66ef; font-weight: 600; }
+    .ap-tab svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    /* Left body */
+    .ap-lbody { flex: 1; overflow-y: auto; }
+    .ap-lbody::-webkit-scrollbar { width: 3px; }
+    .ap-lbody::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+    .ap-lsec-hdr {
+      display: flex; align-items: center; padding: 9px 12px;
+      border-bottom: 1px solid #f1f5f9; cursor: pointer;
+    }
+    .ap-lsec-hdr:hover { background: #f8fafc; }
+    .ap-lsec-label { flex: 1; font-size: 12px; font-weight: 600; color: #0f172a; }
+    .ap-lsec-btn {
+      background: none; border: none; cursor: pointer; color: #94a3b8;
+      padding: 2px; display: flex; align-items: center; border-radius: 3px;
+    }
+    .ap-lsec-btn + .ap-lsec-btn { margin-left: 2px; }
+    .ap-lsec-btn svg { width: 14px; height: 14px; }
+
+    .ap-warn-row {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 12px; border-bottom: 1px solid #f1f5f9; background: #fffbeb;
+    }
+    .ap-warn-icon { color: #f59e0b; flex-shrink: 0; }
+    .ap-warn-icon svg { width: 12px; height: 12px; }
+    .ap-warn-text {
+      font-size: 10px; font-weight: 700; color: #92400e;
+      text-transform: uppercase; letter-spacing: 0.4px; flex-shrink: 0;
+    }
+    .ap-warn-bar {
+      flex: 1; height: 6px; background: #fde68a; border-radius: 3px; overflow: hidden;
+    }
+    .ap-warn-fill { height: 100%; background: #f59e0b; border-radius: 3px; width: 72%; }
+
+    /* Check items */
+    .ap-check-item {
+      display: flex; align-items: stretch;
+      border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.1s;
+    }
+    .ap-check-item:hover { background: #f8fafc; }
+    .ap-check-item.active { background: #eff6ff; }
+    .ap-check-border { width: 4px; flex-shrink: 0; }
+    .ap-check-border.green  { background: #22c55e; }
+    .ap-check-border.orange { background: #f59e0b; }
+    .ap-check-border.blue   { background: #2c66ef; }
+    .ap-check-border.grey   { background: #e2e8f0; }
+    .ap-check-inner { flex: 1; padding: 9px 8px 9px 6px; min-width: 0; }
+    .ap-check-name {
+      font-size: 12px; font-weight: 500; color: #0f172a;
+      margin-bottom: 4px; line-height: 1.35;
+    }
+    .ap-check-meta { display: flex; align-items: center; gap: 4px; min-width: 0; }
+    .ap-check-status { display: flex; align-items: center; }
+    .ap-check-status svg { width: 11px; height: 11px; flex-shrink: 0; }
+    .ap-check-status.green { color: #22c55e; }
+
+    .ap-badge-red {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; font-weight: 600; color: #dc2626;
+      background: #fee2e2; padding: 1px 6px; border-radius: 4px;
+    }
+    .ap-badge-grey { font-size: 10px; font-weight: 500; color: #64748b; }
+
+    .ap-check-icons {
+      display: flex; align-items: center; gap: 3px; margin-left: auto; flex-shrink: 0;
+    }
+    .ap-icon-btn {
+      width: 14px; height: 14px; display: flex; align-items: center;
+      justify-content: center; color: #94a3b8;
+    }
+    .ap-icon-btn svg { width: 11px; height: 11px; }
+    .ap-doc-count {
+      display: inline-flex; align-items: center; gap: 2px;
+      font-size: 10px; font-weight: 600; color: #64748b;
+    }
+    .ap-doc-count svg { width: 10px; height: 10px; }
+    .ap-user-dot {
+      width: 14px; height: 14px; border-radius: 50%; background: #2c66ef;
+      color: #fff; font-size: 7px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* Section separators in list */
+    .ap-policy-row {
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 12px; border-bottom: 1px solid #f1f5f9;
+    }
+    .ap-policy-row svg { width: 10px; height: 10px; color: #94a3b8; flex-shrink: 0; }
+    .ap-policy-lbl {
+      font-size: 10px; font-weight: 700; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .ap-badge-row {
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px 12px; border-bottom: 1px solid #f1f5f9;
+    }
+    .ap-req-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #0f172a; color: #fff;
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+    }
+    .ap-req-count {
+      background: rgba(255,255,255,0.2); color: #fff; font-size: 9px; font-weight: 700;
+      width: 14px; height: 14px; border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ap-opt-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f1f5f9; color: #334155;
+      font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+    }
+    .ap-opt-count {
+      background: rgba(0,0,0,0.1); color: #334155; font-size: 9px; font-weight: 700;
+      width: 14px; height: 14px; border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Main + Right section ────────────────────────────────────────── */
+    .ap-main-section {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    /* Top bar */
+    .ap-topbar {
+      display: flex; align-items: center; padding: 0 14px 0 16px;
+      height: 44px; border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0; gap: 10px;
+    }
+    .ap-check-title-area {
+      flex: 1; display: flex; align-items: center; gap: 6px; min-width: 0;
+    }
+    .ap-check-title-text {
+      font-size: 13px; font-weight: 600; color: #0f172a;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ap-info-icon { color: #94a3b8; flex-shrink: 0; }
+    .ap-info-icon svg { width: 14px; height: 14px; }
+    .ap-skipped-chip {
+      display: inline-flex; align-items: center;
+      background: #f1f5f9; color: #64748b;
+      font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
+    }
+    .ap-topbar-actions {
+      display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+    }
+    .ap-topbar-btn {
+      width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+      color: #64748b; display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+    }
+    .ap-topbar-btn:hover { background: #f1f5f9; }
+    .ap-topbar-btn svg { width: 15px; height: 15px; }
+    .ap-status-select {
+      display: flex; align-items: center; gap: 5px; padding: 5px 10px;
+      border: 1px solid #e2e8f0; border-radius: 6px;
+      font-size: 12px; font-weight: 500; color: #334155; cursor: pointer;
+      background: #fff; margin-left: 4px;
+    }
+    .ap-status-dot-grey { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; flex-shrink: 0; }
+    .ap-status-select svg { width: 11px; height: 11px; color: #94a3b8; }
+    .ap-close-btn {
+      width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+      color: #64748b; display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+    }
+    .ap-close-btn:hover { background: #f1f5f9; color: #0f172a; }
+    .ap-close-btn svg { width: 16px; height: 16px; }
+
+    /* Panels row */
+    .ap-panels-row { flex: 1; display: flex; overflow: hidden; }
+
+    /* Doc area */
+    .ap-doc-panel {
+      flex: 1; display: flex; flex-direction: column;
+      border-right: 1px solid #e2e8f0; overflow: hidden;
+    }
+    .ap-doc-subhdr {
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 8px 14px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0;
+    }
+    .ap-add-doc-subhdr {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 500; color: #2c66ef;
+      background: none; border: none; cursor: pointer; padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .ap-add-doc-subhdr:hover { background: #eff6ff; }
+    .ap-add-doc-subhdr svg { width: 14px; height: 14px; }
+    .ap-doc-area {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: #f8fafc;
+    }
+    .ap-add-doc-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: none; border: none; cursor: pointer; color: #94a3b8;
+    }
+    .ap-add-doc-btn:hover { color: #64748b; }
+    .ap-add-doc-btn svg { width: 28px; height: 28px; }
+    .ap-add-doc-label { font-size: 13px; font-weight: 500; }
+
+    /* Right panel */
+    .ap-right {
+      width: 248px; flex-shrink: 0;
+      display: flex; flex-direction: column; overflow: hidden; background: #fff;
+    }
+    .ap-right-tabs {
+      display: flex; border-bottom: 1px solid #e2e8f0;
+      padding: 0 14px; flex-shrink: 0;
+    }
+    .ap-right-tab {
+      padding: 10px 0; margin-right: 16px;
+      font-size: 12px; font-weight: 500; color: #64748b; cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      white-space: nowrap;
+    }
+    .ap-right-tab.active { color: #2c66ef; border-bottom-color: #2c66ef; font-weight: 600; }
+    .ap-right-body { flex: 1; overflow-y: auto; padding: 12px 14px; }
+    .ap-right-body::-webkit-scrollbar { width: 3px; }
+    .ap-right-body::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+
+    .ap-info-note {
+      font-size: 12px; color: #334155;
+      padding: 8px 10px; background: #f8fafc;
+      border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 14px;
+    }
+
+    .ap-sec-label {
+      font-size: 11px; font-weight: 600; color: #0f172a;
+      margin-bottom: 10px;
+    }
+    .ap-sec-sublabel {
+      font-size: 11px; font-weight: 500; color: #94a3b8; margin-bottom: 8px;
+    }
+    .ap-field { margin-bottom: 10px; }
+    .ap-field-lbl {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 500; color: #64748b; margin-bottom: 4px;
+    }
+    .ap-field-lbl svg { width: 11px; height: 11px; color: #94a3b8; }
+    .ap-field-input {
+      width: 100%; border: 1px solid #e2e8f0; border-radius: 6px;
+      padding: 6px 9px; font-family: Inter, sans-serif; font-size: 12px;
+      color: #0f172a; background: #fff; outline: none;
+    }
+    .ap-field-input:focus { border-color: #2c66ef; box-shadow: 0 0 0 2px rgba(44,102,239,0.1); }
+    .ap-field-select {
+      width: 100%; border: 1px solid #e2e8f0; border-radius: 6px;
+      padding: 6px 9px; font-family: Inter, sans-serif; font-size: 12px;
+      color: #0f172a; background: #fff; outline: none; cursor: pointer;
+    }
+    .ap-date-row { display: flex; gap: 6px; }
+    .ap-date-row .ap-field-select { flex: 1; }
+
+    .ap-check-details-sec {
+      border-top: 1px solid #e2e8f0; padding-top: 12px; margin-top: 4px;
+    }
+    .ap-detail-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 5px 0; gap: 8px;
+    }
+    .ap-detail-key { font-size: 11px; color: #94a3b8; flex-shrink: 0; }
+    .ap-detail-val { font-size: 12px; font-weight: 500; color: #0f172a; }
+    .ap-detail-val.skipped { color: #dc2626; }
+    .ap-detail-add {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 12px; font-weight: 500; color: #2c66ef;
+      text-decoration: none; cursor: pointer;
+    }
+    .ap-detail-add svg { width: 11px; height: 11px; color: #94a3b8; }
+    .ap-detail-add:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Proto nav -->
+  <nav class="proto-nav">
+    <span class="proto-nav-title">Admin Portal</span>
+    <a class="proto-nav-library" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+      </svg>
+      Library
+    </a>
+    <span class="proto-nav-updated" id="navUpdated"></span>
+  </nav>
+
+  <div class="ap-stage">
+    <div class="ap-modal">
+
+      <!-- ── Left panel ─────────────────────────────────────────────── -->
+      <div class="ap-left">
+
+        <div class="ap-lhdr">
+          <!-- Status + nav arrows -->
+          <div class="ap-nav-row">
+            <div class="ap-active-badge">
+              <div class="ap-active-dot"></div>
+              Active
+            </div>
+            <div class="ap-nav-arrows">
+              <button class="ap-nav-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+              </button>
+              <button class="ap-nav-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Profile row -->
+          <div class="ap-profile-row">
+            <div class="ap-avatar">JD</div>
+            <span class="ap-profile-name">Jane Doe</span>
+          </div>
+
+          <!-- Tabs -->
+          <div class="ap-tab-row">
+            <div class="ap-tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="9" height="9" rx="1.5"/><rect x="13" y="2" width="9" height="9" rx="1.5"/><rect x="2" y="13" width="9" height="9" rx="1.5"/><rect x="13" y="13" width="9" height="9" rx="1.5"/></svg>
+              Applications
+            </div>
+            <div class="ap-tab active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path stroke-linecap="round" d="M8 9h8M8 13h5"/></svg>
+              Profile
+            </div>
+            <div class="ap-tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Activity
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrollable body -->
+        <div class="ap-lbody">
+
+          <!-- Summary section -->
+          <div class="ap-lsec-hdr">
+            <span class="ap-lsec-label">Summary</span>
+            <div style="display:flex;gap:2px;">
+              <button class="ap-lsec-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+              </button>
+              <button class="ap-lsec-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Checks section header -->
+          <div class="ap-lsec-hdr">
+            <span class="ap-lsec-label">Checks</span>
+            <button class="ap-lsec-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+            </button>
+          </div>
+
+          <!-- Warning row -->
+          <div class="ap-warn-row">
+            <span class="ap-warn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 8v4M12 16h.01"/></svg>
+            </span>
+            <span class="ap-warn-text">Needs attention</span>
+            <div class="ap-warn-bar"><div class="ap-warn-fill"></div></div>
+          </div>
+
+          <!-- First Aid Certificate -->
+          <div class="ap-check-item">
+            <div class="ap-check-border orange"></div>
+            <div class="ap-check-inner">
+              <div class="ap-check-name">First Aid Certificate</div>
+              <div class="ap-check-meta">
+                <span class="ap-badge-red">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:9px;height:9px;"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 20l5-5M20 4l-5 5"/></svg>
+                  Change requested
+                </span>
+                <div class="ap-check-icons">
+                  <span class="ap-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></span>
+                  <span class="ap-doc-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>2</span>
+                  <span class="ap-user-dot">+</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- POLICY divider -->
+          <div class="ap-policy-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+            <span class="ap-policy-lbl">Policy</span>
+          </div>
+
+          <!-- Required badge -->
+          <div class="ap-badge-row">
+            <span class="ap-req-badge">Required <span class="ap-req-count">4</span></span>
+          </div>
+
+          <!-- Passport (required) -->
+          <div class="ap-check-item">
+            <div class="ap-check-border green"></div>
+            <div class="ap-check-inner">
+              <div class="ap-check-name">Passport</div>
+              <div class="ap-check-meta">
+                <span class="ap-check-status green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+                <div class="ap-check-icons">
+                  <span class="ap-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></span>
+                  <span class="ap-doc-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>2</span>
+                  <span class="ap-user-dot">A</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AHPRA Check -->
+          <div class="ap-check-item">
+            <div class="ap-check-border green"></div>
+            <div class="ap-check-inner">
+              <div class="ap-check-name">AHPRA Check</div>
+              <div class="ap-check-meta">
+                <span class="ap-check-status green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+                <div class="ap-check-icons">
+                  <span class="ap-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></span>
+                  <span class="ap-doc-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>2</span>
+                  <span class="ap-user-dot">B</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Banning Order Check -->
+          <div class="ap-check-item">
+            <div class="ap-check-border grey"></div>
+            <div class="ap-check-inner">
+              <div class="ap-check-name">Banning Order Check</div>
+              <div class="ap-check-meta">
+                <span class="ap-check-status green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+                <div class="ap-check-icons">
+                  <span class="ap-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/></svg></span>
+                  <span class="ap-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></span>
+                  <span class="ap-doc-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>2</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nationally Coordinated Criminal History Check -->
+          <div class="ap-check-item">
+            <div class="ap-check-border green"></div>
+            <div class="ap-check-inner">
+              <div class="ap-check-name" style="white-space:normal;line-height:1.3;">Nationally Coordinated Criminal History Check</div>
+              <div class="ap-check-meta">
+                <span class="ap-check-status green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+                <div class="ap-check-icons">
+                  <span class="ap-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></span>
+                  <span class="ap-doc-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>2</span>
+                  <span class="ap-user-dot">C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Optional badge -->
+          <div class="ap-badge-row">
+            <span class="ap-opt-badge">Optional <span class="ap-opt-count">2</span></span>
+          </div>
+
+          <!-- Passport (optional, 25 Sep) -->
+          <div class="ap-check-item">
+            <div class="ap-check-border green"></div>
+            <div class="ap-check-inner">
+              <div class="ap-check-name">Passport</div>
+              <div class="ap-check-meta">
+                <span class="ap-check-status green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+                <span style="font-size:10px;color:#94a3b8;margin-left:2px;">25 Sep</span>
+                <div class="ap-check-icons">
+                  <span class="ap-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></span>
+                  <span class="ap-doc-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>2</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- [Requirement Name] — selected -->
+          <div class="ap-check-item active">
+            <div class="ap-check-border blue"></div>
+            <div class="ap-check-inner">
+              <div class="ap-check-name">[Requirement Name]</div>
+              <div class="ap-check-meta">
+                <span class="ap-badge-grey">Skipped</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /ap-lbody -->
+      </div><!-- /ap-left -->
+
+      <!-- ── Main + Right ───────────────────────────────────────────── -->
+      <div class="ap-main-section">
+
+        <!-- Top bar -->
+        <div class="ap-topbar">
+          <div class="ap-check-title-area">
+            <span class="ap-check-title-text">Australian Working Rights</span>
+            <span class="ap-info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4M12 8h.01"/></svg>
+            </span>
+            <span class="ap-skipped-chip">Skipped</span>
+          </div>
+          <div class="ap-topbar-actions">
+            <button class="ap-topbar-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="9" height="9" rx="1.5"/><rect x="13" y="2" width="9" height="9" rx="1.5"/><rect x="2" y="13" width="9" height="9" rx="1.5"/><rect x="13" y="13" width="9" height="9" rx="1.5"/></svg>
+            </button>
+            <button class="ap-topbar-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+            </button>
+            <div class="ap-status-select">
+              <span class="ap-status-dot-grey"></span>
+              Pending
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </div>
+            <button class="ap-close-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Panels -->
+        <div class="ap-panels-row">
+
+          <!-- Document area -->
+          <div class="ap-doc-panel">
+            <div class="ap-doc-subhdr">
+              <button class="ap-add-doc-subhdr">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Add
+              </button>
+            </div>
+            <div class="ap-doc-area">
+              <button class="ap-add-doc-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span class="ap-add-doc-label">Add doc</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right panel -->
+          <div class="ap-right">
+            <div class="ap-right-tabs">
+              <div class="ap-right-tab active">Check details</div>
+              <div class="ap-right-tab">Activity</div>
+            </div>
+
+            <div class="ap-right-body">
+
+              <div class="ap-info-note">Check skipped by John Doe.</div>
+
+              <!-- Fields section -->
+              <div class="ap-sec-label">Fields</div>
+              <div class="ap-sec-sublabel" style="margin-top:-6px;">Input</div>
+
+              <div class="ap-field">
+                <div class="ap-field-lbl">
+                  Family name
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4M12 8h.01"/></svg>
+                </div>
+                <input class="ap-field-input" type="text" value="John">
+              </div>
+
+              <div class="ap-field">
+                <div class="ap-field-lbl">
+                  Given name
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4M12 8h.01"/></svg>
+                </div>
+                <input class="ap-field-input" type="text" value="Doe">
+              </div>
+
+              <div class="ap-field">
+                <div class="ap-field-lbl">
+                  Date of birth
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4M12 8h.01"/></svg>
+                </div>
+                <div class="ap-date-row">
+                  <select class="ap-field-select"><option>23</option></select>
+                  <select class="ap-field-select"><option>Dec</option></select>
+                  <select class="ap-field-select"><option>1995</option></select>
+                </div>
+              </div>
+
+              <div class="ap-field">
+                <div class="ap-field-lbl">
+                  Document type
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4M12 8h.01"/></svg>
+                </div>
+                <select class="ap-field-select"><option>Passport</option></select>
+              </div>
+
+              <div class="ap-field">
+                <div class="ap-field-lbl">
+                  Document country
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4M12 8h.01"/></svg>
+                </div>
+                <select class="ap-field-select"><option>Singapore</option></select>
+              </div>
+
+              <div class="ap-field">
+                <div class="ap-field-lbl">
+                  Document number
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 16v-4M12 8h.01"/></svg>
+                </div>
+                <input class="ap-field-input" type="text" value="X1039588">
+              </div>
+
+              <!-- Check details section -->
+              <div class="ap-check-details-sec">
+                <div class="ap-sec-label" style="margin-bottom:8px;">Check details</div>
+                <div class="ap-detail-row">
+                  <span class="ap-detail-key">Approved on</span>
+                  <span class="ap-detail-val skipped">Skipped</span>
+                </div>
+                <div class="ap-detail-row">
+                  <span class="ap-detail-key">Approved by</span>
+                  <span class="ap-detail-val skipped">Skipped</span>
+                </div>
+                <div class="ap-detail-row">
+                  <span class="ap-detail-key">Notes</span>
+                  <a class="ap-detail-add" href="#">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                    Add
+                  </a>
+                </div>
+              </div>
+
+            </div><!-- /ap-right-body -->
+          </div><!-- /ap-right -->
+
+        </div><!-- /ap-panels-row -->
+      </div><!-- /ap-main-section -->
+
+    </div><!-- /ap-modal -->
+  </div><!-- /ap-stage -->
+
+  <script>
+    document.getElementById('navUpdated').textContent =
+      'Updated ' + new Date(document.lastModified).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+  </script>
+</body>
+</html>

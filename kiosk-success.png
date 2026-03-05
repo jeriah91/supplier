@@ -1,0 +1,7 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 224 224" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 1480">
+<circle id="Ellipse 324" cx="112" cy="112" r="90" fill="var(--fill-0, #22D466)"/>
+<path id="Ellipse 325" d="M112 4.5C129.678 4.5 147.084 8.85989 162.675 17.1935C178.266 25.527 191.561 37.5771 201.383 52.2762C211.205 66.9753 217.25 83.8698 218.982 101.463C220.715 119.056 218.082 136.806 211.317 153.138C204.552 169.471 193.863 183.884 180.197 195.099C166.532 206.314 150.311 213.986 132.972 217.434C115.633 220.883 97.7117 220.003 80.7944 214.871C63.8772 209.739 48.4866 200.515 35.986 188.014" stroke="var(--stroke-0, #22D466)" stroke-width="9" stroke-linecap="round"/>
+<path id="Vector 622" d="M65 121L91.5 147.5L157 82" stroke="var(--stroke-0, white)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

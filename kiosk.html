@@ -36,66 +36,41 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* ── TP10 Device Frame (Figma 624×1340, displayed at 55%) ──────────── */
-    .tp10 {
-      position: relative;
-      width: 343px;   /* 624 × 0.55 */
-      height: 737px;  /* 1340 × 0.55 */
+    /* ── Screen shell ──────────────────────────────────────────────────── */
+    .screen-shell-wrap {
       flex-shrink: 0;
-      filter: drop-shadow(0 20px 50px rgba(0,0,0,0.55)) drop-shadow(0 6px 16px rgba(0,0,0,0.3));
-    }
-
-    /* Native-scale inner frame — scaled uniformly to 55% */
-    .tp10-frame {
-      position: absolute;
-      top: 0; left: 0;
-      width: 624px; height: 1340px;
-      transform: scale(0.55);
-      transform-origin: top left;
-    }
-
-    /* Device frame SVG image — on top of screen, transparent over screen area */
-    .tp10-frame-img {
-      position: absolute;
-      top: 0; left: 0;
-      width: 624px; height: 1340px;
-      pointer-events: none;
-    }
-
-    /* Screen viewport — Figma coords: x:45, y:243, 534×854 */
-    .tp10-viewport {
-      position: absolute;
-      top: 243px; left: 45px;
-      width: 534px; height: 854px;
+      width: 534px; height: 854px; /* overridden by fitScreen() */
+      border-radius: 32px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
       overflow: hidden;
-      background: #000;
-    }
-
-    /* Inner content at Figma screen size (536≈534, clips 1px each side) */
-    .tp10-inner {
       position: relative;
-      width: 536px; height: 854px;
-      font-family: 'Mulish', sans-serif;
     }
-
+    .screen-shell {
+      position: absolute; top: 0; left: 0;
+      width: 534px; height: 854px;
+      transform-origin: top left;
+      overflow: hidden;
+      background: #fff;
+    }
 
     /* ══════════════════════════════════════════════════════════════════════
-       SCREEN CONTENT  (all at 536×854, Figma full scale)
+       SCREEN CONTENT  (534×854, Figma full scale)
        ══════════════════════════════════════════════════════════════════════ */
 
     .ks-screen {
       position: absolute; inset: 0;
-      width: 536px; height: 854px;
+      width: 534px; height: 854px;
       display: none; flex-direction: column;
       font-family: 'Mulish', sans-serif;
       overflow: hidden;
     }
     .ks-screen.active { display: flex; }
 
-    /* Header */
+    /* ── Common header ─────────────────────────────────────────────────── */
     .ks-hdr {
       display: flex; align-items: center; gap: 16px;
-      padding: 24px 32px; flex-shrink: 0; background: #fafafa;
+      padding: 27px 32px; flex-shrink: 0; background: #fafafa;
+      border-bottom: 1px solid #f0f0f0;
     }
     .ks-back {
       display: flex; align-items: center; gap: 6px;
@@ -110,8 +85,9 @@
       display: flex; align-items: center; gap: 6px;
     }
 
-    /* Body / footer */
-    .ks-body { flex: 1; padding: 16px 32px 0; overflow: hidden; }
+    /* ── Body / footer ─────────────────────────────────────────────────── */
+    .ks-body { flex: 1; padding: 24px 32px 0; overflow: hidden; }
+    .ks-body.scroll { overflow-y: auto; padding-bottom: 16px; }
     .ks-footer {
       padding: 20px 32px; border-top: 1px solid #eee;
       display: flex; align-items: center; flex-shrink: 0; background: #fafafa;
@@ -119,10 +95,10 @@
     .ks-footer.center { justify-content: center; }
     .ks-footer.end { justify-content: flex-end; }
 
-    .ks-title { font-size: 52px; font-weight: 800; color: #000; line-height: 1.1; margin-bottom: 12px; }
-    .ks-lbl { font-size: 20px; font-weight: 400; color: #6b7280; margin-bottom: 28px; }
+    .ks-title { font-size: 36px; font-weight: 800; color: #000; line-height: 1.2; margin-bottom: 12px; }
+    .ks-lbl { font-size: 20px; font-weight: 400; color: #54565a; margin-bottom: 28px; }
 
-    /* Buttons */
+    /* ── Buttons ───────────────────────────────────────────────────────── */
     .ks-btn {
       font-family: 'Mulish', sans-serif; font-weight: 700; border: none;
       border-radius: 99px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
@@ -134,59 +110,64 @@
       font-size: 20px; background: transparent; color: #197fe6;
       border: 2px solid #197fe6; padding: 14px 28px; width: 100%; justify-content: center;
     }
-    .ks-btn-outline.cancel { color: #000; border-color: #e5e7eb; width: auto; }
+    .ks-btn-outline.cancel { color: #000; border-color: #e2e8f0; width: auto; }
 
-    /* Input */
+    /* ── Input ─────────────────────────────────────────────────────────── */
     .ks-input {
-      width: 100%; border: 2px solid #eee; border-radius: 8px;
+      width: 100%; border: 2px solid #ccc; border-radius: 8px;
       padding: 14px 16px; font-family: 'Mulish', sans-serif;
       font-size: 24px; font-weight: 700; color: #ccc; background: #fff; outline: none;
     }
 
-    /* ── Screen 1: Temperature ─────────────────────────────────────────── */
-    #screen-1 {
-      position: relative; cursor: pointer;
-      background: #2a2a2a;
-    }
+    /* ── Screen 1: Temperature / Welcome ───────────────────────────────── */
+    #screen-1 { position: relative; cursor: pointer; background: #2a2a2a; }
     .temp-bg {
       position: absolute; inset: 0;
       background: url('kiosk-temp-bg.png') center/cover no-repeat;
       filter: brightness(0.45);
     }
     .temp-grad-t {
-      position: absolute; top: 0; left: 0; right: 0; height: 280px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+      position: absolute; top: 0; left: 0; right: 0; height: 300px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
     }
     .temp-grad-b {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 300px;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      position: absolute; bottom: 0; left: 0; right: 0; height: 320px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
     }
     .temp-content {
       position: relative; z-index: 1; width: 100%; height: 100%;
       display: flex; flex-direction: column; align-items: center;
-      padding: 40px 50px 80px;
+      padding: 40px 49px 80px;
     }
-    .temp-logo { height: 64px; margin-bottom: 24px; }
-    .temp-title { font-size: 52px; font-weight: 700; color: #fff; text-align: center; line-height: 1.15; }
+    .temp-logo { height: 64px; width: 160px; object-fit: contain; margin-bottom: 0; }
+    .temp-title {
+      font-size: 52px; font-weight: 700; color: #fff; text-align: center;
+      line-height: 1.15; margin-top: 16px; width: 436px;
+    }
     .temp-smiley { flex: 1; display: flex; align-items: center; justify-content: center; }
-    .temp-smiley img { width: 240px; height: 240px; }
+    .temp-smiley img { width: 241px; height: 241px; }
     .temp-label { font-size: 36px; font-weight: 700; color: #fff; text-align: center; line-height: 1.33; }
-    .temp-tap-hint {
-      position: absolute; bottom: 140px; left: 0; right: 0;
-      text-align: center; font-size: 18px; color: rgba(255,255,255,0.5);
-      font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-    }
 
     /* ── Screen 2: Phone ───────────────────────────────────────────────── */
     #screen-2 { background: #fafafa; }
+    .s2-hdr {
+      display: flex; align-items: center;
+      padding: 24px 32px; flex-shrink: 0; background: #fafafa;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .s2-hdr-title { flex: 1; font-size: 24px; font-weight: 700; color: #000; }
+    .s2-hdr-close { background: none; border: none; cursor: pointer; }
     .phone-field {
       width: 100%; border: 2px solid #eee; border-radius: 8px;
-      overflow: hidden; background: #fff; margin-bottom: 24px;
+      overflow: hidden; background: #fff; margin-bottom: 20px;
     }
     .phone-top {
       display: flex; align-items: center; gap: 8px;
       padding: 14px 16px; border-bottom: 1px solid #f5f5f5;
     }
+    .phone-top-flag { font-size: 20px; }
+    .phone-top-country { font-size: 16px; font-weight: 700; color: #000; flex: 1; }
+    .phone-top-change { font-size: 16px; font-weight: 700; color: #197fe6; }
     .phone-num {
       display: flex; align-items: center; gap: 12px;
       padding: 14px 16px;
@@ -199,7 +180,7 @@
     }
     .numpad {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
     .numpad-btn {
       height: 80px; border-radius: 40px; border: 2px solid #eee; background: #fff;
@@ -207,31 +188,36 @@
       cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
     .numpad-btn.ghost { border: none; background: transparent; }
-    .divider-row { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .divider-row { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
     .divider-line { flex: 1; height: 1px; background: #ccc; }
-    .divider-text { font-size: 20px; color: #6b7280; }
+    .divider-text { font-size: 20px; color: #54565a; }
     .opt-row {
       display: flex; align-items: center; gap: 16px;
-      padding: 16px 24px; background: #fff;
+      padding: 20px 24px; background: #fff;
       border: 2px solid #eee; border-radius: 8px;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.08);
-      cursor: pointer; margin-bottom: 24px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.06);
+      cursor: pointer; margin-bottom: 20px;
     }
-    .by-zip { display: flex; justify-content: center; padding: 16px 0; }
+    .opt-row-label { font-size: 20px; font-weight: 700; color: #000; }
+    .opt-row-sub { font-size: 16px; color: #54565a; margin-top: 2px; }
+    .by-zip { display: flex; justify-content: center; padding: 8px 0 4px; }
     .by-zip img { height: 20px; }
 
-    /* ── Screens 3, 4: shared ──────────────────────────────────────────── */
-    #screen-3, #screen-4, #screen-7 { background: #fafafa; }
+    /* ── Screen 3: Name ────────────────────────────────────────────────── */
+    #screen-3 { background: #fafafa; }
 
-    /* Company list */
+    /* ── Screen 4: Company ─────────────────────────────────────────────── */
+    #screen-4 { background: #fafafa; }
     .company-list { display: flex; flex-direction: column; gap: 12px; }
     .company-item {
       display: flex; align-items: center; padding: 20px 24px;
-      background: #fff; border: none; border-radius: 8px;
+      background: #fff; border: 1px solid #eee; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       font-family: 'Mulish', sans-serif; font-size: 20px; font-weight: 700; color: #000;
       cursor: pointer; width: 100%; text-align: left;
     }
-    .company-item span { flex: 1; }
+    .company-item span.name { flex: 1; }
+    .company-item svg { flex-shrink: 0; color: #54565a; }
 
     /* ── Screen 5: Blocked ─────────────────────────────────────────────── */
     #screen-5 { background: #fafafa; }
@@ -241,13 +227,21 @@
     .blocked-text { font-size: 36px; font-weight: 700; color: #000; text-align: center; line-height: 1.3; }
 
     /* ── Screen 6: Staff Override ──────────────────────────────────────── */
-    #screen-6 { background: #e8e8e8; }
-    .override-modal {
-      background: #fff; border-radius: 16px 16px 0 0;
-      padding: 32px 32px 24px; flex-shrink: 0;
+    #screen-6 { background: #2a2a2a; }
+    .override-dim {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 32px; min-height: 80px;
     }
+    .override-dim-title {
+      font-size: 28px; font-weight: 700; color: rgba(255,255,255,0.85); text-align: center;
+    }
+    .override-sheet {
+      background: #fff; border-radius: 24px 24px 0 0;
+      flex-shrink: 0; display: flex; flex-direction: column;
+    }
+    .override-sheet-inner { padding: 28px 32px 16px; }
     .override-title { font-size: 36px; font-weight: 800; color: #000; margin-bottom: 8px; }
-    .override-sub { font-size: 16px; color: #6b7280; margin-bottom: 24px; }
+    .override-sub { font-size: 16px; color: #54565a; margin-bottom: 20px; }
     .override-fields { display: flex; gap: 16px; }
     .override-input {
       flex: 1; border: 2px solid #eee; border-radius: 8px;
@@ -256,68 +250,57 @@
     }
     .override-actions {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 32px; background: #fff; border-top: 1px solid #eee; flex-shrink: 0;
+      padding: 16px 32px; border-top: 1px solid #eee; background: #fff;
     }
-    .override-numpad { flex: 1; background: #f5f5f5; padding: 12px 32px; }
-    .numpad-4 { display: grid; grid-template-columns: repeat(4, 1fr); height: 100%; }
-    .numpad-4-btn {
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Mulish', sans-serif; font-size: 36px; font-weight: 400;
-      background: none; border: none; cursor: pointer; color: #000;
-    }
+    .override-kbd { width: 100%; display: block; flex-shrink: 0; }
 
-    /* ── Screen 7: Confirmation ────────────────────────────────────────── */
-    .conf-divider { height: 1px; background: #eee; margin: 0 0 24px; }
+    /* ── Screen 7: Documents ───────────────────────────────────────────── */
+    #screen-7 { background: #fafafa; }
+    .conf-divider { height: 1px; background: #eee; margin: 0 0 20px; }
     .conf-section { font-size: 20px; font-weight: 700; color: #000; margin-bottom: 16px; }
     .step-row {
       display: flex; align-items: flex-start; gap: 16px;
       padding: 16px 24px; background: #fff; border-radius: 8px; margin-bottom: 12px;
     }
     .step-num {
-      width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9;
+      width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 20px; font-weight: 700; flex-shrink: 0;
+      font-size: 16px; font-weight: 700; flex-shrink: 0; color: #000;
     }
-    .step-text { font-size: 20px; line-height: 1.5; color: #000; padding-top: 4px; }
+    .step-text { font-size: 18px; line-height: 1.5; color: #000; padding-top: 4px; }
     .doc-row {
       display: flex; align-items: center; justify-content: space-between;
       padding: 16px 24px; background: #fff; border-radius: 8px;
+      border: 1px solid #eee;
     }
     .doc-name { font-size: 20px; font-weight: 700; color: #000; }
-    .doc-status { font-size: 16px; color: #f59e0b; }
+    .doc-status { font-size: 16px; color: #f59e0b; font-weight: 600; }
 
     /* ── Screen 8: Checked-in ──────────────────────────────────────────── */
     #screen-8 { background: #fafafa; }
-    .checkin-hero {
+    .checkin-body {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center; padding: 32px; gap: 16px;
     }
-    .success-wrap { position: relative; margin-bottom: 4px; }
-    .success-ring {
-      position: absolute; inset: -14px; border-radius: 50%;
-      border: 4px solid #22c55e; opacity: 0.2;
+    .checkin-success { width: 224px; height: 224px; flex-shrink: 0; }
+    .checkin-title { font-size: 36px; font-weight: 800; color: #000; }
+    .checkin-sub { font-size: 20px; color: #54565a; }
+    .mood-card {
+      width: 100%; background: #fff; border-radius: 12px;
+      border: 1px solid #eee; padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-top: 4px;
     }
-    .success-icon {
-      width: 180px; height: 180px; border-radius: 50%; background: #22c55e;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .checkin-title { font-size: 52px; font-weight: 800; color: #000; }
-    .checkin-sub { font-size: 24px; color: #6b7280; margin-bottom: 4px; }
-    .mood-card { width: 100%; background: #fff; border-radius: 12px; border: 2px solid #eee; padding: 24px; }
     .mood-q { font-size: 20px; font-weight: 700; color: #000; margin-bottom: 20px; }
     .emoji-row { display: flex; justify-content: space-between; }
-    .emoji-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-    .emoji-circle {
-      width: 76px; height: 76px; border-radius: 50%;
-      background: #f9fafb; border: 2px solid #e5e7eb;
-      display: flex; align-items: center; justify-content: center; font-size: 38px;
-    }
-    .emoji-lbl { font-size: 14px; color: #6b7280; font-weight: 600; }
+    .emoji-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+    .emoji-item img { width: 76px; height: 76px; border-radius: 50%; }
+    .emoji-lbl { font-size: 14px; color: #54565a; font-weight: 700; }
     .auto-return {
       font-size: 16px; color: #9ca3af; text-align: center;
-      padding: 0 32px 32px; flex-shrink: 0;
+      padding: 0 32px 28px; flex-shrink: 0;
     }
-    #countdown { font-weight: 700; color: #6b7280; }
+    #countdown { font-weight: 700; color: #54565a; }
   </style>
 </head>
 <body>
@@ -336,255 +319,316 @@
 
   <!-- ── Stage ── -->
   <div class="stage">
-    <div class="tp10">
-      <div class="tp10-frame">
+    <div class="screen-shell-wrap" id="screenShellWrap">
+      <div class="screen-shell" id="screenShell">
 
-        <!-- Screen viewport (Figma: x:45, y:243, 534×854) -->
-        <div class="tp10-viewport">
-          <div class="tp10-inner">
+        <!-- ══ Screen 1: Temperature / Welcome ══ -->
+        <div class="ks-screen active" id="screen-1" onclick="go(2)">
+          <div class="temp-bg"></div>
+          <div class="temp-grad-t"></div>
+          <div class="temp-grad-b"></div>
+          <div class="temp-content">
+            <img class="temp-logo" src="kiosk-wallaby-logo.svg" alt="Wallaby Health">
+            <div class="temp-title">Welcome to<br>Wallaby Albury</div>
+            <div class="temp-smiley"><img src="kiosk-smiley.svg" alt=""></div>
+            <div class="temp-label">Automatic<br>temperature check</div>
+          </div>
+        </div>
 
-            <!-- ══ Screen 1: Temperature ══ -->
-            <div class="ks-screen active" id="screen-1" onclick="go(2)">
-              <div class="temp-bg"></div>
-              <div class="temp-grad-t"></div>
-              <div class="temp-grad-b"></div>
-              <div class="temp-content">
-                <img class="temp-logo" src="kiosk-wallaby-logo.svg" alt="Wallaby Health">
-                <div class="temp-title">Welcome to<br>Wallaby Albury</div>
-                <div class="temp-smiley"><img src="kiosk-smiley.svg" alt=""></div>
-                <div class="temp-label">Automatic<br>temperature check</div>
+        <!-- ══ Screen 2: Phone / Numpad ══ -->
+        <div class="ks-screen" id="screen-2">
+          <div class="s2-hdr">
+            <div class="s2-hdr-title">Continue with your phone</div>
+            <button class="s2-hdr-close" onclick="go(1)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="ks-body scroll">
+            <div class="phone-field">
+              <div class="phone-top">
+                <span class="phone-top-flag">🇦🇺</span>
+                <span class="phone-top-country">Australia (+61)</span>
+                <span class="phone-top-change">Change</span>
               </div>
-              <div class="temp-tap-hint">Tap to begin</div>
-            </div>
-
-            <!-- ══ Screen 2: Phone ══ -->
-            <div class="ks-screen" id="screen-2" style="background:#fafafa;">
-              <div class="ks-hdr">
-                <div style="flex:1;font-size:24px;font-weight:700;color:#000;">Continue with your phone</div>
-                <button onclick="go(1)" style="background:none;border:none;cursor:pointer;">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-              </div>
-              <div class="ks-body" style="overflow-y:auto;padding-bottom:16px;">
-                <div class="phone-field">
-                  <div class="phone-top">
-                    <span style="font-size:20px;">🇦🇺</span>
-                    <span style="font-size:16px;font-weight:700;">Australia (+61)</span>
-                    <span style="font-size:16px;font-weight:700;color:#197fe6;margin-left:auto;">Change</span>
-                  </div>
-                  <div class="phone-num">
-                    <span class="phone-placeholder">e.g. 0412 345 678</span>
-                    <button class="phone-next-btn" onclick="go(3); event.stopPropagation();">Next</button>
-                  </div>
-                </div>
-                <div class="numpad">
-                  <button class="numpad-btn">1</button>
-                  <button class="numpad-btn">2</button>
-                  <button class="numpad-btn">3</button>
-                  <button class="numpad-btn">4</button>
-                  <button class="numpad-btn">5</button>
-                  <button class="numpad-btn">6</button>
-                  <button class="numpad-btn">7</button>
-                  <button class="numpad-btn">8</button>
-                  <button class="numpad-btn">9</button>
-                  <button class="numpad-btn ghost"></button>
-                  <button class="numpad-btn">0</button>
-                  <button class="numpad-btn ghost">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg>
-                  </button>
-                </div>
-                <div class="divider-row">
-                  <div class="divider-line"></div>
-                  <span class="divider-text">Or</span>
-                  <div class="divider-line"></div>
-                </div>
-                <div class="opt-row" onclick="go(8)">
-                  <div style="flex:1;">
-                    <div style="font-size:20px;font-weight:700;color:#000;">Resident</div>
-                    <div style="font-size:16px;color:#000;margin-top:2px;">For residents only</div>
-                  </div>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </div>
-                <div class="by-zip"><img src="kiosk-by-zipline.svg" alt="by zipline"></div>
+              <div class="phone-num">
+                <span class="phone-placeholder">e.g. 0412 345 678</span>
+                <button class="phone-next-btn" onclick="go(3); event.stopPropagation();">Next</button>
               </div>
             </div>
+            <div class="numpad">
+              <button class="numpad-btn">1</button>
+              <button class="numpad-btn">2</button>
+              <button class="numpad-btn">3</button>
+              <button class="numpad-btn">4</button>
+              <button class="numpad-btn">5</button>
+              <button class="numpad-btn">6</button>
+              <button class="numpad-btn">7</button>
+              <button class="numpad-btn">8</button>
+              <button class="numpad-btn">9</button>
+              <button class="numpad-btn ghost"></button>
+              <button class="numpad-btn">0</button>
+              <button class="numpad-btn ghost">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="divider-row">
+              <div class="divider-line"></div>
+              <span class="divider-text">Or</span>
+              <div class="divider-line"></div>
+            </div>
+            <div class="opt-row" onclick="go(8)">
+              <div style="flex:1;">
+                <div class="opt-row-label">Resident</div>
+                <div class="opt-row-sub">For residents only</div>
+              </div>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+            <div class="by-zip"><img src="kiosk-by-zipline.svg" alt="by zipline"></div>
+          </div>
+        </div>
 
-            <!-- ══ Screen 3: Name ══ -->
-            <div class="ks-screen" id="screen-3">
-              <div class="ks-hdr">
-                <button class="ks-back" onclick="go(2)">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Back
-                </button>
-                <div class="ks-progress"><div class="ks-progress-fill" style="width:33%"></div></div>
-                <button class="ks-restart" onclick="go(1)">Restart <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-              </div>
-              <div class="ks-body">
-                <div class="ks-title">What's your name?</div>
-                <div class="ks-lbl">First name and last name</div>
-                <input class="ks-input" type="text" placeholder="e.g. John Smith">
-              </div>
-              <div class="ks-footer end">
-                <button class="ks-btn ks-btn-primary" onclick="go(4)">
-                  Next <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </button>
+        <!-- ══ Screen 3: Name ══ -->
+        <div class="ks-screen" id="screen-3">
+          <div class="ks-hdr">
+            <button class="ks-back" onclick="go(2)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+              </svg>
+              Back
+            </button>
+            <div class="ks-progress"><div class="ks-progress-fill" style="width:33%"></div></div>
+            <button class="ks-restart" onclick="go(1)">
+              Restart
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="ks-body">
+            <div class="ks-title">What's your name?</div>
+            <div class="ks-lbl">First name and last name</div>
+            <input class="ks-input" type="text" placeholder="e.g. John Smith">
+          </div>
+          <div class="ks-footer end">
+            <button class="ks-btn ks-btn-primary" onclick="go(4)">
+              Next
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ══ Screen 4: Company ══ -->
+        <div class="ks-screen" id="screen-4">
+          <div class="ks-hdr">
+            <button class="ks-back" onclick="go(3)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+              </svg>
+              Back
+            </button>
+            <div class="ks-progress"><div class="ks-progress-fill" style="width:66%"></div></div>
+            <button class="ks-restart" onclick="go(1)">
+              Restart
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="ks-body scroll">
+            <div class="ks-title">Company</div>
+            <div class="ks-lbl" style="margin-bottom:16px;">Choose the company you worked for</div>
+            <input class="ks-input" type="text" placeholder="Tap to search by name or ABN" style="margin-bottom:20px;">
+            <div class="company-list">
+              <button class="company-item" onclick="go(8)">
+                <span class="name">Platypus Plumbing</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <button class="company-item" onclick="go(5)">
+                <span class="name">Koala Care Electrical</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <button class="company-item" onclick="go(5)">
+                <span class="name">Evergreen Landscaping</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <button class="company-item" onclick="go(5)">
+                <span class="name">SafeFlo Fire Solutions</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <button class="company-item" onclick="go(5)">
+                <span class="name">Harmony Hygiene Services</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <button class="company-item" onclick="go(5)">
+                <span class="name">Coastal Comfort HVAC</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ Screen 5: Blocked ══ -->
+        <div class="ks-screen" id="screen-5">
+          <div class="blocked-body">
+            <div class="blocked-text">Please go to reception<br>to continue.</div>
+          </div>
+          <div class="ks-footer center">
+            <button class="ks-btn ks-btn-outline" onclick="go(6)">Staff only</button>
+          </div>
+        </div>
+
+        <!-- ══ Screen 6: Staff Override ══ -->
+        <div class="ks-screen" id="screen-6">
+          <div class="override-dim">
+            <div class="override-dim-title">Staff review required</div>
+          </div>
+          <div class="override-sheet">
+            <div class="override-sheet-inner">
+              <div class="override-title">Staff approval</div>
+              <div class="override-sub">This will go on file for auditing purposes.</div>
+              <div class="override-fields">
+                <input class="override-input" type="text" placeholder="Name">
+                <input class="override-input" type="password" placeholder="4-digit PIN">
               </div>
             </div>
+            <div class="override-actions">
+              <button class="ks-btn ks-btn-outline cancel" onclick="go(5)">Cancel</button>
+              <button class="ks-btn ks-btn-primary blue" onclick="go(7)">
+                Approve
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+            <img class="override-kbd" src="kiosk-staff-kbd.png" alt="">
+          </div>
+        </div>
 
-            <!-- ══ Screen 4: Company ══ -->
-            <div class="ks-screen" id="screen-4">
-              <div class="ks-hdr">
-                <button class="ks-back" onclick="go(3)">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Back
-                </button>
-                <div class="ks-progress"><div class="ks-progress-fill" style="width:66%"></div></div>
-                <button class="ks-restart" onclick="go(1)">Restart <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-              </div>
-              <div class="ks-body" style="overflow-y:auto;padding-bottom:16px;">
-                <div class="ks-title">Company</div>
-                <div class="ks-lbl">Choose the company you worked for</div>
-                <input class="ks-input" type="text" placeholder="Tap to search by name or ABN" style="margin-bottom:20px;">
-                <div class="company-list">
-                  <button class="company-item" onclick="go(8)"><span>Platypus Plumbing</span><span>→</span></button>
-                  <button class="company-item" onclick="go(5)"><span>Koala Care Electrical</span><span>→</span></button>
-                  <button class="company-item" onclick="go(5)"><span>Evergreen Landscaping</span><span>→</span></button>
-                  <button class="company-item" onclick="go(5)"><span>SafeFlo Fire Solutions</span><span>→</span></button>
-                  <button class="company-item" onclick="go(5)"><span>Harmony Hygiene Services</span><span>→</span></button>
-                  <button class="company-item" onclick="go(5)"><span>Coastal Comfort HVAC</span><span>→</span></button>
+        <!-- ══ Screen 7: Documents ══ -->
+        <div class="ks-screen" id="screen-7">
+          <div class="ks-hdr">
+            <button class="ks-back" onclick="go(4)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+              </svg>
+              Back
+            </button>
+            <div class="ks-progress"><div class="ks-progress-fill" style="width:100%"></div></div>
+            <button class="ks-restart" onclick="go(1)">
+              Restart
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          <div class="ks-body scroll">
+            <div class="ks-title">Some documents still need to be completed</div>
+            <div class="conf-divider" style="margin-top:16px;"></div>
+            <div class="conf-section">What to do next:</div>
+            <div class="step-row">
+              <div class="step-num">1</div>
+              <div class="step-text">A link has been sent via SMS to 0401 234 567 where you can provide required checks. Follow the prompts in the provided link.</div>
+            </div>
+            <div class="step-row">
+              <div class="step-num">2</div>
+              <div class="step-text">Go to the reception to continue.</div>
+            </div>
+            <div class="conf-divider" style="margin-top:4px;"></div>
+            <div class="conf-section">Required document:</div>
+            <div class="doc-row">
+              <span class="doc-name">Driver's License</span>
+              <span class="doc-status">Pending ⚠️</span>
+            </div>
+          </div>
+          <div class="ks-footer center">
+            <button class="ks-btn ks-btn-outline" onclick="go(8)">Continue</button>
+          </div>
+        </div>
+
+        <!-- ══ Screen 8: Checked-in ══ -->
+        <div class="ks-screen" id="screen-8">
+          <div class="checkin-body">
+            <img class="checkin-success" src="kiosk-success.png" alt="">
+            <div class="checkin-title">Shift started</div>
+            <div class="checkin-sub">Have a great shift</div>
+            <div class="mood-card">
+              <div class="mood-q">How are you feeling today?</div>
+              <div class="emoji-row">
+                <div class="emoji-item">
+                  <img src="kiosk-emoji-awesome.png" alt="Awesome">
+                  <span class="emoji-lbl">Awesome</span>
+                </div>
+                <div class="emoji-item">
+                  <img src="kiosk-emoji-good.png" alt="Good">
+                  <span class="emoji-lbl">Good</span>
+                </div>
+                <div class="emoji-item">
+                  <img src="kiosk-emoji-notgreat.png" alt="Not Great">
+                  <span class="emoji-lbl">Not Great</span>
+                </div>
+                <div class="emoji-item">
+                  <img src="kiosk-emoji-awful.png" alt="Awful">
+                  <span class="emoji-lbl">Awful</span>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="auto-return">Returning to start in <span id="countdown">5</span> seconds</div>
+        </div>
 
-            <!-- ══ Screen 5: Blocked ══ -->
-            <div class="ks-screen" id="screen-5">
-              <div class="blocked-body">
-                <div class="blocked-text">Please go to reception<br>to continue.</div>
-              </div>
-              <div class="ks-footer center">
-                <button class="ks-btn ks-btn-outline" onclick="go(6)">Staff only</button>
-              </div>
-            </div>
-
-            <!-- ══ Screen 6: Staff Override ══ -->
-            <div class="ks-screen" id="screen-6">
-              <div class="override-modal">
-                <div class="override-title">Staff approval</div>
-                <div class="override-sub">This will go on file for auditing purposes.</div>
-                <div class="override-fields">
-                  <input class="override-input" type="text" placeholder="Name">
-                  <input class="override-input" type="password" placeholder="4-digit PIN">
-                </div>
-              </div>
-              <div class="override-actions">
-                <button class="ks-btn ks-btn-outline cancel" onclick="go(5)">Cancel</button>
-                <button class="ks-btn ks-btn-primary blue" onclick="go(7)">
-                  Approve <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </button>
-              </div>
-              <div class="override-numpad">
-                <div class="numpad-4">
-                  <button class="numpad-4-btn">1</button><button class="numpad-4-btn">2</button><button class="numpad-4-btn">3</button>
-                  <button class="numpad-4-btn" style="font-size:28px;color:#9ca3af;">−</button>
-                  <button class="numpad-4-btn">4</button><button class="numpad-4-btn">5</button><button class="numpad-4-btn">6</button>
-                  <button class="numpad-4-btn" style="font-size:28px;color:#9ca3af;">,</button>
-                  <button class="numpad-4-btn">7</button><button class="numpad-4-btn">8</button><button class="numpad-4-btn">9</button>
-                  <button class="numpad-4-btn"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg></button>
-                  <button class="numpad-4-btn" style="font-size:24px;color:#9ca3af;">.</button>
-                  <button class="numpad-4-btn">0</button>
-                  <button class="numpad-4-btn" style="font-size:24px;color:#9ca3af;">_</button>
-                  <button class="numpad-4-btn"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></button>
-                </div>
-              </div>
-            </div>
-
-            <!-- ══ Screen 7: Confirmation ══ -->
-            <div class="ks-screen" id="screen-7">
-              <div class="ks-hdr">
-                <button class="ks-back" onclick="go(4)">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Back
-                </button>
-                <div class="ks-progress"><div class="ks-progress-fill" style="width:100%"></div></div>
-                <button class="ks-restart" onclick="go(1)">Restart <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-              </div>
-              <div class="ks-body" style="overflow-y:auto;padding-bottom:16px;">
-                <div class="ks-title" style="font-size:40px;">Some documents still need to be completed</div>
-                <div class="conf-divider" style="margin-top:16px;"></div>
-                <div class="conf-section">What to do next:</div>
-                <div class="step-row">
-                  <div class="step-num">1</div>
-                  <div class="step-text">A link has been sent via SMS to 0401 234 567 where you can provide required checks. Follow the prompts in the provided link.</div>
-                </div>
-                <div class="step-row">
-                  <div class="step-num">2</div>
-                  <div class="step-text">Go to the reception to continue.</div>
-                </div>
-                <div class="conf-divider" style="margin-top:4px;"></div>
-                <div class="conf-section">Required document:</div>
-                <div class="doc-row">
-                  <span class="doc-name">Driver's License</span>
-                  <span class="doc-status">Pending ⚠️</span>
-                </div>
-              </div>
-              <div class="ks-footer center">
-                <button class="ks-btn ks-btn-outline" onclick="go(8)">Continue</button>
-              </div>
-            </div>
-
-            <!-- ══ Screen 8: Checked-in ══ -->
-            <div class="ks-screen" id="screen-8">
-              <div class="ks-hdr">
-                <button class="ks-back" onclick="go(7)">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Back
-                </button>
-                <div style="flex:1;"></div>
-                <button class="ks-restart" onclick="go(1)">Restart <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-              </div>
-              <div class="checkin-hero">
-                <div class="success-wrap">
-                  <div class="success-ring"></div>
-                  <div class="success-icon">
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                  </div>
-                </div>
-                <div class="checkin-title">Shift started</div>
-                <div class="checkin-sub">Have a great shift</div>
-                <div class="mood-card">
-                  <div class="mood-q">How are you feeling today?</div>
-                  <div class="emoji-row">
-                    <div class="emoji-item"><div class="emoji-circle">😊</div><span class="emoji-lbl">Awesome</span></div>
-                    <div class="emoji-item"><div class="emoji-circle">🙂</div><span class="emoji-lbl">Good</span></div>
-                    <div class="emoji-item"><div class="emoji-circle">😕</div><span class="emoji-lbl">Not Great</span></div>
-                    <div class="emoji-item"><div class="emoji-circle">😠</div><span class="emoji-lbl">Awful</span></div>
-                  </div>
-                </div>
-              </div>
-              <div class="auto-return">Returning to start in <span id="countdown">5</span> seconds</div>
-            </div>
-
-          </div><!-- /tp10-inner -->
-        </div><!-- /tp10-viewport -->
-
-        <!-- TP10 device frame — composite SVG with transparent screen hole -->
-        <img class="tp10-frame-img" src="kiosk-tp10.svg" alt="">
-
-      </div><!-- /tp10-frame -->
-    </div><!-- /tp10 -->
+      </div><!-- /screen-shell -->
+    </div><!-- /screen-shell-wrap -->
   </div><!-- /stage -->
 
   <script>
+    // ── Responsive scaling ───────────────────────────────────────────────
+    function fitScreen() {
+      var wrap = document.getElementById('screenShellWrap');
+      var shell = document.getElementById('screenShell');
+      var margin = 32;
+      var availH = window.innerHeight - 44 - margin * 2;
+      var availW = window.innerWidth - margin * 2;
+      var scale = Math.min(1, availH / 854, availW / 534);
+      var w = Math.round(534 * scale);
+      var h = Math.round(854 * scale);
+      wrap.style.width = w + 'px';
+      wrap.style.height = h + 'px';
+      shell.style.transform = scale < 1 ? 'scale(' + scale + ')' : '';
+    }
+    window.addEventListener('resize', fitScreen);
+    fitScreen();
+
     // ── Screen navigation ────────────────────────────────────────────────
     var timer = null;
     var timerCount = 5;
 
     function go(n) {
-      // Clear any running timeout
       if (timer) { clearInterval(timer); timer = null; }
-
       document.querySelectorAll('.ks-screen').forEach(function(s) {
         s.classList.remove('active');
       });
       document.getElementById('screen-' + n).classList.add('active');
 
-      // Start countdown on checked-in screen
       if (n === 8) {
         timerCount = 5;
         document.getElementById('countdown').textContent = timerCount;
@@ -592,8 +636,7 @@
           timerCount--;
           document.getElementById('countdown').textContent = timerCount;
           if (timerCount <= 0) {
-            clearInterval(timer);
-            timer = null;
+            clearInterval(timer); timer = null;
             go(1);
           }
         }, 1000);
