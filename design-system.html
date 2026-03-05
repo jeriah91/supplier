@@ -92,6 +92,14 @@
     .check-result-item .ri-detail { font-size: 12px; color: #64748b; line-height: 18px; }
     .check-result-empty { text-align: center; color: #059669; font-size: 14px; font-weight: 500; padding: 16px 0; }
     .check-result-list { display: flex; flex-direction: column; gap: 8px; }
+    .check-result-item { cursor: pointer; }
+    .check-result-item input[type="checkbox"] { flex-shrink: 0; accent-color: #2c66ef; width: 15px; height: 15px; cursor: pointer; margin: 0; }
+    .check-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid #e2e8f0; margin-top: 4px; }
+    .check-select-all { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #64748b; cursor: pointer; user-select: none; }
+    .check-select-all input[type="checkbox"] { accent-color: #2c66ef; width: 15px; height: 15px; cursor: pointer; }
+    .check-add-btn { background: #2c66ef; color: #fff; border: none; border-radius: 8px; padding: 7px 14px; font-family: inherit; font-size: 13px; font-weight: 500; letter-spacing: -0.26px; cursor: pointer; }
+    .check-add-btn:hover { background: #1d56df; }
+    .check-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* ── Main 3-col layout ── */
     .main {
@@ -2272,16 +2280,115 @@
           <div style="font-size:13px;color:#64748b;margin-bottom:4px;">${entries.length} potential new component pattern${entries.length > 1 ? 's' : ''} found:</div>
           <div class="check-result-list">
             ${entries.map(([root, info]) => `
-              <div class="check-result-item">
+              <label class="check-result-item">
+                <input type="checkbox" class="check-item-cb" data-root="${root}" data-classes="${info.classes.slice(0,3).join(' ')}" data-pages="${[...info.pages].join(', ')}" onchange="updateAddBtn()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
                 <div>
                   <div class="ri-label">.${info.classes.slice(0,3).join(', .')}</div>
                   <div class="ri-detail">Found on: ${[...info.pages].join(', ')}</div>
                 </div>
-              </div>`).join('')}
+              </label>`).join('')}
           </div>
-          <div style="font-size:12px;color:#94a3b8;margin-top:8px;">Review these patterns and add them to the DS array if they are reusable components.</div>`;
+          <div class="check-footer">
+            <label class="check-select-all">
+              <input type="checkbox" id="checkSelectAll" onchange="document.querySelectorAll('.check-item-cb').forEach(c=>c.checked=this.checked);updateAddBtn()">
+              Select all
+            </label>
+            <button class="check-add-btn" id="checkAddBtn" onclick="addDetectedComponents()" disabled>Add components</button>
+          </div>`;
       }
+    }
+
+    function updateAddBtn() {
+      const checked = document.querySelectorAll('.check-item-cb:checked').length;
+      const btn = document.getElementById('checkAddBtn');
+      if (!btn) return;
+      btn.disabled = checked === 0;
+      btn.textContent = checked ? `Add ${checked} component${checked > 1 ? 's' : ''}` : 'Add components';
+    }
+
+    function toComponentName(cls) {
+      return cls.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+
+    function appendNavCategory(gi, group) {
+      const catGroup = document.createElement('div');
+      catGroup.className = 'cat-group';
+      const header = document.createElement('button');
+      header.className = 'cat-header open';
+      header.innerHTML = `<span>${group.category}</span><svg class="cat-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>`;
+      const itemsList = document.createElement('div');
+      itemsList.className = 'cat-items open';
+      header.addEventListener('click', () => toggleCat(gi, header, itemsList));
+      catGroup.appendChild(header);
+      catGroup.appendChild(itemsList);
+      navPanel.appendChild(catGroup);
+    }
+
+    function appendNavItem(gi, ii, name) {
+      const catGroups = navPanel.querySelectorAll('.cat-group');
+      const catGroup = catGroups[gi];
+      if (!catGroup) return;
+      const itemsList = catGroup.querySelector('.cat-items');
+      const wrap = document.createElement('div');
+      wrap.className = 'cat-item-wrap';
+      const tree = document.createElement('div');
+      tree.className = 'cat-item-tree';
+      const btn = document.createElement('button');
+      btn.className = 'cat-item';
+      btn.textContent = name;
+      btn.dataset.gi = gi;
+      btn.dataset.ii = ii;
+      btn.addEventListener('click', () => selectItem(gi, ii, btn));
+      wrap.appendChild(tree);
+      wrap.appendChild(btn);
+      itemsList.appendChild(wrap);
+    }
+
+    function addDetectedComponents() {
+      const checked = [...document.querySelectorAll('.check-item-cb:checked')];
+      if (!checked.length) return;
+
+      let detectedGroup = DS.find(g => g.category === 'Detected');
+      let gi;
+      if (!detectedGroup) {
+        detectedGroup = { category: 'Detected', items: [] };
+        DS.push(detectedGroup);
+        gi = DS.length - 1;
+        appendNavCategory(gi, detectedGroup);
+      } else {
+        gi = DS.indexOf(detectedGroup);
+      }
+
+      const added = [];
+      checked.forEach(cb => {
+        const root = cb.dataset.root;
+        const classes = cb.dataset.classes.trim().split(/\s+/);
+        const name = toComponentName(classes[0] || root);
+        DS_FINGERPRINTS[root] = name;
+        classes.forEach(c => { DS_FINGERPRINTS[c] = name; });
+        const item = {
+          name,
+          previewCSS: `.ds-${root} { font-family: Inter, sans-serif; padding: 8px 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; display: inline-block; font-size: 13px; color: #334155; }`,
+          previewHTML: `<div class="ds-${root}">${name}</div>`,
+          css: `.${root} {\n  /* TODO: add styles */\n}`,
+          html: `<div class="${root}">\n  <!-- TODO: add markup -->\n</div>`
+        };
+        detectedGroup.items.push(item);
+        appendNavItem(gi, detectedGroup.items.length - 1, name);
+        added.push(name);
+      });
+
+      const body = document.getElementById('checkResultBody');
+      body.innerHTML = `
+        <div class="check-result-empty">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" style="display:inline-block;vertical-align:middle;margin-right:6px">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+          ${added.length} component${added.length > 1 ? 's' : ''} added to the design system.
+        </div>
+        <div style="font-size:12px;color:#94a3b8;margin-top:8px;">${added.map(n => `<strong>${n}</strong>`).join(', ')} — now listed under <em>Detected</em> in the left panel.</div>`;
+      document.getElementById('checkDialogTitle').textContent = `${added.length} component${added.length > 1 ? 's' : ''} added`;
     }
 
     // Last updated
