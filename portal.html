@@ -2305,7 +2305,20 @@
         return '<span class="bulk-share-worker-chip">' + name + '</span>';
       }).join('');
       document.getElementById('bulkShareEmail').value = '';
+      updateBulkCredCount();
       document.getElementById('bulkShareBackdrop').classList.add('is-visible');
+    }
+
+    function updateBulkCredCount() {
+      var total = document.querySelectorAll('#bulkShareBackdrop input[name="bulk-cred"]:not(:disabled)').length;
+      var checked = document.querySelectorAll('#bulkShareBackdrop input[name="bulk-cred"]:not(:disabled):checked').length;
+      var el = document.getElementById('bulkCredCount');
+      if (el) el.textContent = checked + ' of ' + total + ' selected';
+    }
+
+    function selectAllBulkCreds(state) {
+      document.querySelectorAll('#bulkShareBackdrop input[name="bulk-cred"]:not(:disabled)').forEach(function(cb) { cb.checked = state; });
+      updateBulkCredCount();
     }
 
     function closeBulkShareModal() {
@@ -2336,7 +2349,7 @@
 
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 11:57:51';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 12:01:00';
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
@@ -2370,6 +2383,84 @@
       <div class="bulk-share-title" id="bulkShareTitle">Share credentials for 0 workers</div>
       <div class="bulk-share-sub">A secure link will be sent for each selected worker.</div>
       <div class="bulk-share-workers" id="bulkShareWorkers"></div>
+      <div class="share-creds-section">
+        <div class="share-creds-label">Share Credentials</div>
+        <div class="share-creds-box">
+          <div class="share-creds-toolbar">
+            <div class="share-creds-actions">
+              <button class="share-creds-action" onclick="selectAllBulkCreds(true)">Select all</button>
+              <button class="share-creds-action" onclick="selectAllBulkCreds(false)">Deselect all</button>
+            </div>
+            <span class="share-creds-count" id="bulkCredCount"></span>
+          </div>
+          <div class="share-creds-scroll">
+            <div class="share-creds-group-header">Licences &amp; Qualifications</div>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Current State/Territory Plumbing Licence</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Gasfitting Licence</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Backflow Prevention Accreditation</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Professional Qualifications</span>
+            </label>
+            <div class="share-creds-group-header">Safety &amp; Compliance</div>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Public Liability Insurance ($20M min.)</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Workers' Compensation Insurance</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Safe Work Method Statements (SWMS)</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Construction Induction Card (White Card)</span>
+            </label>
+            <div class="share-creds-group-header">Aged Care Specific</div>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">National Police Check</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">COVID-19 Vaccination Records</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Infection Control Training Certificate</span>
+            </label>
+            <div class="share-creds-group-header">On-Site &amp; Administrative</div>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Contractor Induction Records</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Australian Work Rights</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Risk Assessments</span>
+            </label>
+            <label class="share-cred-item">
+              <input type="checkbox" name="bulk-cred" checked onchange="updateBulkCredCount()">
+              <span class="share-cred-label">Asbestos Awareness Training Certificate</span>
+            </label>
+          </div>
+        </div>
+      </div>
       <div class="bulk-share-form">
         <div class="bulk-share-field">
           <label class="bulk-share-label" for="bulkShareDuration">Link valid for</label>
