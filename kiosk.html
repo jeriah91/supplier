@@ -42,9 +42,10 @@
       width: 343px;   /* 624 × 0.55 */
       height: 737px;  /* 1340 × 0.55 */
       flex-shrink: 0;
+      filter: drop-shadow(0 20px 50px rgba(0,0,0,0.55)) drop-shadow(0 6px 16px rgba(0,0,0,0.3));
     }
 
-    /* Native-scale inner frame — everything at Figma coordinates */
+    /* Native-scale inner frame — scaled uniformly to 55% */
     .tp10-frame {
       position: absolute;
       top: 0; left: 0;
@@ -53,22 +54,27 @@
       transform-origin: top left;
     }
 
-    /* Screen viewport — matches Figma Rectangle3835 position exactly */
-    .tp10-viewport {
+    /* Device frame SVG image — on top of screen, transparent over screen area */
+    .tp10-frame-img {
       position: absolute;
-      top: 88.5px; left: 8.2px;
-      width: 609.551px; height: 1071.907px;
-      overflow: hidden;
-      background: #212022;
-      border-radius: 32.5px 32.5px 0 0;
+      top: 0; left: 0;
+      width: 624px; height: 1340px;
+      pointer-events: none;
     }
 
-    /* Inner content: 536×854 scaled to fill viewport width (×1.137) */
+    /* Screen viewport — Figma coords: x:45, y:243, 534×854 */
+    .tp10-viewport {
+      position: absolute;
+      top: 243px; left: 45px;
+      width: 534px; height: 854px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* Inner content at Figma screen size (536≈534, clips 1px each side) */
     .tp10-inner {
       position: relative;
       width: 536px; height: 854px;
-      transform: scale(1.137);
-      transform-origin: top left;
       font-family: 'Mulish', sans-serif;
     }
 
@@ -333,23 +339,7 @@
     <div class="tp10">
       <div class="tp10-frame">
 
-        <!-- Camera bar gradient background -->
-        <div style="position:absolute;top:0;left:147.19px;width:330.512px;height:81.274px;background:linear-gradient(157deg,#d1d1d1 19%,#8c8c8c 99%);border-radius:40.637px;"></div>
-        <!-- Camera bar dark inner -->
-        <div style="position:absolute;top:8.13px;left:155.32px;width:314.258px;height:65.019px;background:#212022;border-radius:131.195px;transform:rotate(180deg);"></div>
-        <!-- Intersect (camera bar highlight) -->
-        <img style="position:absolute;top:8.13px;left:217.75px;width:251.827px;height:65.019px;pointer-events:none;" src="kiosk-device-intersect.svg" alt="">
-        <!-- Ellipse316 (secondary camera ring, −135°) -->
-        <img style="position:absolute;top:25.1px;left:296.75px;width:32.19px;height:32.19px;transform-origin:center;transform:rotate(-135deg);" src="kiosk-device-cam2.svg" alt="">
-        <!-- Ellipse315 (main camera lens) -->
-        <img style="position:absolute;top:26.39px;left:298.05px;width:29.593px;height:29.593px;" src="kiosk-device-cam.svg" alt="">
-        <!-- Ellipse317 (camera inner, 45°) -->
-        <img style="position:absolute;top:33.84px;left:305.49px;width:14.704px;height:14.704px;transform-origin:center;transform:rotate(45deg);" src="kiosk-device-cam-inner.svg" alt="">
-
-        <!-- Device body -->
-        <div style="position:absolute;top:81.27px;left:0;width:624px;height:1258.836px;background:linear-gradient(154deg,#ededee 1%,#d0d0d0 105%);border-radius:37.928px;box-shadow:0 30px 80px rgba(0,0,0,0.55),0 8px 24px rgba(0,0,0,0.3);"></div>
-
-        <!-- Screen viewport (at Figma Rectangle3835 coordinates) — below device face hardware -->
+        <!-- Screen viewport (Figma: x:45, y:243, 534×854) -->
         <div class="tp10-viewport">
           <div class="tp10-inner">
 
@@ -573,28 +563,8 @@
           </div><!-- /tp10-inner -->
         </div><!-- /tp10-viewport -->
 
-        <!-- Left shoulder -->
-        <div style="position:absolute;top:148.1px;left:85.08px;width:85.789px;height:36.122px;background:#e5e7eb;border-radius:18.061px;"></div>
-        <!-- Right shoulder -->
-        <div style="position:absolute;top:148.1px;left:454.94px;width:85.789px;height:36.122px;background:#e5e7eb;border-radius:18.061px;"></div>
-        <!-- Left pillar -->
-        <div style="position:absolute;top:139.39px;left:226.86px;width:10.933px;height:54.665px;background:#c4c4c4;border-radius:10.933px;"></div>
-        <!-- Right pillar -->
-        <div style="position:absolute;top:139.39px;left:388.12px;width:10.933px;height:54.665px;background:#c4c4c4;border-radius:10.933px;"></div>
-        <!-- IR sensors — left -->
-        <img style="position:absolute;top:139.07px;left:254.19px;width:54.99px;height:54.99px;transform-origin:center;transform:rotate(-135deg);" src="kiosk-device-ir-outer.svg" alt="">
-        <img style="position:absolute;top:141.29px;left:256.41px;width:50.554px;height:50.554px;" src="kiosk-device-ir.svg" alt="">
-        <img style="position:absolute;top:154px;left:269.13px;width:25.119px;height:25.119px;transform-origin:center;transform:rotate(45deg);" src="kiosk-device-ir-inner.svg" alt="">
-        <!-- IR sensors — right -->
-        <img style="position:absolute;top:139.07px;left:317.78px;width:54.99px;height:54.99px;transform-origin:center;transform:rotate(-135deg);" src="kiosk-device-ir-outer.svg" alt="">
-        <img style="position:absolute;top:141.29px;left:320.01px;width:50.554px;height:50.554px;" src="kiosk-device-ir.svg" alt="">
-        <img style="position:absolute;top:154px;left:332.72px;width:25.119px;height:25.119px;transform-origin:center;transform:rotate(45deg);" src="kiosk-device-ir-inner.svg" alt="">
-
-        <!-- Home button -->
-        <img style="position:absolute;top:1220.01px;left:283.55px;width:56.895px;height:56.891px;" src="kiosk-device-home.svg" alt="">
-
-        <!-- Subtract (device sheen overlay, non-interactive) -->
-        <img style="position:absolute;top:81.27px;left:114.8px;width:507.63px;height:1258.836px;pointer-events:none;" src="kiosk-device-subtract.svg" alt="">
+        <!-- TP10 device frame — composite SVG with transparent screen hole -->
+        <img class="tp10-frame-img" src="kiosk-tp10.svg" alt="">
 
       </div><!-- /tp10-frame -->
     </div><!-- /tp10 -->

@@ -1,0 +1,68 @@
+<svg viewBox="0 0 624 1340" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Camera bar gradient (~157°) -->
+    <linearGradient id="camGrad" gradientUnits="userSpaceOnUse" x1="147" y1="0" x2="478" y2="81">
+      <stop offset="0" stop-color="#d1d1d1"/>
+      <stop offset="1" stop-color="#8c8c8c"/>
+    </linearGradient>
+    <!-- Device body gradient (~154°) -->
+    <linearGradient id="bodyGrad" gradientUnits="userSpaceOnUse" x1="0" y1="81" x2="624" y2="1340">
+      <stop offset="0" stop-color="#ededee"/>
+      <stop offset="1" stop-color="#d0d0d0"/>
+    </linearGradient>
+    <!-- Body mask: transparent screen hole at (45, 243, 534×854) -->
+    <mask id="bodyMask" maskUnits="userSpaceOnUse">
+      <rect x="0" y="81.27" width="624" height="1258.836" rx="37.928" fill="white"/>
+      <rect x="45" y="243" width="534" height="854" fill="black"/>
+    </mask>
+    <!-- Subtract mask: same screen hole -->
+    <mask id="subtractMask" maskUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="624" height="1340" fill="white"/>
+      <rect x="45" y="243" width="534" height="854" fill="black"/>
+    </mask>
+  </defs>
+
+  <!-- ── Camera bar ─────────────────────────────────────────────────── -->
+  <rect x="147.19" y="0" width="330.512" height="81.274" rx="40.637" fill="url(#camGrad)"/>
+  <!-- Dark inner bar -->
+  <rect x="155.32" y="8.13" width="314.258" height="65.019" rx="32.5" fill="#212022"/>
+  <!-- Intersect highlight -->
+  <image href="kiosk-device-intersect.svg" x="217.75" y="8.13" width="251.827" height="65.019"/>
+  <!-- Secondary camera ring -->
+  <image href="kiosk-device-cam2.svg" x="296.75" y="25.1" width="32.19" height="32.19" transform="rotate(-135 312.845 41.195)"/>
+  <!-- Main camera lens -->
+  <image href="kiosk-device-cam.svg" x="298.05" y="26.39" width="29.593" height="29.593"/>
+  <!-- Camera inner -->
+  <image href="kiosk-device-cam-inner.svg" x="305.49" y="33.84" width="14.704" height="14.704" transform="rotate(45 312.842 41.192)"/>
+
+  <!-- ── Device body (transparent screen hole) ─────────────────────── -->
+  <rect x="0" y="81.27" width="624" height="1258.836" rx="37.928" fill="url(#bodyGrad)" mask="url(#bodyMask)"/>
+
+  <!-- ── Bezel face elements ───────────────────────────────────────── -->
+  <!-- Left shoulder -->
+  <rect x="85.08" y="148.1" width="85.789" height="36.122" rx="18.061" fill="#e5e7eb"/>
+  <!-- Right shoulder -->
+  <rect x="454.94" y="148.1" width="85.789" height="36.122" rx="18.061" fill="#e5e7eb"/>
+  <!-- Left pillar -->
+  <rect x="226.86" y="139.39" width="10.933" height="54.665" rx="5.47" fill="#c4c4c4"/>
+  <!-- Right pillar -->
+  <rect x="388.12" y="139.39" width="10.933" height="54.665" rx="5.47" fill="#c4c4c4"/>
+
+  <!-- IR sensors — left -->
+  <image href="kiosk-device-ir-outer.svg" x="254.19" y="139.07" width="54.99" height="54.99" transform="rotate(-135 281.685 166.565)"/>
+  <image href="kiosk-device-ir.svg" x="256.41" y="141.29" width="50.554" height="50.554"/>
+  <image href="kiosk-device-ir-inner.svg" x="269.13" y="154" width="25.119" height="25.119" transform="rotate(45 281.69 166.56)"/>
+
+  <!-- IR sensors — right -->
+  <image href="kiosk-device-ir-outer.svg" x="317.78" y="139.07" width="54.99" height="54.99" transform="rotate(-135 345.275 166.565)"/>
+  <image href="kiosk-device-ir.svg" x="320.01" y="141.29" width="50.554" height="50.554"/>
+  <image href="kiosk-device-ir-inner.svg" x="332.72" y="154" width="25.119" height="25.119" transform="rotate(45 345.28 166.56)"/>
+
+  <!-- ── Home button ────────────────────────────────────────────────── -->
+  <image href="kiosk-device-home.svg" x="283.55" y="1220.01" width="56.895" height="56.891"/>
+
+  <!-- ── Subtract sheen (transparent over screen area) ─────────────── -->
+  <g mask="url(#subtractMask)">
+    <image href="kiosk-device-subtract.svg" x="114.8" y="81.27" width="507.63" height="1258.836"/>
+  </g>
+</svg>
