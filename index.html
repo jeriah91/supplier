@@ -97,6 +97,21 @@
       color: #94a3b8; letter-spacing: -0.24px; line-height: 16px;
     }
 
+    /* ── Section group label ── */
+    .group-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      line-height: 16px;
+    }
+    .group-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
     /* ── Grid ── */
     .grid {
       display: flex;
@@ -327,7 +342,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
         </div>
         <div class="stat-text">
-          <span class="stat-value">4</span>
+          <span class="stat-value">6</span>
           <span class="stat-label">Flows</span>
         </div>
       </div>
@@ -336,7 +351,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         </div>
         <div class="stat-text">
-          <span class="stat-value">18</span>
+          <span class="stat-value">20</span>
           <span class="stat-label">Screens</span>
         </div>
       </div>
@@ -352,7 +367,9 @@
     </div>
 
     <!-- Cards grid -->
-    <div class="grid">
+    <div class="group-section">
+      <span class="group-label">Flows</span>
+      <div class="grid">
 
       <!-- Onboarding -->
       <a class="card" href="onboarding-welcome.html">
@@ -438,12 +455,70 @@
         </div>
       </a>
 
-    </div>
+      </div><!-- /grid -->
+    </div><!-- /group-section Flows -->
+
+    <!-- Comms group -->
+    <div class="group-section">
+      <span class="group-label">Comms</span>
+      <div class="grid">
+
+        <!-- Passport Portal Invite email -->
+        <a class="card" href="email-passport-invite.html">
+          <div class="thumbnail-wrap" data-native-width="900">
+            <iframe src="email-passport-invite.html" title="Passport Invite Email" tabindex="-1" aria-hidden="true"></iframe>
+            <div class="platform-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              Email
+            </div>
+            <div class="thumbnail-overlay"></div>
+          </div>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <span class="card-label">Passport Portal Invite</span>
+            </div>
+            <div class="card-meta-row">
+              <span class="card-desc">Email sent to external recipients to access a shared credentials link</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- OTP verification email -->
+        <a class="card" href="email-otp.html">
+          <div class="thumbnail-wrap" data-native-width="900">
+            <iframe src="email-otp.html" title="OTP Email" tabindex="-1" aria-hidden="true"></iframe>
+            <div class="platform-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              Email
+            </div>
+            <div class="thumbnail-overlay"></div>
+          </div>
+          <div class="card-meta">
+            <div class="card-meta-row">
+              <span class="card-label">OTP Verification Code</span>
+            </div>
+            <div class="card-meta-row">
+              <span class="card-desc">One-time verification code sent when a recipient signs into Zipline Passport</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Spacer cards to prevent stretching -->
+        <div style="flex:1;min-width:0;max-width:calc(25% - 18px);visibility:hidden;pointer-events:none;" aria-hidden="true"></div>
+        <div style="flex:1;min-width:0;max-width:calc(25% - 18px);visibility:hidden;pointer-events:none;" aria-hidden="true"></div>
+
+      </div><!-- /grid -->
+    </div><!-- /group-section Comms -->
 
     <!-- What's new -->
     <div style="display:flex;flex-direction:column;gap:12px;">
       <span class="section-heading">What's new</span>
       <div class="changelog">
+        <div class="changelog-row">
+          <span class="changelog-date">5 Mar</span>
+          <span class="changelog-tag proto">Comms</span>
+          <span class="changelog-msg">New email prototypes: Passport Portal invite and OTP verification code</span>
+        </div>
         <div class="changelog-row">
           <span class="changelog-date">5 Mar</span>
           <span class="changelog-tag proto">Passport Portal</span>

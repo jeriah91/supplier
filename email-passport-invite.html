@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prototype / Comms · Passport Invite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Proto-nav ─────────────────────────────────────────────────────── */
+    .proto-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      height: 40px; background: #0f172a;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; gap: 16px;
+    }
+    .proto-nav-left { display: flex; align-items: center; gap: 10px; }
+    .proto-nav-title {
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.5); letter-spacing: -0.24px; white-space: nowrap;
+    }
+    .proto-nav-title strong { color: #fff; font-weight: 600; }
+    .proto-nav-sep { color: rgba(255,255,255,0.25); font-size: 12px; }
+    .proto-nav-right { display: flex; align-items: center; gap: 12px; }
+    .proto-nav-link {
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+      color: rgba(255,255,255,0.5); text-decoration: none; letter-spacing: -0.24px;
+    }
+    .proto-nav-link:hover { color: #fff; }
+    .proto-nav-time {
+      font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400;
+      color: rgba(255,255,255,0.3); letter-spacing: -0.22px; white-space: nowrap;
+    }
+
+    /* ── Page ──────────────────────────────────────────────────────────── */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #3c4043;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px 24px 40px;
+      padding-top: 60px;
+    }
+
+    /* ── Gmail card ─────────────────────────────────────────────────────── */
+    .email-card {
+      background: #fff;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 900px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3);
+    }
+
+    /* ── Toolbar ─────────────────────────────────────────────────────────── */
+    .gm-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 8px; border-bottom: 1px solid #e8eaed; height: 52px;
+    }
+    .gm-toolbar-left { display: flex; align-items: center; gap: 0; }
+    .gm-toolbar-right { display: flex; align-items: center; gap: 4px; }
+    .gm-icon-btn {
+      width: 40px; height: 40px; border-radius: 50%; border: none; background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #5f6368; transition: background 0.15s;
+    }
+    .gm-icon-btn:hover { background: #e8eaed; }
+    .gm-icon-btn svg { width: 20px; height: 20px; }
+    .gm-divider { width: 1px; height: 24px; background: #e8eaed; margin: 0 6px; flex-shrink: 0; }
+    .gm-pagination { font-size: 13px; color: rgba(0,0,0,0.54); margin: 0 10px; white-space: nowrap; }
+
+    /* ── Subject row ─────────────────────────────────────────────────────── */
+    .gm-subject-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 24px; border-bottom: 1px solid #e8eaed; flex-wrap: wrap;
+    }
+    .gm-subject { font-size: 22px; font-weight: 400; color: #202124; letter-spacing: -0.2px; line-height: 1.2; }
+    .gm-inbox-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(0,0,0,0.05); color: rgba(0,0,0,0.6);
+      font-size: 11px; font-weight: 500; padding: 2px 7px;
+      border-radius: 4px; letter-spacing: 0.1px; flex-shrink: 0; cursor: default;
+    }
+    .gm-subject-icons { margin-left: auto; display: flex; gap: 4px; }
+    .gm-icon-btn-sm {
+      width: 36px; height: 36px; border-radius: 50%; border: none; background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #5f6368; transition: background 0.15s;
+    }
+    .gm-icon-btn-sm:hover { background: #e8eaed; }
+    .gm-icon-btn-sm svg { width: 18px; height: 18px; }
+
+    /* ── Sender row ──────────────────────────────────────────────────────── */
+    .gm-sender-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 12px 24px; border-bottom: 1px solid #e8eaed;
+    }
+    .gm-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700; color: #fff; flex-shrink: 0; margin-top: 2px;
+    }
+    .gm-sender-details { flex: 1; min-width: 0; }
+    .gm-sender-name-row { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+    .gm-from-name { font-size: 14px; font-weight: 700; color: #202124; }
+    .gm-from-email { font-size: 12px; color: rgba(0,0,0,0.54); }
+    .gm-unsubscribe { font-size: 11px; color: rgba(0,0,0,0.54); text-decoration: underline; cursor: pointer; margin-left: 2px; }
+    .gm-to-row { display: flex; align-items: center; gap: 3px; margin-top: 3px; }
+    .gm-to-label { font-size: 12px; color: rgba(0,0,0,0.54); }
+    .gm-to-me { font-size: 12px; color: rgba(0,0,0,0.54); }
+    .gm-to-arrow { font-size: 9px; color: rgba(0,0,0,0.4); cursor: pointer; margin-left: 1px; }
+    .gm-timestamp-col { display: flex; align-items: center; gap: 4px; flex-shrink: 0; margin-top: 2px; }
+    .gm-timestamp { font-size: 12px; color: rgba(0,0,0,0.6); white-space: nowrap; }
+
+    /* ── Email body ──────────────────────────────────────────────────────── */
+    .gm-body { padding: 20px 24px 24px 80px; }
+
+    .gm-notice {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #f3f9fe; border: 1px solid #c8dff9; border-radius: 6px;
+      padding: 10px 14px; font-size: 13px; color: #202124; margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .gm-notice a { color: #1a73e8; font-weight: 600; text-decoration: underline; }
+
+    .gm-text { font-size: 14px; color: #202124; line-height: 1.65; }
+    .gm-text p { margin-bottom: 14px; }
+    .gm-text p:last-child { margin-bottom: 0; }
+
+    .gm-cta-wrap { margin: 20px 0; }
+    .gm-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #1a73e8; color: #fff;
+      font-size: 14px; font-weight: 500; font-family: 'Roboto', sans-serif;
+      text-decoration: none; padding: 10px 24px; border-radius: 4px;
+      transition: background 0.15s; cursor: pointer; border: none;
+    }
+    .gm-cta:hover { background: #1557b0; }
+    .gm-cta svg { width: 16px; height: 16px; }
+
+    .gm-meta-note {
+      font-size: 12px; color: rgba(0,0,0,0.54); line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    .gm-sig {
+      margin-top: 24px; padding-top: 16px;
+      border-top: 1px solid #e8eaed;
+    }
+    .gm-sig-brand {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: rgba(0,0,0,0.6);
+    }
+    .gm-sig-logo {
+      width: 22px; height: 22px; border-radius: 5px;
+      background: #1a73e8; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .gm-reply-btns {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid #e8eaed;
+    }
+    .gm-reply-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 18px; border: 1px solid rgba(0,0,0,0.16);
+      border-radius: 4px; background: none; cursor: pointer;
+      font-size: 14px; font-weight: 500; font-family: 'Roboto', sans-serif;
+      color: rgba(0,0,0,0.54); transition: background 0.15s;
+    }
+    .gm-reply-btn:hover { background: #f1f3f4; }
+    .gm-reply-btn svg { width: 18px; height: 18px; }
+  </style>
+</head>
+<body>
+
+  <!-- Proto-nav -->
+  <nav class="proto-nav" id="protoNav">
+    <div class="proto-nav-left">
+      <span class="proto-nav-title">Prototype <span class="proto-nav-sep">/</span> <strong>Comms</strong> <span class="proto-nav-sep">·</span> Passport Invite</span>
+    </div>
+    <div class="proto-nav-right">
+      <a class="proto-nav-link" href="index.html">Library</a>
+      <span class="proto-nav-time" id="protoTime"></span>
+    </div>
+  </nav>
+
+  <!-- Gmail-style email card -->
+  <div class="email-card">
+
+    <!-- Toolbar -->
+    <div class="gm-toolbar">
+      <div class="gm-toolbar-left">
+        <!-- Back -->
+        <button class="gm-icon-btn" title="Back to inbox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="gm-divider"></div>
+        <!-- Archive -->
+        <button class="gm-icon-btn" title="Archive">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+        </button>
+        <!-- Report spam -->
+        <button class="gm-icon-btn" title="Report spam">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 8v4m0 4h.01"/></svg>
+        </button>
+        <!-- Delete -->
+        <button class="gm-icon-btn" title="Delete">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+        <div class="gm-divider"></div>
+        <!-- Mark unread / Label / More -->
+        <button class="gm-icon-btn" title="Mark as unread">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </button>
+        <button class="gm-icon-btn" title="Add label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+        </button>
+        <button class="gm-icon-btn" title="More">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
+        </button>
+      </div>
+      <div class="gm-toolbar-right">
+        <span class="gm-pagination">1–50 of 2,619</span>
+        <button class="gm-icon-btn" title="Newer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="gm-icon-btn" title="Older">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Subject row -->
+    <div class="gm-subject-row">
+      <h1 class="gm-subject">You've been invited to view Carter Peters' credentials</h1>
+      <span class="gm-inbox-badge">Inbox ×</span>
+      <div class="gm-subject-icons">
+        <button class="gm-icon-btn-sm" title="Print">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        </button>
+        <button class="gm-icon-btn-sm" title="Open in new window">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sender row -->
+    <div class="gm-sender-row">
+      <div class="gm-avatar" style="background: #16a34a;">WH</div>
+      <div class="gm-sender-details">
+        <div class="gm-sender-name-row">
+          <span class="gm-from-name">Wallaby Health</span>
+          <span class="gm-from-email">&lt;no-reply@zipline.io&gt;</span>
+          <span class="gm-unsubscribe">Unsubscribe</span>
+        </div>
+        <div class="gm-to-row">
+          <span class="gm-to-label">to</span>
+          <span class="gm-to-me">me</span>
+          <span class="gm-to-arrow">▾</span>
+        </div>
+      </div>
+      <div class="gm-timestamp-col">
+        <span class="gm-timestamp">9:14 AM (8 hours ago)</span>
+        <button class="gm-icon-btn-sm" title="Star">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+        </button>
+        <button class="gm-icon-btn-sm" title="Reply">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+        </button>
+        <button class="gm-icon-btn-sm" title="More">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Email body -->
+    <div class="gm-body">
+
+      <!-- Do not reply notice -->
+      <div class="gm-notice">
+        Do not reply to this email. If you need help, <a href="#">click here</a>.
+      </div>
+
+      <!-- Body text -->
+      <div class="gm-text">
+        <p>Hi John,</p>
+        <p><strong>Wallaby Health</strong> has shared <strong>Carter Peters'</strong> compliance credentials with you. You can view their verified documents — including licences, certifications, and police checks — through Zipline Passport.</p>
+        <p>The link below is valid for <strong>7 days</strong> and is restricted to this email address.</p>
+      </div>
+
+      <!-- CTA -->
+      <div class="gm-cta-wrap">
+        <a class="gm-cta" href="passport-otp.html">
+          View credentials
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+
+      <div class="gm-text">
+        <p class="gm-meta-note">This link is single-use and restricted to <strong>john.smith@exteriorservices.com.au</strong>. Do not forward it to others.</p>
+        <p>If you weren't expecting this email, you can safely ignore it.</p>
+      </div>
+
+      <!-- Signature -->
+      <div class="gm-sig">
+        <div class="gm-sig-brand">
+          <div class="gm-sig-logo">Z</div>
+          <span>Wallaby Health via Zipline · <a href="#" style="color:#1a73e8;text-decoration:none;">no-reply@zipline.io</a></span>
+        </div>
+      </div>
+
+      <!-- Reply / Forward buttons -->
+      <div class="gm-reply-btns">
+        <button class="gm-reply-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+          Reply
+        </button>
+        <button class="gm-reply-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6M17 10h-4"/></svg>
+          Reply all
+        </button>
+        <button class="gm-reply-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 10H11a8 8 0 00-8 8v2m18-10l-6-6m6 6l-6 6"/></svg>
+          Forward
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Timestamp
+    (function() {
+      var d = new Date(document.lastModified);
+      var el = document.getElementById('protoTime');
+      if (el && !isNaN(d)) {
+        el.textContent = 'Updated ' + d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+    })();
+
+    // Hide proto-nav when shown as iframe thumbnail
+    (function() {
+      if (window.self !== window.top) {
+        var nav = document.getElementById('protoNav');
+        if (nav) nav.style.display = 'none';
+        document.body.style.paddingTop = '20px';
+      }
+    })();
+  </script>
+</body>
+</html>
