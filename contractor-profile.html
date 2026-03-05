@@ -277,25 +277,17 @@
     }
     .btn-share-action:hover { background: #1d55d6; }
     .btn-share-action svg { width: 16px; height: 16px; }
-    .share-secure-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; margin-top: 12px; }
-    .share-secure-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .share-secure-label { font-size: 14px; font-weight: 600; color: #334155; letter-spacing: -0.28px; }
-    .share-secure-status { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: #16a34a; }
-    .share-secure-dot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; }
-    .share-secure-url { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #334155; line-height: 16px; word-break: break-all; margin-bottom: 10px; }
-    .share-secure-btns { display: flex; gap: 8px; }
-    .btn-sec-copy {
-      flex: 1; padding: 7px 12px; border: 1px solid #e2e8f0; background: #fff;
-      border-radius: 6px; cursor: pointer; font-family: inherit;
-      font-size: 13px; font-weight: 500; color: #334155;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      letter-spacing: -0.26px; transition: background 0.15s;
-    }
-    .btn-sec-copy:hover { background: #f8fafc; }
-    .btn-sec-copy svg { width: 14px; height: 14px; }
-    .share-confirm-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-    .share-confirm-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #334155; letter-spacing: -0.26px; }
-    .share-confirm-meta-item svg { width: 14px; height: 14px; color: #16a34a; flex-shrink: 0; }
+    .share-confirm-icon { width: 44px; height: 44px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .share-confirm-icon svg { width: 22px; height: 22px; color: #16a34a; }
+    .share-confirm-title { font-size: 16px; font-weight: 700; color: #0f172a; letter-spacing: -0.32px; margin-bottom: 6px; }
+    .share-confirm-desc { font-size: 13px; color: #64748b; letter-spacing: -0.26px; line-height: 20px; margin-bottom: 14px; }
+    .share-confirm-recipients { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+    .share-confirm-recipient { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px 3px 8px; border-radius: 100px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 12px; font-weight: 500; color: #334155; letter-spacing: -0.24px; }
+    .share-confirm-creds { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+    .share-confirm-creds-heading { padding: 7px 12px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 11px; font-weight: 600; color: #64748b; letter-spacing: 0.2px; text-transform: uppercase; }
+    .share-confirm-cred-item { display: flex; align-items: center; gap: 8px; padding: 6px 12px; font-size: 13px; color: #334155; letter-spacing: -0.26px; border-bottom: 1px solid #f1f5f9; }
+    .share-confirm-cred-item:last-child { border-bottom: none; }
+    .share-confirm-cred-item svg { width: 13px; height: 13px; color: #16a34a; flex-shrink: 0; }
     .share-org-notice {
       display: none;
       background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
@@ -310,18 +302,7 @@
     .share-org-info { flex: 1; }
     .share-org-name { font-size: 13px; font-weight: 600; color: #166534; letter-spacing: -0.26px; line-height: 18px; }
     .share-org-desc { font-size: 11px; color: #166534; letter-spacing: -0.22px; line-height: 16px; }
-    .share-notif-box {
-      border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px; background: #f0fdf4;
-      margin-top: 12px; display: flex; align-items: center; gap: 12px;
-    }
-    .share-notif-icon {
-      width: 36px; height: 36px; border-radius: 50%; background: #16a34a;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff;
-    }
-    .share-notif-icon svg { width: 18px; height: 18px; }
-    .share-notif-info { display: flex; flex-direction: column; gap: 2px; }
-    .share-notif-org-name { font-size: 14px; font-weight: 600; color: #166534; letter-spacing: -0.28px; }
-    .share-notif-org-desc { font-size: 12px; color: #166534; letter-spacing: -0.24px; }
+    .share-confirm-sys-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px 3px 8px; border-radius: 100px; border: 1px solid #bbf7d0; background: #f0fdf4; font-size: 12px; font-weight: 600; color: #166534; letter-spacing: -0.24px; margin-bottom: 14px; }
     .share-email-suggestions {
       position: absolute; left: 0; right: 0; top: calc(100% + 4px);
       background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
@@ -816,50 +797,28 @@
       <div id="shareSharedView" style="display:none">
         <!-- External recipient confirmed view -->
         <div id="shareSharedExternal">
-          <div class="share-modal-title">Share Carter Peters' credentials</div>
-          <div class="share-modal-sub">Credentials shared with <strong id="shareConfirmEmail"></strong></div>
-          <div class="share-confirm-meta">
-            <div class="share-confirm-meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              Valid for <span id="shareConfirmDuration"></span>
-            </div>
-            <div class="share-confirm-meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              Restricted to <span id="shareConfirmEmailMeta"></span>
-            </div>
+          <div class="share-confirm-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
           </div>
-          <div class="share-secure-box">
-            <div class="share-secure-top">
-              <span class="share-secure-label">Secure Link</span>
-              <span class="share-secure-status"><span class="share-secure-dot"></span>Active</span>
-            </div>
-            <div class="share-secure-url">https://staging-demo.zipline.app/staff-members/pQIs9KLI6Bt6vXxgdNhQ/%2B61412345678</div>
-            <div class="share-secure-btns">
-              <button class="btn-sec-copy" onclick="copyModalLink(this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-                Copy Link
-              </button>
-            </div>
+          <div class="share-confirm-title">Credentials shared</div>
+          <div class="share-confirm-desc">An email has been sent to the following recipients with a secure link to view Carter Peters' credentials. The link expires in <span id="shareConfirmDuration"></span>.</div>
+          <div class="share-confirm-recipients" id="shareConfirmRecipients"></div>
+          <div class="share-confirm-creds">
+            <div class="share-confirm-creds-heading">Shared credentials &middot; <span id="shareConfirmCredCount"></span></div>
+            <div id="shareConfirmCredList"></div>
           </div>
         </div>
         <!-- System org confirmed view -->
         <div id="shareSharedSystem" style="display:none">
-          <div class="share-modal-title">Notification sent</div>
-          <div class="share-modal-sub">An email was sent to <strong id="shareConfirmEmailSys"></strong>. They can access the credentials directly through their Zipline account.</div>
-          <div class="share-confirm-meta">
-            <div class="share-confirm-meta-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              Restricted to <span id="shareConfirmEmailSysMeta"></span>
-            </div>
+          <div class="share-confirm-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
           </div>
-          <div class="share-notif-box">
-            <div class="share-notif-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            </div>
-            <div class="share-notif-info">
-              <span class="share-notif-org-name" id="shareConfirmOrgName"></span>
-              <span class="share-notif-org-desc">Already part of the Zipline system — no OTP required</span>
-            </div>
+          <div class="share-confirm-title">Notification sent</div>
+          <div class="share-confirm-desc">The following recipients have been notified and can access Carter Peters' credentials directly through their Zipline account — no sign-in link required.</div>
+          <div class="share-confirm-recipients" id="shareConfirmRecipientsSys"></div>
+          <div class="share-confirm-creds">
+            <div class="share-confirm-creds-heading">Shared credentials &middot; <span id="shareConfirmCredCountSys"></span></div>
+            <div id="shareConfirmCredListSys"></div>
           </div>
         </div>
       </div>
@@ -1069,25 +1028,45 @@
       updateCredCount();
     }
     function submitShare() {
-      // commit any typed-but-not-yet-tagged email
       var inputVal = document.getElementById('shareEmailInput').value.replace(/,\s*$/, '').trim();
       if (inputVal && emailTags.indexOf(inputVal) === -1) emailTags.push(inputVal);
       if (!emailTags.length) { document.getElementById('shareEmailInput').focus(); return; }
       var duration = document.getElementById('shareDuration').value;
+
+      // Collect selected credential labels
+      var credLabels = [];
+      document.querySelectorAll('#shareFormView input[name="cred"]:not(:disabled):checked').forEach(function(cb) {
+        var lbl = cb.closest('.share-cred-item') && cb.closest('.share-cred-item').querySelector('label');
+        if (lbl) credLabels.push(lbl.textContent.trim());
+      });
+
+      function recipientPillsHtml(tags) {
+        return tags.map(function(email) {
+          var org = getMatchedOrg(email);
+          var dot = org ? '<span style="width:6px;height:6px;border-radius:50%;background:' + ORG_TAG_STYLES[org.keyword].text + ';display:inline-block;flex-shrink:0"></span>' : '';
+          var style = org ? 'border-color:' + ORG_TAG_STYLES[org.keyword].border + ';background:' + ORG_TAG_STYLES[org.keyword].bg + ';color:' + ORG_TAG_STYLES[org.keyword].text + ';' : '';
+          return '<span class="share-confirm-recipient" style="' + style + '">' + dot + email + '</span>';
+        }).join('');
+      }
+      function credListHtml(labels) {
+        return labels.map(function(label) {
+          return '<div class="share-confirm-cred-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' + label + '</div>';
+        }).join('');
+      }
+      var countText = credLabels.length + ' item' + (credLabels.length !== 1 ? 's' : '');
       var allSystem = emailTags.every(function(e) { return !!getMatchedOrg(e); });
-      var recipientLabel = emailTags.length === 1 ? emailTags[0]
-        : emailTags[0] + ' +' + (emailTags.length - 1) + ' other' + (emailTags.length > 2 ? 's' : '');
+
       if (allSystem) {
-        var org = getMatchedOrg(emailTags[0]);
-        document.getElementById('shareConfirmEmailSys').textContent = recipientLabel;
-        document.getElementById('shareConfirmEmailSysMeta').textContent = recipientLabel;
-        document.getElementById('shareConfirmOrgName').textContent = emailTags.length === 1 ? org.name : emailTags.length + ' system recipients';
+        document.getElementById('shareConfirmRecipientsSys').innerHTML = recipientPillsHtml(emailTags);
+        document.getElementById('shareConfirmCredCountSys').textContent = countText;
+        document.getElementById('shareConfirmCredListSys').innerHTML = credListHtml(credLabels);
         document.getElementById('shareSharedExternal').style.display = 'none';
         document.getElementById('shareSharedSystem').style.display = '';
       } else {
-        document.getElementById('shareConfirmEmail').textContent = recipientLabel;
         document.getElementById('shareConfirmDuration').textContent = duration;
-        document.getElementById('shareConfirmEmailMeta').textContent = recipientLabel;
+        document.getElementById('shareConfirmRecipients').innerHTML = recipientPillsHtml(emailTags);
+        document.getElementById('shareConfirmCredCount').textContent = countText;
+        document.getElementById('shareConfirmCredList').innerHTML = credListHtml(credLabels);
         document.getElementById('shareSharedExternal').style.display = '';
         document.getElementById('shareSharedSystem').style.display = 'none';
       }
