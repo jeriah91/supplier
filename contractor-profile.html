@@ -202,8 +202,36 @@
     .shared-with-org { display: flex; flex-direction: column; gap: 8px; }
     .shared-with-org-header { display: flex; align-items: center; gap: 8px; }
     .shared-with-expiry { margin-left: auto; font-size: 11px; color: #94a3b8; letter-spacing: -0.22px; white-space: nowrap; }
+    .shared-with-revoke {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1px solid #e2e8f0; background: #fff; color: #64748b;
+      font-family: inherit; font-size: 12px; font-weight: 500;
+      padding: 3px 10px; border-radius: 6px; cursor: pointer;
+      letter-spacing: -0.24px; line-height: 20px; flex-shrink: 0;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .shared-with-revoke:hover { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
+    .shared-with-revoke svg { width: 14px; height: 14px; }
     .shared-with-creds { display: flex; flex-wrap: wrap; gap: 6px; padding-left: 16px; }
     .shared-with-cred { font-size: 12px; font-weight: 500; color: #334155; letter-spacing: -0.24px; background: #f1f5f9; border-radius: 6px; padding: 3px 9px; }
+    /* ── Revoke confirm modal ── */
+    .revoke-backdrop {
+      position: fixed; inset: 0; z-index: 9500;
+      background: rgba(15,23,42,0.55);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    .revoke-backdrop.is-visible { opacity: 1; pointer-events: auto; }
+    .revoke-modal { background: #fff; border-radius: 16px; padding: 24px; width: 420px; max-width: calc(100vw - 32px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); }
+    .revoke-title { font-size: 18px; font-weight: 700; color: #0f172a; letter-spacing: -0.54px; margin-bottom: 8px; }
+    .revoke-body { font-size: 14px; color: #64748b; letter-spacing: -0.28px; line-height: 20px; margin-bottom: 12px; }
+    .revoke-creds { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; padding: 12px; background: #fef2f2; border-radius: 8px; border: 1px solid #fecaca; }
+    .revoke-cred { font-size: 12px; font-weight: 500; color: #991b1b; letter-spacing: -0.24px; background: #fee2e2; border-radius: 6px; padding: 3px 9px; }
+    .revoke-btns { display: flex; gap: 10px; }
+    .revoke-btn-cancel { flex: 1; padding: 9px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 500; color: #334155; cursor: pointer; letter-spacing: -0.28px; }
+    .revoke-btn-cancel:hover { background: #f8fafc; }
+    .revoke-btn-confirm { flex: 1; padding: 9px; background: #dc2626; border: none; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; letter-spacing: -0.28px; }
+    .revoke-btn-confirm:hover { background: #b91c1c; }
 
     /* ── Share Modal ── */
     .share-backdrop {
@@ -511,48 +539,6 @@
           <!-- Sharing tab -->
           <div class="tab-panel" id="tab-sharing">
 
-            <!-- Passport section -->
-            <div class="card-sec">
-              <div class="sec-title">Passport</div>
-              <div class="sec-sub">Share secure links to this worker's verified credentials.</div>
-
-              <!-- Shared with -->
-              <div class="shared-section">
-                <div class="shared-label-row">
-                  <span class="shared-label">Shared with</span>
-                  <div class="shared-line"></div>
-                </div>
-                <div class="org-row">
-                  <div class="org-avatar wh">WH</div>
-                  <span class="org-name">Wallaby Health</span>
-                  <button class="btn-revoke">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                    Revoke access
-                  </button>
-                </div>
-                <div class="org-row">
-                  <div class="org-avatar ch">CH</div>
-                  <span class="org-name">Catholic Healthcare</span>
-                  <span class="org-remaining">3 days remaining</span>
-                  <button class="btn-revoke">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                    Revoke access
-                  </button>
-                </div>
-                <div class="org-row">
-                  <div class="org-avatar bc">BC</div>
-                  <span class="org-name">Bolton Clarke</span>
-                  <span class="org-remaining">4 days remaining</span>
-                  <button class="btn-revoke">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                    Revoke access
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="h-divider"></div>
-
             <!-- Shared with section -->
             <div class="card-sec">
               <div class="sec-title">Shared with</div>
@@ -564,6 +550,10 @@
                     <span class="log-org-dot" style="background:#34d399"></span>
                     <span class="log-org-name">Wallaby Health</span>
                     <span class="shared-with-expiry">Expires 14 Mar 2026</span>
+                    <button class="shared-with-revoke" onclick="openRevokeModal('Wallaby Health', ['Plumbing Licence','Gasfitting Licence','Public Liability Insurance','National Police Check','Australian Work Rights'])">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 115.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                      Revoke access
+                    </button>
                   </div>
                   <div class="shared-with-creds">
                     <span class="shared-with-cred">Plumbing Licence</span>
@@ -578,7 +568,11 @@
                   <div class="shared-with-org-header">
                     <span class="log-org-dot" style="background:#fb7185"></span>
                     <span class="log-org-name">Catholic Healthcare</span>
-                    <span class="shared-with-expiry">Expires 17 Mar 2026</span>
+                    <span class="shared-with-expiry">Expires 17 Mar 2026 · 12 days remaining</span>
+                    <button class="shared-with-revoke" onclick="openRevokeModal('Catholic Healthcare', ['Plumbing Licence','National Police Check','COVID-19 Vaccination Records','Infection Control Training Certificate','Australian Work Rights'])">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 115.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                      Revoke access
+                    </button>
                   </div>
                   <div class="shared-with-creds">
                     <span class="shared-with-cred">Plumbing Licence</span>
@@ -593,12 +587,16 @@
                   <div class="shared-with-org-header">
                     <span class="log-org-dot" style="background:#a78bfa"></span>
                     <span class="log-org-name">Bolton Clarke</span>
-                    <span class="shared-with-expiry">Expires 20 Mar 2026</span>
+                    <span class="shared-with-expiry">Expires 20 Mar 2026 · 15 days remaining</span>
+                    <button class="shared-with-revoke" onclick="openRevokeModal('Bolton Clarke', ['Plumbing Licence','Backflow Prevention Accreditation','Workers’ Compensation Insurance','National Police Check','Australian Work Rights'])">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 115.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                      Revoke access
+                    </button>
                   </div>
                   <div class="shared-with-creds">
                     <span class="shared-with-cred">Plumbing Licence</span>
                     <span class="shared-with-cred">Backflow Prevention Accreditation</span>
-                    <span class="shared-with-cred">Workers' Compensation Insurance</span>
+                    <span class="shared-with-cred">Workers’ Compensation Insurance</span>
                     <span class="shared-with-cred">National Police Check</span>
                     <span class="shared-with-cred">Australian Work Rights</span>
                   </div>
@@ -606,7 +604,6 @@
 
               </div>
             </div>
-
             <div class="h-divider"></div>
 
             <!-- Access log section -->
@@ -887,6 +884,19 @@
     </div>
   </div>
 
+  <!-- Revoke access modal -->
+  <div class="revoke-backdrop" id="revokeBackdrop" onclick="closeRevokeModal()">
+    <div class="revoke-modal" onclick="event.stopPropagation()">
+      <div class="revoke-title" id="revokeOrgName">Revoke access</div>
+      <div class="revoke-body">This organisation will immediately lose access to the following credentials shared via Passport.</div>
+      <div class="revoke-creds" id="revokeCredsList"></div>
+      <div class="revoke-btns">
+        <button class="revoke-btn-cancel" onclick="closeRevokeModal()">Cancel</button>
+        <button class="revoke-btn-confirm" onclick="closeRevokeModal()">Revoke access</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Deactivate modal -->
   <div class="deact-backdrop" id="deactBackdrop">
     <div class="deact-modal">
@@ -1145,6 +1155,17 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeShareModal();
     });
+
+    // ── Revoke access modal ──────────────────────────────────────────────
+    function openRevokeModal(orgName, creds) {
+      document.getElementById('revokeOrgName').textContent = 'Revoke access for ' + orgName + '?';
+      var list = document.getElementById('revokeCredsList');
+      list.innerHTML = creds.map(function(c) {
+        return '<span class="revoke-cred">' + c + '</span>';
+      }).join('');
+      document.getElementById('revokeBackdrop').classList.add('is-visible');
+    }
+    function closeRevokeModal() { document.getElementById('revokeBackdrop').classList.remove('is-visible'); }
 
     // ── Deactivate modal ─────────────────────────────────────────────────
     function openDeactModal() { document.getElementById('deactBackdrop').classList.add('is-visible'); }
