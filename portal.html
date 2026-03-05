@@ -2305,6 +2305,8 @@
         return '<span class="bulk-share-worker-chip">' + name + '</span>';
       }).join('');
       document.getElementById('bulkShareEmail').value = '';
+      document.getElementById('bulkShareFormView').style.display = '';
+      document.getElementById('bulkShareConfirmView').style.display = 'none';
       updateBulkCredCount();
       document.getElementById('bulkShareBackdrop').classList.add('is-visible');
     }
@@ -2323,14 +2325,40 @@
 
     function closeBulkShareModal() {
       document.getElementById('bulkShareBackdrop').classList.remove('is-visible');
+      document.getElementById('bulkShareFormView').style.display = '';
+      document.getElementById('bulkShareConfirmView').style.display = 'none';
     }
 
     function submitBulkShare() {
       var email = document.getElementById('bulkShareEmail').value.trim();
       if (!email) { document.getElementById('bulkShareEmail').focus(); return; }
-      closeBulkShareModal();
+      var duration = document.getElementById('bulkShareDuration').value;
+
+      // Collect selected credential labels
+      var credLabels = [];
+      document.querySelectorAll('#bulkShareBackdrop input[name="bulk-cred"]:not(:disabled):checked').forEach(function(cb) {
+        var lbl = cb.closest('label');
+        if (lbl) credLabels.push(lbl.textContent.trim());
+      });
+
+      // Worker count from chips
+      var workerCount = document.querySelectorAll('#bulkShareWorkers .bulk-share-worker-chip').length;
+      var workerText = workerCount + ' worker' + (workerCount !== 1 ? 's' : '');
+
+      function credListHtml(labels) {
+        return labels.map(function(label) {
+          return '<div class="share-confirm-cred-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' + label + '</div>';
+        }).join('');
+      }
+
+      document.getElementById('bulkShareConfirmDesc').textContent = 'An email has been sent to the following recipient with secure links to view credentials for ' + workerText + '. The links expire in ' + duration + '.';
+      document.getElementById('bulkShareConfirmRecipients').innerHTML = '<span class="share-confirm-recipient">' + email + '</span>';
+      document.getElementById('bulkShareConfirmCredCount').textContent = credLabels.length + ' item' + (credLabels.length !== 1 ? 's' : '');
+      document.getElementById('bulkShareConfirmCredList').innerHTML = credListHtml(credLabels);
+
+      document.getElementById('bulkShareFormView').style.display = 'none';
+      document.getElementById('bulkShareConfirmView').style.display = '';
       clearSelection();
-      showBanner('email');
     }
 
     // Copy direct link
@@ -2349,7 +2377,7 @@
 
   </script>
   <script>
-    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 12:01:00';
+    document.getElementById('protoLastUpdated').textContent = 'Last updated 05/03/2026 12:04:04';
   </script>
   <script src="sidebar.js"></script>
   <script src="sidebar-logo.js"></script>
@@ -2380,6 +2408,9 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
+
+      <!-- Form view -->
+      <div id="bulkShareFormView">
       <div class="bulk-share-title" id="bulkShareTitle">Share credentials for 0 workers</div>
       <div class="bulk-share-sub">A secure link will be sent for each selected worker.</div>
       <div class="bulk-share-workers" id="bulkShareWorkers"></div>
@@ -2483,6 +2514,27 @@
           Share all
         </button>
       </div>
+      </div><!-- end #bulkShareFormView -->
+
+      <!-- Confirmation view -->
+      <div id="bulkShareConfirmView" style="display:none">
+        <div class="share-confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <div class="share-confirm-title-row">
+          <div class="share-confirm-title">Credentials shared</div>
+          <a class="share-confirm-email-link" href="email-passport-invite.html" target="_blank" title="Preview invite email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+        <div class="share-confirm-desc" id="bulkShareConfirmDesc"></div>
+        <div class="share-confirm-recipients" id="bulkShareConfirmRecipients"></div>
+        <div class="share-confirm-creds">
+          <div class="share-confirm-creds-heading">Shared credentials &middot; <span id="bulkShareConfirmCredCount"></span></div>
+          <div id="bulkShareConfirmCredList"></div>
+        </div>
+      </div><!-- end #bulkShareConfirmView -->
+
     </div>
   </div>
 </body>
